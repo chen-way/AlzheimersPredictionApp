@@ -1,82 +1,80 @@
 import streamlit as st
-import numpy as np
 import pandas as pd
-import joblib
+import numpy as np
+import pickle
 
-# Load model and preprocessing objects
-model = joblib.load("xgb_model.pkl")
-scaler = joblib.load("scaler.pkl")
-label_encoders = joblib.load("label_encoders.pkl")
-target_encoder = joblib.load("target_encoder.pkl")
+from sklearn.preprocessing import StandardScaler
 
-st.set_page_config(page_title="Alzheimer's Risk Predictor", page_icon="🧠", layout="centered")
+# Set page config
+st.set_page_config(
+    page_title="Alzheimer's Risk Predictor",
+    layout="centered",
+    initial_sidebar_state="collapsed"
+)
 
-st.markdown("""
-    <style>
-        .main {
-            background-color: #f4f4f4;
-            padding: 2rem;
-            border-radius: 10px;
-        }
-        h1 {
-            color: #3b3b3b;
-            text-align: center;
-        }
-    </style>
-""", unsafe_allow_html=True)
+# Load trained model, scaler, and feature names
+with open('alzheimers_model.pkl', 'rb') as f:
+    model = pickle.load(f)
 
+with open('scaler.pkl', 'rb') as f:
+    scaler = pickle.load(f)
+
+with open('feature_names.pkl', 'rb') as f:
+    feature_names = pickle.load(f)
+
+# App title
 st.title("🧠 Alzheimer's Disease Risk Predictor")
-st.markdown("Predict your likelihood of developing Alzheimer's disease based on health and demographic data.")
+st.markdown("This tool uses machine learning to estimate your risk of developing Alzheimer's disease based on health indicators.")
 
-# Input form
-with st.form("prediction_form"):
-    st.subheader("Enter your information")
+# Collect user input
+st.subheader("Enter your health information below:")
 
-    age = st.number_input("Age", min_value=30, max_value=100, value=65)
+col1, col2 = st.columns(2)
+
+with col1:
+    age = st.number_input("Age", min_value=30, max_value=100, step=1)
     gender = st.selectbox("Gender", ["Male", "Female"])
-    apoe4 = st.selectbox("APOE4 Status", ["Negative", "Positive"])
-    systolic = st.number_input("Systolic Blood Pressure", min_value=80, max_value=200, value=120)
-    diastolic = st.number_input("Diastolic Blood Pressure", min_value=50, max_value=130, value=80)
-    bmi = st.number_input("Body Mass Index (BMI)", min_value=10.0, max_value=60.0, value=22.5)
-    cholesterol = st.selectbox("Cholesterol Level", ["Normal", "High", "Very High"])
-    education = st.selectbox("Education Level", ["High School", "Some College", "Bachelor's", "Master's/PhD"])
-    activity = st.selectbox("Physical Activity Level", ["Low", "Moderate", "High"])
+    systolic_bp = st.number_input("Systolic Blood Pressure", min_value=80, max_value=250, step=1)
+    cholesterol = st.number_input("Cholesterol Level (mg/dL)", min_value=100, max_value=400)
 
-    submit = st.form_submit_button("Predict")
+with col2:
+    bmi = st.number_input("BMI", min_value=10.0, max_value=60.0)
+    glucose = st.number_input("Glucose Level (mg/dL)", min_value=50, max_value=250)
+    smoking = st.selectbox("Do you smoke?", ["No", "Yes"])
+    family_history = st.selectbox("Family history of Alzheimer's?", ["No", "Yes"])
 
-# When user submits form
-if submit:
-    # Create input DataFrame
-    input_data = pd.DataFrame({
-        "Age": [age],
-        "Gender": [gender],
-        "APOE4_Status": [apoe4],
-        "Systolic_BP": [systolic],
-        "Diastolic_BP": [diastolic],
-        "BMI": [bmi],
-        "Cholesterol": [cholesterol],
-        "Education": [education],
-        "Physical_Activity": [activity]
-    })
+# Encode categorical variables manually (you must have done similar during training)
+gender_encoded = 1 if gender == "Male" else 0
+smoking_encoded = 1 if smoking == "Yes" else 0
+family_history_encoded = 1 if family_history == "Yes" else 0
 
-    # Encode categorical features
-    for col in input_data.columns:
-        if col in label_encoders:
-            input_data[col] = label_encoders[col].transform(input_data[col])
+# Create input dataframe with proper column names
+input_dict = {
+    'Age': age,
+    'Gender': gender_encoded,
+    'SystolicBP': systolic_bp,
+    'Cholesterol': cholesterol,
+    'BMI': bmi,
+    'Glucose': glucose,
+    'Smoking': smoking_encoded,
+    'FamilyHistory': family_history_encoded
+}
 
-    # Scale the data
-    input_scaled = scaler.transform(input_data)
+input_df = pd.DataFrame([input_dict])
 
-    # Predict
-    prediction = model.predict(input_scaled)
-    predicted_label = target_encoder.inverse_transform(prediction)[0]
+# Reorder columns to match training data
+input_df = input_df[feature_names]
 
-    # Display result
-    st.success(f"🧬 Based on the data provided, the predicted diagnosis is: **{predicted_label}**")
+# Scale input
+input_scaled = scaler.transform(input_df)
 
-    if predicted_label.lower() == "normal":
-        st.info("Great news! Your risk seems low, but continue living a healthy lifestyle.")
-    elif "mild" in predicted_label.lower():
-        st.warning("This suggests early signs of potential Alzheimer's. Consider speaking with a medical professional.")
+# Predict
+if st.button("Predict Risk"):
+    prediction = model.predict(input_scaled)[0]
+    probability = model.predict_proba(input_scaled)[0][1]
+
+    st.subheader("🧾 Prediction Result")
+    if prediction == 1:
+        st.error(f"High Risk of Alzheimer's Disease ({probability*100:.1f}% probability)")
     else:
-        st.error("This indicates higher risk. Please consult your healthcare provider for further testing and support.")
+        st.success(f"Low Risk of Alzheimer's Disease ({probability*100:.1f}% probability)")
