@@ -55,23 +55,7 @@ This project develops a machine learning-based prediction model using patient he
 
 ## How to Use the App
 
-1. Clone or download this repository.
-2. Ensure you have Python 3.7+ installed.
-3. Install dependencies with:
-
-    ```
-    pip install -r requirements.txt
-    ```
-
-4. Run the Streamlit app:
-
-    ```
-    streamlit run alzheimers_app.py
-    ```
-
-5. Upload a CSV file containing patient data with the features listed above.
-6. View predictions added to your dataset and download the results as a CSV file.
-
+1.
 ---
 
 ## Model Training (Summary)
