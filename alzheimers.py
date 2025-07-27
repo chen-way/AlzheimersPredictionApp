@@ -1,97 +1,82 @@
 import streamlit as st
-import pandas as pd
 import numpy as np
+import pandas as pd
 import joblib
 
-# Load saved model and encoders
-model = joblib.load("best_rf_compressed.pkl")
+# Load model and preprocessing objects
+model = joblib.load("xgb_model.pkl")
 scaler = joblib.load("scaler.pkl")
-encoders = joblib.load("encoder.pkl")  # This should be a dict of LabelEncoders
+label_encoders = joblib.load("label_encoders.pkl")
+target_encoder = joblib.load("target_encoder.pkl")
 
-st.set_page_config(page_title="Alzheimer's Risk Prediction", layout="centered")
-st.title("🧠 Alzheimer's Disease Risk Prediction")
-st.markdown("Upload patient data to predict the risk of Alzheimer's disease.")
+st.set_page_config(page_title="Alzheimer's Risk Predictor", page_icon="🧠", layout="centered")
 
-# ====== Get user input ======
-def get_user_input():
-    st.header("Enter Patient Information")
+st.markdown("""
+    <style>
+        .main {
+            background-color: #f4f4f4;
+            padding: 2rem;
+            border-radius: 10px;
+        }
+        h1 {
+            color: #3b3b3b;
+            text-align: center;
+        }
+    </style>
+""", unsafe_allow_html=True)
 
-    country = st.selectbox("Country", ["USA", "Canada", "UK", "India", "Other"])
-    age = st.slider("Age", 40, 100, 65)
+st.title("🧠 Alzheimer's Disease Risk Predictor")
+st.markdown("Predict your likelihood of developing Alzheimer's disease based on health and demographic data.")
+
+# Input form
+with st.form("prediction_form"):
+    st.subheader("Enter your information")
+
+    age = st.number_input("Age", min_value=30, max_value=100, value=65)
     gender = st.selectbox("Gender", ["Male", "Female"])
-    education = st.selectbox("Education Level", ["None", "Primary", "Secondary", "Tertiary"])
-    bmi = st.number_input("BMI", 10.0, 50.0, 24.5)
-    physical_activity = st.selectbox("Physical Activity Level", ["Low", "Moderate", "High"])
-    smoking = st.selectbox("Smoking Status", ["Never", "Former", "Current"])
-    alcohol = st.selectbox("Alcohol Consumption", ["None", "Moderate", "High"])
-    diabetes = st.selectbox("Diabetes", ["No", "Yes"])
-    hypertension = st.selectbox("Hypertension", ["No", "Yes"])
-    cholesterol = st.selectbox("Cholesterol Level", ["Normal", "Borderline", "High"])
-    family_history = st.selectbox("Family History of Alzheimer’s", ["No", "Yes"])
-    cognitive_score = st.slider("Cognitive Test Score", 0, 30, 25)
-    depression = st.selectbox("Depression Level", ["None", "Mild", "Moderate", "Severe"])
-    sleep = st.selectbox("Sleep Quality", ["Poor", "Average", "Good"])
-    diet = st.selectbox("Dietary Habits", ["Unhealthy", "Average", "Healthy"])
-    pollution = st.selectbox("Air Pollution Exposure", ["Low", "Moderate", "High"])
-    employment = st.selectbox("Employment Status", ["Employed", "Unemployed", "Retired"])
-    marital = st.selectbox("Marital Status", ["Single", "Married", "Divorced", "Widowed"])
-    genetics = st.selectbox("Genetic Risk Factor (APOE-ε4 allele)", ["No", "Yes"])
-    social = st.selectbox("Social Engagement Level", ["Low", "Moderate", "High"])
-    income = st.selectbox("Income Level", ["Low", "Middle", "High"])
-    stress = st.selectbox("Stress Levels", ["Low", "Moderate", "High"])
-    urban_rural = st.selectbox("Urban vs Rural Living", ["Urban", "Rural"])
+    apoe4 = st.selectbox("APOE4 Status", ["Negative", "Positive"])
+    systolic = st.number_input("Systolic Blood Pressure", min_value=80, max_value=200, value=120)
+    diastolic = st.number_input("Diastolic Blood Pressure", min_value=50, max_value=130, value=80)
+    bmi = st.number_input("Body Mass Index (BMI)", min_value=10.0, max_value=60.0, value=22.5)
+    cholesterol = st.selectbox("Cholesterol Level", ["Normal", "High", "Very High"])
+    education = st.selectbox("Education Level", ["High School", "Some College", "Bachelor's", "Master's/PhD"])
+    activity = st.selectbox("Physical Activity Level", ["Low", "Moderate", "High"])
 
-    user_input = pd.DataFrame({
-        "Country": [country],
+    submit = st.form_submit_button("Predict")
+
+# When user submits form
+if submit:
+    # Create input DataFrame
+    input_data = pd.DataFrame({
         "Age": [age],
         "Gender": [gender],
-        "Education Level": [education],
+        "APOE4_Status": [apoe4],
+        "Systolic_BP": [systolic],
+        "Diastolic_BP": [diastolic],
         "BMI": [bmi],
-        "Physical Activity Level": [physical_activity],
-        "Smoking Status": [smoking],
-        "Alcohol Consumption": [alcohol],
-        "Diabetes": [diabetes],
-        "Hypertension": [hypertension],
-        "Cholesterol Level": [cholesterol],
-        "Family History of Alzheimer’s": [family_history],
-        "Cognitive Test Score": [cognitive_score],
-        "Depression Level": [depression],
-        "Sleep Quality": [sleep],
-        "Dietary Habits": [diet],
-        "Air Pollution Exposure": [pollution],
-        "Employment Status": [employment],
-        "Marital Status": [marital],
-        "Genetic Risk Factor (APOE-ε4 allele)": [genetics],
-        "Social Engagement Level": [social],
-        "Income Level": [income],
-        "Stress Levels": [stress],
-        "Urban vs Rural Living": [urban_rural]
+        "Cholesterol": [cholesterol],
+        "Education": [education],
+        "Physical_Activity": [activity]
     })
 
-    return user_input
+    # Encode categorical features
+    for col in input_data.columns:
+        if col in label_encoders:
+            input_data[col] = label_encoders[col].transform(input_data[col])
 
-# ====== Preprocess input to match model format ======
-def preprocess_input(df):
-    df = df.copy()
-    for col in df.columns:
-        if col in encoders:
-            df[col] = encoders[col].transform(df[col])
-    df_scaled = scaler.transform(df)
-    return df_scaled
+    # Scale the data
+    input_scaled = scaler.transform(input_data)
 
-# ====== Run prediction ======
-user_data = get_user_input()
+    # Predict
+    prediction = model.predict(input_scaled)
+    predicted_label = target_encoder.inverse_transform(prediction)[0]
 
-if st.button("Predict Alzheimer's Risk"):
-    try:
-        processed = preprocess_input(user_data)
-        prediction = model.predict(processed)
-        proba = model.predict_proba(processed)[0][1]
+    # Display result
+    st.success(f"🧬 Based on the data provided, the predicted diagnosis is: **{predicted_label}**")
 
-        if prediction[0] == 1:
-            st.error(f"🚨 High Risk of Alzheimer’s ({proba * 100:.2f}%)")
-        else:
-            st.success(f"🟢 Low Risk of Alzheimer’s ({(1 - proba) * 100:.2f}%)")
-
-    except Exception as e:
-        st.exception(f"Something went wrong: {e}")
+    if predicted_label.lower() == "normal":
+        st.info("Great news! Your risk seems low, but continue living a healthy lifestyle.")
+    elif "mild" in predicted_label.lower():
+        st.warning("This suggests early signs of potential Alzheimer's. Consider speaking with a medical professional.")
+    else:
+        st.error("This indicates higher risk. Please consult your healthcare provider for further testing and support.")
