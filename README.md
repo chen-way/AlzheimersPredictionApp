@@ -73,11 +73,7 @@ The Random Forest model was trained on a cleaned and encoded dataset using these
 
 | File                 | Description                                            |
 |----------------------|--------------------------------------------------------|
-| `alzheimers_app.py`    | Main Streamlit app for prediction                      |
-| `best_model.pkl`       | Trained Random Forest model                             |
-| `scaler.pkl`           | StandardScaler object for feature scaling              |
-| `label_encoders.pkl`   | Dictionary of LabelEncoders for categorical features   |
-| `target_encoder.pkl`   | LabelEncoder for target variable (Alzheimer’s Diagnosis)|
+| `alzheimers.py`      | Main Streamlit app for prediction                      |
 | `requirements.txt`     | Python dependencies needed to run the app              |
 | `README.md`            | This documentation file                                |
 
