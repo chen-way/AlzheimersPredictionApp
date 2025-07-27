@@ -1,7 +1,6 @@
-# Alzheimer’s Disease Prediction App 🧠
+# Alzheimer’s Disease Prediction App 
 
 **By Chenwei Pan**  
-Westmount Charter Mid-High School
 
 ---
 
