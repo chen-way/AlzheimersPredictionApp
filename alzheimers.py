@@ -3,17 +3,19 @@ import pandas as pd
 import numpy as np
 import joblib
 
-st.set_page_config(page_title="Alzheimer's Risk Prediction App", layout="centered")
-st.title("🧠 Alzheimer's Disease Risk Prediction")
-st.markdown("This app predicts the likelihood of Alzheimer's based on patient data.")
-
-model = joblib.load("alzheimers_model.pkl")
+# Load saved model and encoders
+model = joblib.load("best_rf_compressed.pkl")
 scaler = joblib.load("scaler.pkl")
-encoders = joblib.load("encoder.pkl")
+encoders = joblib.load("encoder.pkl")  # This should be a dict of LabelEncoders
 
+st.set_page_config(page_title="Alzheimer's Risk Prediction", layout="centered")
+st.title("🧠 Alzheimer's Disease Risk Prediction")
+st.markdown("Upload patient data to predict the risk of Alzheimer's disease.")
+
+# ====== Get user input ======
 def get_user_input():
     st.header("Enter Patient Information")
-    
+
     country = st.selectbox("Country", ["USA", "Canada", "UK", "India", "Other"])
     age = st.slider("Age", 40, 100, 65)
     gender = st.selectbox("Gender", ["Male", "Female"])
@@ -39,7 +41,7 @@ def get_user_input():
     stress = st.selectbox("Stress Levels", ["Low", "Moderate", "High"])
     urban_rural = st.selectbox("Urban vs Rural Living", ["Urban", "Rural"])
 
-    data = pd.DataFrame({
+    user_input = pd.DataFrame({
         "Country": [country],
         "Age": [age],
         "Gender": [gender],
@@ -65,23 +67,31 @@ def get_user_input():
         "Stress Levels": [stress],
         "Urban vs Rural Living": [urban_rural]
     })
-    return data
 
-def preprocess_input(data):
-    for column in data.columns:
-        if column in encoders:
-            data[column] = encoders[column].transform(data[column])
-    data_scaled = scaler.transform(data)
-    return data_scaled
+    return user_input
 
+# ====== Preprocess input to match model format ======
+def preprocess_input(df):
+    df = df.copy()
+    for col in df.columns:
+        if col in encoders:
+            df[col] = encoders[col].transform(df[col])
+    df_scaled = scaler.transform(df)
+    return df_scaled
+
+# ====== Run prediction ======
 user_data = get_user_input()
 
 if st.button("Predict Alzheimer's Risk"):
-    processed_data = preprocess_input(user_data)
-    prediction = model.predict(processed_data)
-    prediction_proba = model.predict_proba(processed_data)[0][1]
+    try:
+        processed = preprocess_input(user_data)
+        prediction = model.predict(processed)
+        proba = model.predict_proba(processed)[0][1]
 
-    if prediction[0] == 1:
-        st.error(f"High Risk of Alzheimer's ({prediction_proba * 100:.2f}%)")
-    else:
-        st.success(f"Low Risk of Alzheimer's ({(1 - prediction_proba) * 100:.2f}%)")
+        if prediction[0] == 1:
+            st.error(f"🚨 High Risk of Alzheimer’s ({proba * 100:.2f}%)")
+        else:
+            st.success(f"🟢 Low Risk of Alzheimer’s ({(1 - proba) * 100:.2f}%)")
+
+    except Exception as e:
+        st.exception(f"Something went wrong: {e}")
