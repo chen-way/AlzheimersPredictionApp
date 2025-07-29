@@ -295,30 +295,32 @@ st.markdown("""
     .stDeployButton {display:none;}
     header {visibility: hidden;}
 
-div[data-testid="stNumberInput"] {
+/* Target only the number input container */
+div[data-testid="stNumberInput"] > div {
     border: 2px solid #93BCDC !important;
     border-radius: 10px !important;
     background-color: #FDF6E7 !important;
-    padding: 0 !important;
-    height: 42px !important; /* Slightly taller */
-    display: inline-flex !important;
+    height: 42px !important;
+    display: flex !important;
     align-items: center !important;
+    padding: 0 0.4rem !important;
 }
 
+/* Input inside */
 div[data-testid="stNumberInput"] input[type="number"] {
     border: none !important;
     background: transparent !important;
-    padding: 0 0.6rem !important;
     height: 36px !important;
     font-size: 18px !important;
+    width: 100% !important;
     margin: 0 !important;
     line-height: 1.2 !important;
 }
 
+/* Buttons + container */
 div[data-testid="stNumberInput"] > div > div {
-    height: 36px !important;
     display: flex !important;
-    align-items: center !important;
+    height: 36px !important;
 }
 
 div[data-testid="stNumberInput"] > div > div > button {
@@ -333,7 +335,8 @@ div[data-testid="stNumberInput"] > div > div > button {
     align-items: center !important;
 }
 
-div[data-testid="stNumberInput"]:focus-within {
+/* Focus effect */
+div[data-testid="stNumberInput"]:focus-within > div {
     border-color: #d1e5f4 !important;
     box-shadow: 0 0 6px rgba(209, 229, 244, 0.8) !important;
     outline: none !important;
