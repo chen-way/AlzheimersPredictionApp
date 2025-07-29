@@ -342,14 +342,24 @@ div[data-testid="stNumberInput"]:focus-within > div {
     outline: none !important;
 }
 
-/* Remove the grey background rectangle around the number input field */
+/* Fix background of number input container and inner input */
+div[data-testid="stNumberInput"] > div {
+    background-color: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0px !important;
+    align-items: center !important;
+}
+
+/* Fix the actual input field */
 div[data-testid="stNumberInput"] input {
     background-color: transparent !important;
     box-shadow: none !important;
     border: none !important;
     color: black !important;
-    padding-left: 10px !important; /* optional, for spacing */
+    padding-left: 10px !important;
 }
+
 
 </style>
 """, unsafe_allow_html=True)
