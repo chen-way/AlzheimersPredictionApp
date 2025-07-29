@@ -330,6 +330,24 @@ div[data-baseweb="input"] > div > input {
     color: black !important;
 }
 
+/* Remove all borders and shadows from number input containers */
+div[data-baseweb="input"] > div,
+div[data-baseweb="input"] > div > input,
+div[data-testid="stNumberInput"] > div > div,
+div[data-testid="stNumberInput"] > div > div > input {
+    border: none !important;
+    box-shadow: none !important;
+    background-color: #FDF6E7 !important;
+}
+
+/* Remove focus outlines */
+div[data-baseweb="input"] > div:focus-within,
+div[data-testid="stNumberInput"] > div > div:focus-within {
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
