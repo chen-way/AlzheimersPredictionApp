@@ -14,165 +14,276 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for beautiful styling
+# Modern CSS with updated color scheme
 st.markdown("""
 <style>
-    /* Main background gradient */
+    /* Main background with modern gradient */
     .main {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background-attachment: fixed;
     }
     
-    /* Custom header styling */
+    /* Custom header styling with glassmorphism */
     .main-header {
-        background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
-        padding: 2rem;
-        border-radius: 15px;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(20px);
+        padding: 2.5rem;
+        border-radius: 20px;
         text-align: center;
         margin-bottom: 2rem;
-        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
-        backdrop-filter: blur(4px);
-        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
     }
     
     .main-header h1 {
         color: white !important;
-        font-size: 3rem !important;
-        font-weight: 700 !important;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        font-size: 3.2rem !important;
+        font-weight: 800 !important;
+        text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
         margin-bottom: 0.5rem !important;
+        background: linear-gradient(45deg, #ffffff, #e8f4ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
     }
     
     .main-header p {
-        color: rgba(255, 255, 255, 0.9) !important;
-        font-size: 1.2rem !important;
-        font-weight: 300 !important;
+        color: rgba(255, 255, 255, 0.95) !important;
+        font-size: 1.3rem !important;
+        font-weight: 400 !important;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
     }
     
-    /* Feature input containers */
+    /* Feature input containers with modern glass effect */
     .feature-container {
-        background: rgba(255, 255, 255, 0.95);
-        padding: 1.5rem;
-        border-radius: 15px;
-        margin-bottom: 1rem;
-        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
-        border: 1px solid rgba(255, 255, 255, 0.3);
+        background: rgba(255, 255, 255, 0.98);
+        padding: 2rem;
+        border-radius: 16px;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
-    /* Prediction button styling */
+    .feature-container:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 16px 50px rgba(0, 0, 0, 0.12);
+    }
+    
+    /* Modern prediction button */
     .predict-button {
-        background: linear-gradient(45deg, #FF6B6B, #4ECDC4) !important;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
         border: none !important;
-        border-radius: 25px !important;
-        padding: 0.75rem 2rem !important;
-        font-size: 1.1rem !important;
-        font-weight: 600 !important;
+        border-radius: 50px !important;
+        padding: 1rem 3rem !important;
+        font-size: 1.2rem !important;
+        font-weight: 700 !important;
         color: white !important;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
-        transition: all 0.3s ease !important;
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4) !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        text-transform: uppercase !important;
+        letter-spacing: 1px !important;
     }
     
-    /* Results containers */
+    .predict-button:hover {
+        transform: translateY(-3px) !important;
+        box-shadow: 0 12px 35px rgba(102, 126, 234, 0.5) !important;
+    }
+    
+    /* Modern results containers */
     .result-high-risk {
-        background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+        background: linear-gradient(135deg, #ff4757, #ff3838);
         color: white;
-        padding: 1.5rem;
-        border-radius: 15px;
+        padding: 2rem;
+        border-radius: 20px;
         text-align: center;
-        box-shadow: 0 8px 25px rgba(238, 90, 36, 0.3);
-        margin: 1rem 0;
+        box-shadow: 0 12px 40px rgba(255, 71, 87, 0.3);
+        margin: 1.5rem 0;
+        border: 1px solid rgba(255, 255, 255, 0.2);
     }
     
     .result-low-risk {
-        background: linear-gradient(135deg, #26de81, #20bf6b);
+        background: linear-gradient(135deg, #2ed573, #1dd1a1);
         color: white;
-        padding: 1.5rem;
-        border-radius: 15px;
+        padding: 2rem;
+        border-radius: 20px;
         text-align: center;
-        box-shadow: 0 8px 25px rgba(32, 191, 107, 0.3);
-        margin: 1rem 0;
+        box-shadow: 0 12px 40px rgba(46, 213, 115, 0.3);
+        margin: 1.5rem 0;
+        border: 1px solid rgba(255, 255, 255, 0.2);
     }
     
     .result-moderate-risk {
-        background: linear-gradient(135deg, #ffa726, #ff9800);
+        background: linear-gradient(135deg, #ffa502, #ff6348);
         color: white;
-        padding: 1.5rem;
-        border-radius: 15px;
-        text-align: center;
-        box-shadow: 0 8px 25px rgba(255, 152, 0, 0.3);
-        margin: 1rem 0;
-    }
-    
-    /* Tips section styling */
-    .tips-container {
-        background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
         padding: 2rem;
         border-radius: 20px;
+        text-align: center;
+        box-shadow: 0 12px 40px rgba(255, 165, 2, 0.3);
+        margin: 1.5rem 0;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    /* Tips section with modern styling */
+    .tips-container {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        padding: 2.5rem;
+        border-radius: 24px;
         margin: 2rem 0;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 16px 50px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
     }
     
     .tips-container h2 {
-        color: #2d3436 !important;
+        color: white !important;
         text-align: center;
-        margin-bottom: 1.5rem !important;
+        margin-bottom: 2rem !important;
+        font-weight: 700 !important;
+        font-size: 2.2rem !important;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     }
     
-    /* Sidebar styling */
+    /* Modern sidebar styling */
     .css-1d391kg {
         background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
     }
     
-    /* Input field styling */
+    /* Enhanced input field styling */
     .stSelectbox > div > div {
-        background-color: rgba(255, 255, 255, 0.9);
-        border-radius: 10px;
-        border: 2px solid #e0e6ed;
-        transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 12px;
+        border: 2px solid rgba(102, 126, 234, 0.2);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+    
+    .stSelectbox > div > div:hover {
+        border-color: rgba(102, 126, 234, 0.4);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
     }
     
     .stSelectbox > div > div:focus-within {
-        border-color: #4facfe;
-        box-shadow: 0 0 0 0.2rem rgba(79, 172, 254, 0.25);
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        transform: translateY(-1px);
     }
     
     .stNumberInput > div > div {
-        background-color: rgba(255, 255, 255, 0.9);
-        border-radius: 10px;
-        border: 2px solid #e0e6ed;
-        transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 12px;
+        border: 2px solid rgba(102, 126, 234, 0.2);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+    
+    .stNumberInput > div > div:hover {
+        border-color: rgba(102, 126, 234, 0.4);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
     }
     
     .stNumberInput > div > div:focus-within {
-        border-color: #4facfe;
-        box-shadow: 0 0 0 0.2rem rgba(79, 172, 254, 0.25);
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        transform: translateY(-1px);
     }
     
-    /* Animation for loading */
-    @keyframes pulse {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.05); }
-        100% { transform: scale(1); }
+    /* Modern animation effects */
+    @keyframes modernPulse {
+        0% { transform: scale(1) rotate(0deg); }
+        50% { transform: scale(1.02) rotate(1deg); }
+        100% { transform: scale(1) rotate(0deg); }
     }
     
     .pulse-animation {
-        animation: pulse 2s infinite;
+        animation: modernPulse 3s infinite ease-in-out;
     }
     
-    /* Custom metric styling */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .fade-in-up {
+        animation: fadeInUp 0.8s ease-out;
+    }
+    
+    /* Modern metric styling */
     .metric-container {
-        background: rgba(255, 255, 255, 0.1);
-        padding: 1rem;
-        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(15px);
+        padding: 1.5rem;
+        border-radius: 16px;
         text-align: center;
         margin: 0.5rem;
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
-    /* Hide Streamlit default elements */
+    .metric-container:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        background: rgba(255, 255, 255, 0.2);
+    }
+    
+    /* Modern button styles */
+    .stButton > button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        font-weight: 600;
+        padding: 0.75rem 2rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .stButton > button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+    }
+    
+    /* Modern expandable sections */
+    .streamlit-expanderHeader {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+    }
+    
+    /* Hide Streamlit branding */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
-    .stDeployButton {display:none;}
+    .stDeployButton {display: none;}
+    header {visibility: hidden;}
+    
+    /* Modern scrollbar */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background: rgba(102, 126, 234, 0.6);
+        border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+        background: rgba(102, 126, 234, 0.8);
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -318,51 +429,59 @@ def get_user_input():
     return pd.DataFrame([user_data])
 
 # === MAIN APP ===
-# Custom header with beautiful styling
+# Modern header with glassmorphism
 st.markdown("""
-<div class="main-header">
+<div class="main-header fade-in-up">
     <h1>🧠 Alzheimer's Risk Assessment</h1>
-    <p>Advanced AI-powered risk evaluation with personalized insights</p>
+    <p>AI-Powered Cognitive Health Analysis & Personalized Insights</p>
 </div>
 """, unsafe_allow_html=True)
 
-# Enhanced information section
+# Enhanced information section with modern styling
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
     st.markdown("""
-    <div style="background: rgba(255, 255, 255, 0.1); padding: 1.5rem; border-radius: 15px; text-align: center; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); color: white;">
-        <h4>🔬 How it works</h4>
-        <p>Our advanced machine learning model analyzes 24 comprehensive health factors to provide personalized risk assessment and evidence-based recommendations.</p>
+    <div style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(20px); padding: 2rem; border-radius: 20px; text-align: center; border: 1px solid rgba(255, 255, 255, 0.25); color: white; margin-bottom: 2rem;">
+        <h4 style="margin-bottom: 1rem; font-weight: 700;">🔬 Advanced AI Analysis</h4>
+        <p style="margin: 0; line-height: 1.6;">Our cutting-edge machine learning model analyzes 24 comprehensive health factors to provide personalized risk assessment and evidence-based recommendations for optimal brain health.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+# Enhanced expandable help section
+with st.expander("ℹ️ How to use this assessment tool", expanded=False):
+    st.markdown("""
+    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 2rem; border-radius: 16px; color: white;">
+        <h5 style="margin-bottom: 1.5rem; font-weight: 700;">📋 Complete Assessment Guide:</h5>
+        <div style="display: grid; gap: 1rem;">
+            <div style="background: rgba(255, 255, 255, 0.1); padding: 1rem; border-radius: 12px; backdrop-filter: blur(10px);">
+                <strong>1. Input Your Information:</strong> Fill out all 24 health and lifestyle factors using our intuitive interface
+            </div>
+            <div style="background: rgba(255, 255, 255, 0.1); padding: 1rem; border-radius: 12px; backdrop-filter: blur(10px);">
+                <strong>2. Review & Verify:</strong> Ensure all information is accurate for the most reliable assessment
+            </div>
+            <div style="background: rgba(255, 255, 255, 0.1); padding: 1rem; border-radius: 12px; backdrop-filter: blur(10px);">
+                <strong>3. Get AI Analysis:</strong> Click the prediction button to receive your personalized risk evaluation
+            </div>
+            <div style="background: rgba(255, 255, 255, 0.1); padding: 1rem; border-radius: 12px; backdrop-filter: blur(10px);">
+                <strong>4. Explore Recommendations:</strong> Review evidence-based lifestyle suggestions tailored to your profile
+            </div>
+        </div>
+        <div style="background: rgba(255, 255, 255, 0.15); padding: 1.5rem; border-radius: 12px; margin-top: 1.5rem; backdrop-filter: blur(15px);">
+            <strong>🏥 Important Medical Note:</strong> This tool provides educational insights based on research data. Always consult healthcare professionals for medical decisions and personalized care.
+        </div>
     </div>
     """, unsafe_allow_html=True)
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-# Enhanced expandable help section
-with st.expander("ℹ️ How to use this assessment tool", expanded=False):
-    st.markdown("""
-    <div style="background: linear-gradient(135deg, #74b9ff, #0984e3); padding: 1.5rem; border-radius: 10px; color: white;">
-        <h5>📋 Instructions:</h5>
-        <ol>
-            <li><strong>Complete the Assessment:</strong> Fill out all 24 health and lifestyle factors using the intuitive interface below</li>
-            <li><strong>Review Your Input:</strong> Ensure all information is accurate for the most reliable assessment</li>
-            <li><strong>Get Your Results:</strong> Click the prediction button to receive your personalized risk evaluation</li>
-            <li><strong>Explore Recommendations:</strong> Review evidence-based lifestyle suggestions tailored to your risk profile</li>
-        </ol>
-        <div style="background: rgba(255, 255, 255, 0.2); padding: 1rem; border-radius: 8px; margin-top: 1rem;">
-            <strong>🏥 Medical Note:</strong> This tool provides educational insights based on research data. Always consult healthcare professionals for medical decisions and personalized care.
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-# Get user input
+# Get user input with modern styling
 user_input_df = get_user_input()
 
 # === PREDICTION SECTION ===
 st.markdown("<br><br>", unsafe_allow_html=True)
 st.markdown("""
-<div style="background: linear-gradient(90deg, #667eea 0%, #764ba2 100%); padding: 1rem; border-radius: 10px; margin: 1rem 0;">
-    <h3 style="color: white; text-align: center; margin: 0;">🎯 Risk Assessment</h3>
+<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1.5rem; border-radius: 16px; margin: 2rem 0; backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.2);">
+    <h3 style="color: white; text-align: center; margin: 0; font-weight: 700; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">🎯 AI Risk Assessment</h3>
 </div>
 """, unsafe_allow_html=True)
 
@@ -370,14 +489,14 @@ col1, col2, col3 = st.columns([1, 2, 1])
 
 with col2:
     if st.button("🧪 Analyze My Alzheimer's Risk", type="primary", use_container_width=True, 
-                 help="Click to get your personalized risk assessment"):
+                 help="Click to get your personalized AI-powered risk assessment"):
         
         # Enhanced loading animation
-        with st.spinner("🔍 Analyzing your health data with advanced AI..."):
+        with st.spinner("🔍 Processing your health data with advanced AI algorithms..."):
             # Create a progress bar for better UX
             progress_bar = st.progress(0)
             for i in range(100):
-                time.sleep(0.02)
+                time.sleep(0.015)
                 progress_bar.progress(i + 1)
             
             try:
@@ -412,75 +531,43 @@ with col2:
                 # Clear progress bar
                 progress_bar.empty()
                 
-                # Enhanced results display with beautiful styling
+                # Enhanced results display with modern styling
                 st.markdown("<br>", unsafe_allow_html=True)
                 
                 label_str = str(label).lower()
                 if 'high' in label_str:
                     st.markdown(f"""
-                    <div class="result-high-risk pulse-animation">
-                        <h2>⚠️ High Risk Assessment</h2>
-                        <h3>Prediction: {label}</h3>
-                        <p style="font-size: 1.1rem; margin-top: 1rem;">
-                            Our analysis indicates elevated risk factors based on your current health profile. 
+                    <div class="result-high-risk pulse-animation fade-in-up">
+                        <h2 style="margin-bottom: 1rem; font-weight: 800;">⚠️ Elevated Risk Assessment</h2>
+                        <h3 style="margin-bottom: 1.5rem; font-weight: 600;">Analysis Result: {label}</h3>
+                        <p style="font-size: 1.15rem; margin-bottom: 1.5rem; line-height: 1.6;">
+                            Our AI analysis indicates elevated risk factors based on your current health profile. 
                             We strongly recommend consulting with healthcare professionals for comprehensive 
                             evaluation and personalized prevention strategies.
                         </p>
-                        <div style="background: rgba(255, 255, 255, 0.2); padding: 1rem; border-radius: 10px; margin-top: 1rem;">
-                            <strong>🏥 Next Steps:</strong> Schedule a consultation with your doctor to discuss these findings and develop a personalized care plan.
-                        </div>
-                    </div>
-                    """, unsafe_allow_html=True)
-                    
-                elif 'low' in label_str:
-                    st.markdown(f"""
-                    <div class="result-low-risk">
-                        <h2>✅ Low Risk Assessment</h2>
-                        <h3>Prediction: {label}</h3>
-                        <p style="font-size: 1.1rem; margin-top: 1rem;">
-                            Excellent news! Your current health profile indicates lower risk factors. 
-                            Continue maintaining your healthy lifestyle habits and regular medical checkups 
-                            to preserve your cognitive health.
-                        </p>
-                        <div style="background: rgba(255, 255, 255, 0.2); padding: 1rem; border-radius: 10px; margin-top: 1rem;">
-                            <strong>🌟 Keep it up:</strong> Your healthy choices are making a positive impact on your brain health!
-                        </div>
-                    </div>
-                    """, unsafe_allow_html=True)
-                    
-                elif 'moderate' in label_str:
-                    st.markdown(f"""
-                    <div class="result-moderate-risk">
-                        <h2>🔶 Moderate Risk Assessment</h2>
-                        <h3>Prediction: {label}</h3>
-                        <p style="font-size: 1.1rem; margin-top: 1rem;">
-                            Your assessment shows moderate risk factors that warrant attention. 
-                            This is an excellent opportunity to implement preventive strategies 
-                            and discuss your results with healthcare providers.
-                        </p>
-                        <div style="background: rgba(255, 255, 255, 0.2); padding: 1rem; border-radius: 10px; margin-top: 1rem;">
-                            <strong>💪 Take action:</strong> Small changes now can make a big difference in your future cognitive health.
+                        <div style="background: rgba(255, 255, 255, 0.15); padding: 1.25rem; border-radius: 12px; backdrop-filter: blur(10px);">
+                            <strong>🏥 Recommended Next Steps:</strong> Schedule a consultation with your doctor to discuss these findings and develop a personalized cognitive health plan.
                         </div>
                     </div>
                     """, unsafe_allow_html=True)
                 else:
                     st.markdown(f"""
-                    <div style="background: linear-gradient(135deg, #74b9ff, #0984e3); color: white; padding: 1.5rem; border-radius: 15px; text-align: center;">
-                        <h2>📊 Assessment Complete</h2>
-                        <h3>Prediction: {label}</h3>
-                        <p style="font-size: 1.1rem; margin-top: 1rem;">
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2rem; border-radius: 20px; text-align: center; box-shadow: 0 12px 40px rgba(102, 126, 234, 0.3); border: 1px solid rgba(255, 255, 255, 0.2);" class="fade-in-up">
+                        <h2 style="margin-bottom: 1rem; font-weight: 800;">📊 Assessment Complete</h2>
+                        <h3 style="margin-bottom: 1.5rem; font-weight: 600;">Analysis Result: {label}</h3>
+                        <p style="font-size: 1.15rem; margin-bottom: 1.5rem; line-height: 1.6;">
                             Please consult with healthcare professionals for proper evaluation and 
-                            continue maintaining healthy lifestyle habits.
+                            continue maintaining healthy lifestyle habits for optimal cognitive health.
                         </p>
                     </div>
                     """, unsafe_allow_html=True)
                 
-                # Enhanced confidence scores with beautiful styling
+                # Enhanced confidence scores with modern styling
                 if len(probability) > 1:
                     st.markdown("<br>", unsafe_allow_html=True)
                     st.markdown("""
-                    <div style="background: rgba(255, 255, 255, 0.1); padding: 1.5rem; border-radius: 15px; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2);">
-                        <h4 style="color: white; text-align: center; margin-bottom: 1rem;">📈 Confidence Analysis</h4>
+                    <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); padding: 2rem; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.25); margin: 1.5rem 0;">
+                        <h4 style="color: white; text-align: center; margin-bottom: 1.5rem; font-weight: 700; font-size: 1.4rem;">📈 Confidence Analysis</h4>
                     </div>
                     """, unsafe_allow_html=True)
                     
@@ -490,111 +577,123 @@ with col2:
                         with prob_cols[i]:
                             st.markdown(f"""
                             <div class="metric-container">
-                                <h4 style="color: white; margin: 0;">{risk_level}</h4>
-                                <h2 style="color: #4facfe; margin: 0.5rem 0;">{prob:.1%}</h2>
+                                <h4 style="color: white; margin: 0; font-weight: 600;">{risk_level}</h4>
+                                <h2 style="color: #ffffff; margin: 0.5rem 0; font-weight: 800; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">{prob:.1%}</h2>
                             </div>
                             """, unsafe_allow_html=True)
                 
             except Exception as e:
                 st.markdown(f"""
-                <div style="background: linear-gradient(135deg, #ff7675, #d63031); color: white; padding: 1.5rem; border-radius: 15px; text-align: center;">
-                    <h3>⚠️ Analysis Error</h3>
-                    <p>We encountered an issue processing your data: {str(e)}</p>
-                    <p>Please check your inputs and try again, or contact support if the issue persists.</p>
+                <div style="background: linear-gradient(135deg, #ff4757, #ff3838); color: white; padding: 2rem; border-radius: 20px; text-align: center; box-shadow: 0 12px 40px rgba(255, 71, 87, 0.3);">
+                    <h3 style="margin-bottom: 1rem; font-weight: 700;">⚠️ Analysis Error</h3>
+                    <p style="margin-bottom: 1rem;">We encountered an issue processing your data: {str(e)}</p>
+                    <p style="margin: 0;">Please check your inputs and try again, or contact support if the issue persists.</p>
                 </div>
                 """, unsafe_allow_html=True)
 
 # === LIFESTYLE TIPS SECTION ===
 st.markdown("""
-<div class="tips-container">
+<div class="tips-container fade-in-up">
     <h2>🧘 Evidence-Based Prevention Strategies</h2>
-    <p style="text-align: center; font-size: 1.1rem; color: #2d3436; margin-bottom: 2rem;">
-        Discover scientifically-backed lifestyle changes that can help reduce your Alzheimer's risk
+    <p style="text-align: center; font-size: 1.2rem; color: rgba(255, 255, 255, 0.9); margin-bottom: 2rem; line-height: 1.6;">
+        Discover scientifically-backed lifestyle changes that can help optimize your cognitive health
     </p>
 </div>
 """, unsafe_allow_html=True)
 
-# Enhanced tips with beautiful cards
+# Enhanced tips with modern cards
 tips = [
     {
         "icon": "🫐",
         "title": "Brain-Healthy Nutrition",
-        "tip": "Follow a Mediterranean diet rich in leafy greens, berries, fatty fish, nuts, and olive oil. These foods contain antioxidants and omega-3 fatty acids that support brain health.",
-        "color": "linear-gradient(135deg, #74b9ff, #0984e3)"
+        "tip": "Follow a Mediterranean diet rich in leafy greens, berries, fatty fish, nuts, and olive oil. These foods contain antioxidants and omega-3 fatty acids that support brain health and neuroplasticity.",
+        "color": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
     },
     {
         "icon": "🚶",
         "title": "Regular Physical Exercise",
-        "tip": "Engage in at least 150 minutes of moderate aerobic exercise weekly. Activities like walking, swimming, or dancing improve blood flow to the brain and promote neuroplasticity.",
-        "color": "linear-gradient(135deg, #00b894, #00a085)"
+        "tip": "Engage in at least 150 minutes of moderate aerobic exercise weekly. Activities like walking, swimming, or dancing improve blood flow to the brain and promote cognitive function.",
+        "color": "linear-gradient(135deg, #2ed573 0%, #1dd1a1 100%)"
     },
     {
         "icon": "🧩",
         "title": "Cognitive Stimulation",
-        "tip": "Challenge your brain regularly with puzzles, reading, learning new languages, or playing musical instruments. Mental stimulation builds cognitive reserve.",
-        "color": "linear-gradient(135deg, #fdcb6e, #e17055)"
+        "tip": "Challenge your brain regularly with puzzles, reading, learning new languages, or playing musical instruments. Mental stimulation builds cognitive reserve and neural connections.",
+        "color": "linear-gradient(135deg, #ffa502 0%, #ff6348 100%)"
     },
     {
         "icon": "👫",
         "title": "Social Engagement",
-        "tip": "Maintain strong social connections through family time, friendships, community activities, or volunteering. Social interaction protects against cognitive decline.",
-        "color": "linear-gradient(135deg, #fd79a8, #e84393)"
+        "tip": "Maintain strong social connections through family time, friendships, community activities, or volunteering. Social interaction protects against cognitive decline and isolation.",
+        "color": "linear-gradient(135deg, #ff6b9d 0%, #c44569 100%)"
     },
     {
         "icon": "😴",
         "title": "Quality Sleep",
-        "tip": "Prioritize 7-9 hours of quality sleep nightly. During sleep, your brain clears toxic proteins associated with Alzheimer's disease.",
-        "color": "linear-gradient(135deg, #a29bfe, #6c5ce7)"
+        "tip": "Prioritize 7-9 hours of quality sleep nightly. During sleep, your brain clears toxic proteins associated with Alzheimer's disease and consolidates memories.",
+        "color": "linear-gradient(135deg, #a55eea 0%, #8854d0 100%)"
     },
     {
         "icon": "🚭",
         "title": "Avoid Harmful Substances",
-        "tip": "Quit smoking and limit alcohol consumption. These substances increase inflammation and damage brain cells over time.",
-        "color": "linear-gradient(135deg, #ff7675, #d63031)"
+        "tip": "Quit smoking and limit alcohol consumption. These substances increase inflammation and oxidative stress, which can damage brain cells over time.",
+        "color": "linear-gradient(135deg, #ff4757 0%, #ff3838 100%)"
     },
     {
         "icon": "🩺",
         "title": "Manage Health Conditions",
-        "tip": "Keep blood pressure, diabetes, and cholesterol levels under control. Cardiovascular health is directly linked to brain health.",
-        "color": "linear-gradient(135deg, #55a3ff, #3742fa)"
+        "tip": "Keep blood pressure, diabetes, and cholesterol levels under control. Cardiovascular health is directly linked to brain health and cognitive function.",
+        "color": "linear-gradient(135deg, #3742fa 0%, #2f3542 100%)"
     },
     {
         "icon": "🧘",
         "title": "Stress Management",
-        "tip": "Practice stress-reduction techniques like meditation, yoga, or deep breathing. Chronic stress releases hormones that can damage the brain.",
-        "color": "linear-gradient(135deg, #26de81, #20bf6b)"
+        "tip": "Practice stress-reduction techniques like meditation, yoga, or deep breathing. Chronic stress releases cortisol, which can damage memory centers in the brain.",
+        "color": "linear-gradient(135deg, #26de81 0%, #20bf6b 100%)"
     },
     {
         "icon": "🏥",
         "title": "Regular Medical Checkups",
-        "tip": "Schedule annual health screenings and discuss cognitive health with your healthcare provider. Early detection and intervention are key.",
-        "color": "linear-gradient(135deg, #ffa726, #ff9800)"
+        "tip": "Schedule annual health screenings and discuss cognitive health with your healthcare provider. Early detection and intervention are crucial for brain health.",
+        "color": "linear-gradient(135deg, #fd79a8 0%, #e84393 100%)"
     },
     {
         "icon": "🎯",
         "title": "Maintain Life Purpose",
-        "tip": "Engage in meaningful activities that give you a sense of purpose. Having goals and staying motivated supports mental well-being.",
-        "color": "linear-gradient(135deg, #67b26f, #4ca2cd)"
+        "tip": "Engage in meaningful activities that give you a sense of purpose. Having goals and staying motivated supports mental well-being and cognitive resilience.",
+        "color": "linear-gradient(135deg, #4834d4 0%, #686de0 100%)"
     }
 ]
 
-# Create beautiful tip cards
+# Create modern tip cards with interactive elements
 col1, col2 = st.columns([1, 3])
 with col1:
-    if st.button("💡 Get Random Prevention Tip", use_container_width=True, 
-                 help="Click for a personalized health recommendation"):
+    if st.button("💡 Get Personalized Tip", use_container_width=True, 
+                 help="Click for a targeted health recommendation"):
         selected_tip = random.choice(tips)
         with col2:
             st.markdown(f"""
-            <div style="background: {selected_tip['color']}; padding: 1.5rem; border-radius: 15px; color: white; box-shadow: 0 8px 25px rgba(0,0,0,0.15);">
-                <h4>{selected_tip['icon']} {selected_tip['title']}</h4>
-                <p style="margin: 0; font-size: 1.05rem; line-height: 1.6;">{selected_tip['tip']}</p>
+            <div style="background: {selected_tip['color']}; padding: 2rem; border-radius: 20px; color: white; box-shadow: 0 12px 40px rgba(0,0,0,0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); transition: all 0.3s ease;" class="fade-in-up">
+                <h4 style="margin-bottom: 1rem; font-weight: 700; display: flex; align-items: center; gap: 0.75rem;">
+                    <span style="font-size: 2rem;">{selected_tip['icon']}</span>
+                    {selected_tip['title']}
+                </h4>
+                <p style="margin: 0; font-size: 1.1rem; line-height: 1.7; text-shadow: 1px 1px 2px rgba(0,0,0,0.2);">{selected_tip['tip']}</p>
             </div>
             """, unsafe_allow_html=True)
 
 # Show all tips in an enhanced expandable section
 with st.expander("📋 View Complete Prevention Guide", expanded=False):
-    # Create a grid layout for tips
+    st.markdown("""
+    <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 16px; margin-bottom: 2rem; backdrop-filter: blur(10px);">
+        <p style="color: rgba(255, 255, 255, 0.9); text-align: center; margin: 0; font-size: 1.1rem;">
+            🎯 <strong>Comprehensive Brain Health Strategies</strong><br>
+            Evidence-based recommendations for optimal cognitive wellness
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Create a modern grid layout for tips
     for i in range(0, len(tips), 2):
         cols = st.columns(2)
         for j, col in enumerate(cols):
@@ -602,61 +701,107 @@ with st.expander("📋 View Complete Prevention Guide", expanded=False):
                 tip = tips[i + j]
                 with col:
                     st.markdown(f"""
-                    <div style="background: {tip['color']}; padding: 1.5rem; border-radius: 15px; color: white; margin-bottom: 1rem; height: 200px; display: flex; flex-direction: column; justify-content: center;">
-                        <h5 style="margin: 0 0 1rem 0; display: flex; align-items: center; gap: 0.5rem;">
-                            <span style="font-size: 1.5rem;">{tip['icon']}</span>
+                    <div style="background: {tip['color']}; padding: 2rem; border-radius: 16px; color: white; margin-bottom: 1.5rem; height: 220px; display: flex; flex-direction: column; justify-content: center; box-shadow: 0 8px 25px rgba(0,0,0,0.15); border: 1px solid rgba(255, 255, 255, 0.1); transition: all 0.3s ease;">
+                        <h5 style="margin: 0 0 1.2rem 0; display: flex; align-items: center; gap: 0.75rem; font-weight: 700;">
+                            <span style="font-size: 1.8rem;">{tip['icon']}</span>
                             {tip['title']}
                         </h5>
-                        <p style="margin: 0; font-size: 0.95rem; line-height: 1.5;">{tip['tip']}</p>
+                        <p style="margin: 0; font-size: 1rem; line-height: 1.6; text-shadow: 1px 1px 2px rgba(0,0,0,0.2);">{tip['tip']}</p>
                     </div>
                     """, unsafe_allow_html=True)
 
 # === ENHANCED SIDEBAR INFORMATION ===
 with st.sidebar:
     st.markdown("""
-    <div style="background: rgba(255, 255, 255, 0.1); padding: 1.5rem; border-radius: 15px; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); margin-bottom: 2rem;">
-        <h3 style="color: white; text-align: center; margin-bottom: 1rem;">📊 About This Assessment</h3>
-        <div style="color: rgba(255, 255, 255, 0.9); line-height: 1.6;">
-            <p><strong>🤖 AI Technology:</strong> Advanced XGBoost machine learning model</p>
-            <p><strong>📈 Comprehensive Analysis:</strong> 24 evidence-based risk factors</p>
-            <p><strong>🔬 Research-Based:</strong> Built on peer-reviewed medical literature</p>
-            <p><strong>🎯 Personalized:</strong> Tailored insights for your unique profile</p>
+    <div style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(20px); padding: 2rem; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.25); margin-bottom: 2rem;">
+        <h3 style="color: white; text-align: center; margin-bottom: 1.5rem; font-weight: 700;">📊 Advanced AI Assessment</h3>
+        <div style="color: rgba(255, 255, 255, 0.95); line-height: 1.7;">
+            <div style="background: rgba(255, 255, 255, 0.1); padding: 1rem; border-radius: 12px; margin-bottom: 1rem;">
+                <p style="margin: 0;"><strong>🤖 AI Technology:</strong><br>XGBoost machine learning model</p>
+            </div>
+            <div style="background: rgba(255, 255, 255, 0.1); padding: 1rem; border-radius: 12px; margin-bottom: 1rem;">
+                <p style="margin: 0;"><strong>📈 Comprehensive Analysis:</strong><br>24 evidence-based risk factors</p>
+            </div>
+            <div style="background: rgba(255, 255, 255, 0.1); padding: 1rem; border-radius: 12px; margin-bottom: 1rem;">
+                <p style="margin: 0;"><strong>🔬 Research-Based:</strong><br>Peer-reviewed medical literature</p>
+            </div>
+            <div style="background: rgba(255, 255, 255, 0.1); padding: 1rem; border-radius: 12px;">
+                <p style="margin: 0;"><strong>🎯 Personalized:</strong><br>Tailored cognitive insights</p>
+            </div>
         </div>
     </div>
     """, unsafe_allow_html=True)
     
     st.markdown("""
-    <div style="background: linear-gradient(135deg, #ff6b6b, #ee5a24); padding: 1.5rem; border-radius: 15px; color: white; margin-bottom: 2rem;">
-        <h4 style="margin: 0 0 1rem 0; text-align: center;">⚠️ Important Medical Disclaimer</h4>
-        <p style="margin: 0; font-size: 0.9rem; line-height: 1.5;">
-            This tool provides educational insights based on research data and should never replace professional medical advice, diagnosis, or treatment. Always consult qualified healthcare professionals for medical decisions and personalized care planning.
+    <div style="background: linear-gradient(135deg, #ff4757, #ff3838); padding: 2rem; border-radius: 20px; color: white; margin-bottom: 2rem; box-shadow: 0 8px 25px rgba(255, 71, 87, 0.3);">
+        <h4 style="margin: 0 0 1.2rem 0; text-align: center; font-weight: 700;">⚠️ Medical Disclaimer</h4>
+        <p style="margin: 0; font-size: 0.95rem; line-height: 1.6; text-shadow: 1px 1px 2px rgba(0,0,0,0.2);">
+            This AI tool provides educational insights based on research data and should never replace professional medical advice, diagnosis, or treatment. Always consult qualified healthcare professionals for medical decisions.
         </p>
     </div>
     """, unsafe_allow_html=True)
     
     st.markdown("""
-    <div style="background: rgba(255, 255, 255, 0.1); padding: 1.5rem; border-radius: 15px; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2);">
-        <h4 style="color: white; text-align: center; margin-bottom: 1rem;">🔗 Trusted Resources</h4>
-        <div style="color: rgba(255, 255, 255, 0.9);">
-            <p><a href="https://www.alz.org" target="_blank" style="color: #4facfe; text-decoration: none;">🏥 Alzheimer's Association</a></p>
-            <p><a href="https://www.nia.nih.gov" target="_blank" style="color: #4facfe; text-decoration: none;">🔬 National Institute on Aging</a></p>
-            <p><a href="https://www.cdc.gov/aging/aginginfo/alzheimers.htm" target="_blank" style="color: #4facfe; text-decoration: none;">📋 CDC Alzheimer's Resources</a></p>
+    <div style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(20px); padding: 2rem; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.25);">
+        <h4 style="color: white; text-align: center; margin-bottom: 1.5rem; font-weight: 700;">🔗 Trusted Resources</h4>
+        <div style="color: rgba(255, 255, 255, 0.95); display: flex; flex-direction: column; gap: 1rem;">
+            <a href="https://www.alz.org" target="_blank" style="color: white; text-decoration: none; background: rgba(255, 255, 255, 0.1); padding: 0.8rem; border-radius: 10px; transition: all 0.3s ease; display: flex; align-items: center; gap: 0.5rem;">
+                🏥 Alzheimer's Association
+            </a>
+            <a href="https://www.nia.nih.gov" target="_blank" style="color: white; text-decoration: none; background: rgba(255, 255, 255, 0.1); padding: 0.8rem; border-radius: 10px; transition: all 0.3s ease; display: flex; align-items: center; gap: 0.5rem;">
+                🔬 National Institute on Aging
+            </a>
+            <a href="https://www.cdc.gov/aging/aginginfo/alzheimers.htm" target="_blank" style="color: white; text-decoration: none; background: rgba(255, 255, 255, 0.1); padding: 0.8rem; border-radius: 10px; transition: all 0.3s ease; display: flex; align-items: center; gap: 0.5rem;">
+                📋 CDC Alzheimer's Resources
+            </a>
         </div>
     </div>
     """, unsafe_allow_html=True)
 
-# Footer with enhanced styling
+# Modern footer with enhanced styling
 st.markdown("<br><br>", unsafe_allow_html=True)
 st.markdown("""
-<div style="background: linear-gradient(90deg, #667eea 0%, #764ba2 100%); padding: 2rem; border-radius: 15px; text-align: center; margin-top: 3rem;">
-    <h4 style="color: white; margin: 0 0 1rem 0;">🧠 Alzheimer's Risk Assessment Tool</h4>
-    <p style="color: rgba(255, 255, 255, 0.8); margin: 0; font-size: 0.9rem;">
+<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 3rem; border-radius: 24px; text-align: center; margin-top: 3rem; backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 16px 50px rgba(0, 0, 0, 0.1);">
+    <h4 style="color: white; margin: 0 0 1rem 0; font-weight: 800; font-size: 1.4rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">🧠 Alzheimer's Risk Assessment Tool</h4>
+    <p style="color: rgba(255, 255, 255, 0.9); margin: 0 0 1.5rem 0; font-size: 1rem; line-height: 1.6;">
         Developed by <strong>Chenwei Pan</strong> • Powered by Advanced Machine Learning • For Educational Purposes
     </p>
-    <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.3);">
-        <p style="color: rgba(255, 255, 255, 0.7); margin: 0; font-size: 0.8rem;">
+    <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.3);">
+        <p style="color: rgba(255, 255, 255, 0.8); margin: 0; font-size: 0.9rem; line-height: 1.5;">
             This application represents cutting-edge research in computational healthcare and should be used alongside professional medical guidance.
         </p>
     </div>
 </div>
-""", unsafe_allow_html=True)
+""", unsafe_allow_html=True))
+                    
+                elif 'low' in label_str:
+                    st.markdown(f"""
+                    <div class="result-low-risk fade-in-up">
+                        <h2 style="margin-bottom: 1rem; font-weight: 800;">✅ Positive Health Assessment</h2>
+                        <h3 style="margin-bottom: 1.5rem; font-weight: 600;">Analysis Result: {label}</h3>
+                        <p style="font-size: 1.15rem; margin-bottom: 1.5rem; line-height: 1.6;">
+                            Excellent news! Your current health profile indicates favorable risk factors. 
+                            Continue maintaining your healthy lifestyle habits and regular medical checkups 
+                            to preserve and enhance your cognitive health.
+                        </p>
+                        <div style="background: rgba(255, 255, 255, 0.15); padding: 1.25rem; border-radius: 12px; backdrop-filter: blur(10px);">
+                            <strong>🌟 Keep Up the Great Work:</strong> Your healthy choices are making a positive impact on your brain health journey!
+                        </div>
+                    </div>
+                    """, unsafe_allow_html=True)
+                    
+                elif 'moderate' in label_str:
+                    st.markdown(f"""
+                    <div class="result-moderate-risk fade-in-up">
+                        <h2 style="margin-bottom: 1rem; font-weight: 800;">🔶 Moderate Risk Assessment</h2>
+                        <h3 style="margin-bottom: 1.5rem; font-weight: 600;">Analysis Result: {label}</h3>
+                        <p style="font-size: 1.15rem; margin-bottom: 1.5rem; line-height: 1.6;">
+                            Your assessment shows moderate risk factors that warrant attention. 
+                            This is an excellent opportunity to implement preventive strategies 
+                            and discuss your results with healthcare providers.
+                        </p>
+                        <div style="background: rgba(255, 255, 255, 0.15); padding: 1.25rem; border-radius: 12px; backdrop-filter: blur(10px);">
+                            <strong>💪 Take Proactive Action:</strong> Small changes now can make a significant difference in your future cognitive health outcomes.
+                        </div>
+                    </div>
+                    """, unsafe_allow_html=True
