@@ -826,7 +826,7 @@ with st.sidebar:
         <div style="color: #2d3436;">
             <p><a href="https://www.alz.org" target="_blank" style="color: #1E5A96; text-decoration: none;">🏥 Alzheimer's Association</a></p>
             <p><a href="https://www.nia.nih.gov" target="_blank" style="color: #1E5A96; text-decoration: none;">🔬 National Institute on Aging</a></p>
-            <p><a href="https://www.cdc.gov/aging/aginginfo/alzheimers.htm" target="_blank" style="color: #1E5A96; text-decoration: none;">📋 CDC Alzheimer's Resources</a></p>
+            <p><a href="https://www.cdc.gov/alzheimers-dementia/about/alzheimers.html?CDC_AAref_Val=https://www.cdc.gov/aging/aginginfo/alzheimers.htm" target="_blank" style="color: #1E5A96; text-decoration: none;">📋 CDC Alzheimer's Resources</a></p>
         </div>
     </div>
     """, unsafe_allow_html=True)
