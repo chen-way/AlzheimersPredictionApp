@@ -135,6 +135,8 @@ st.markdown("""
     
     .stSidebar {
         background-color: #FDF6E7 !important;
+        width: 350px !important;
+        min-width: 350px !important;
     }
     
     /* Input field styling */
@@ -151,16 +153,50 @@ st.markdown("""
         box-shadow: 0 0 0 0.2rem rgba(209, 229, 244, 0.25);
     }
     
+    /* Number input styling to match selectbox */
+    .stNumberInput > div > div > input {
+        background-color: #FDF6E7 !important;
+        color: black !important;
+        border-radius: 10px !important;
+        border: 2px solid #93BCDC !important;
+        transition: all 0.3s ease !important;
+    }
+    
     .stNumberInput > div > div {
         background-color: #FDF6E7 !important;
-        border-radius: 10px;
-        border: 2px solid #93BCDC;
-        transition: all 0.3s ease;
+        border-radius: 10px !important;
+        border: 2px solid #93BCDC !important;
+        transition: all 0.3s ease !important;
     }
     
     .stNumberInput > div > div:focus-within {
-        border-color: #d1e5f4;
-        box-shadow: 0 0 0 0.2rem rgba(209, 229, 244, 0.25);
+        border-color: #d1e5f4 !important;
+        box-shadow: 0 0 0 0.2rem rgba(209, 229, 244, 0.25) !important;
+    }
+    
+    .stNumberInput > div > div > input:focus {
+        border-color: #d1e5f4 !important;
+        box-shadow: 0 0 0 0.2rem rgba(209, 229, 244, 0.25) !important;
+        outline: none !important;
+    }
+    
+    /* Sidebar width adjustment */
+    .css-1d391kg {
+        width: 350px !important;
+    }
+    
+    .css-1cypcdb {
+        width: 350px !important;
+    }
+    
+    section[data-testid="stSidebar"] {
+        width: 350px !important;
+        min-width: 350px !important;
+    }
+    
+    section[data-testid="stSidebar"] > div {
+        width: 350px !important;
+        min-width: 350px !important;
     }
     
     /* Button styling */
