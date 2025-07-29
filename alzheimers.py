@@ -348,36 +348,33 @@ div[data-testid="stNumberInput"] > div > div:focus-within {
     outline: none !important;
 }
 
-/* Wrap border around entire number input container including +/- */
 div[data-testid="stNumberInput"] {
     border: 2px solid #93BCDC !important;
     border-radius: 10px !important;
     background-color: #FDF6E7 !important;
-    padding: 0.2rem 0.5rem 0.2rem 0.5rem !important;
+    padding: 0.1rem 0.3rem !important;  /* less vertical and horizontal padding */
 }
 
-/* Remove inner borders to avoid double borders */
 div[data-testid="stNumberInput"] > div > div {
     border: none !important;
     box-shadow: none !important;
 }
 
-/* Style the input box itself */
 div[data-testid="stNumberInput"] input[type="number"] {
     background-color: #FDF6E7 !important;
     border: none !important;
-    padding: 0.4rem 0.5rem !important;
+    padding: 0.2rem 0.4rem !important;  /* smaller padding */
     border-radius: 10px !important;
     box-shadow: none !important;
+    height: 28px !important;  /* fix input height */
+    font-size: 16px !important;  /* keep font readable */
 }
 
-/* On focus, highlight the outer border */
 div[data-testid="stNumberInput"]:focus-within {
     border-color: #d1e5f4 !important;
     box-shadow: 0 0 6px rgba(209, 229, 244, 0.8) !important;
     outline: none !important;
 }
-
 
 </style>
 """, unsafe_allow_html=True)
