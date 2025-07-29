@@ -6,6 +6,39 @@ import gzip
 import time
 import random
 
+st.markdown("""
+<style>
+/* Your custom box with cream background and blue border */
+div[data-testid="stNumberInput"] {
+    background-color: #fffef7 !important;  /* cream */
+    border: 2px solid #0066cc !important;  /* blue */
+    border-radius: 12px !important;
+    padding: 8px 12px !important;
+    box-shadow: none !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+/* Remove the default grey background from inner div */
+div[data-testid="stNumberInput"] > div {
+    background-color: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+}
+
+/* Tweak input field style */
+div[data-testid="stNumberInput"] input {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    color: black !important;
+    padding: 4px 6px !important;
+    font-size: 16px !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
 # Enhanced page configuration with custom styling
 st.set_page_config(
     page_title="Alzheimer's Risk Assessment", 
@@ -341,25 +374,6 @@ div[data-testid="stNumberInput"]:focus-within > div {
     box-shadow: 0 0 6px rgba(209, 229, 244, 0.8) !important;
     outline: none !important;
 }
-
-/* Fix background of number input container and inner input */
-div[data-testid="stNumberInput"] > div {
-    background-color: transparent !important;
-    box-shadow: none !important;
-    border: none !important;
-    padding: 0px !important;
-    align-items: center !important;
-}
-
-/* Fix the actual input field */
-div[data-testid="stNumberInput"] input {
-    background-color: transparent !important;
-    box-shadow: none !important;
-    border: none !important;
-    color: black !important;
-    padding-left: 10px !important;
-}
-
 
 </style>
 """, unsafe_allow_html=True)
