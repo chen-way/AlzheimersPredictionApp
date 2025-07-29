@@ -7,37 +7,32 @@ import time
 import random
 
 st.markdown("""
-<style>
-/* Your custom box with cream background and blue border */
-div[data-testid="stNumberInput"] {
-    background-color: #fffef7 !important;  /* cream */
-    border: 2px solid #0066cc !important;  /* blue */
-    border-radius: 12px !important;
-    padding: 8px 12px !important;
-    box-shadow: none !important;
-    display: flex !important;
-    align-items: center !important;
-}
+    <style>
+    /* Outer container styling */
+    div[data-baseweb="input"] > div {
+        background-color: #fffef7 !important;
+        border: 2px solid #93BCDC !important;
+        border-radius: 10px !important;
+        color: black !important;
+        padding: 6px !important;
+    }
 
-/* Remove the default grey background from inner div */
-div[data-testid="stNumberInput"] > div {
-    background-color: transparent !important;
-    box-shadow: none !important;
-    border: none !important;
-    padding: 0 !important;
-}
+    /* Remove grey rectangle inside the input box */
+    div[data-baseweb="input"] input {
+        background-color: transparent !important;
+        box-shadow: none !important;
+        border: none !important;
+        color: black !important;
+    }
 
-/* Tweak input field style */
-div[data-testid="stNumberInput"] input {
-    background-color: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    color: black !important;
-    padding: 4px 6px !important;
-    font-size: 16px !important;
-}
-</style>
+    /* Optional: handle focus styling */
+    div[data-baseweb="input"] > div:focus-within {
+        border-color: #d1e5f4 !important;
+        box-shadow: 0 0 0 0.2rem rgba(209, 229, 244, 0.25) !important;
+    }
+    </style>
 """, unsafe_allow_html=True)
+
 
 # Enhanced page configuration with custom styling
 st.set_page_config(
