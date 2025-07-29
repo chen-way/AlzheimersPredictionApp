@@ -295,79 +295,42 @@ st.markdown("""
     .stDeployButton {display:none;}
     header {visibility: hidden;}
 
-    /* Final fix for Streamlit number input rendering inconsistencies */
-div[data-baseweb="input"] > div {
-    background-color: #FDF6E7 !important;
-    border: 2px solid #93BCDC !important;
-    border-radius: 10px !important;
-    color: black !important;
-    transition: all 0.3s ease !important;
-}
-
-div[data-baseweb="input"] > div:focus-within {
-    border-color: #d1e5f4 !important;
-    box-shadow: 0 0 0 0.2rem rgba(209, 229, 244, 0.25) !important;
-}
-
-/* Remove all borders for Streamlit number input */
-div[data-baseweb="input"] > div {
-    background-color: #FDF6E7 !important;
-    border: none !important;
-    border-radius: 10px !important;
-    color: black !important;
-    transition: all 0.3s ease !important;
-}
-
-div[data-baseweb="input"] > div:focus-within {
-    border-color: transparent !important;
-    box-shadow: none !important;
-}
-
-div[data-baseweb="input"] > div > input {
-    background-color: #FDF6E7 !important;
-    border: none !important;
-    border-radius: 10px !important;
-    color: black !important;
-}
-
-/* Remove all borders and shadows from number input containers */
-div[data-baseweb="input"] > div,
-div[data-baseweb="input"] > div > input,
-div[data-testid="stNumberInput"] > div > div,
-div[data-testid="stNumberInput"] > div > div > input {
-    border: none !important;
-    box-shadow: none !important;
-    background-color: #FDF6E7 !important;
-}
-
-/* Remove focus outlines */
-div[data-baseweb="input"] > div:focus-within,
-div[data-testid="stNumberInput"] > div > div:focus-within {
-    border: none !important;
-    box-shadow: none !important;
-    outline: none !important;
-}
-
 div[data-testid="stNumberInput"] {
     border: 2px solid #93BCDC !important;
     border-radius: 10px !important;
     background-color: #FDF6E7 !important;
-    padding: 0.1rem 0.3rem !important;  /* less vertical and horizontal padding */
-}
-
-div[data-testid="stNumberInput"] > div > div {
-    border: none !important;
-    box-shadow: none !important;
+    padding: 0 !important;
+    height: 34px !important; /* target height */
+    display: inline-flex !important;
+    align-items: center !important;
 }
 
 div[data-testid="stNumberInput"] input[type="number"] {
-    background-color: #FDF6E7 !important;
     border: none !important;
-    padding: 0.2rem 0.4rem !important;  /* smaller padding */
-    border-radius: 10px !important;
-    box-shadow: none !important;
-    height: 28px !important;  /* fix input height */
-    font-size: 16px !important;  /* keep font readable */
+    background: transparent !important;
+    padding: 0 0.4rem !important;
+    height: 28px !important;
+    font-size: 16px !important;
+    margin: 0 !important;
+    line-height: 1 !important;
+}
+
+div[data-testid="stNumberInput"] > div > div {
+    height: 28px !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+div[data-testid="stNumberInput"] > div > div > button {
+    border: none !important;
+    background: transparent !important;
+    height: 28px !important;
+    width: 28px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
 }
 
 div[data-testid="stNumberInput"]:focus-within {
