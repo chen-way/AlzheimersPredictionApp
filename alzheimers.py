@@ -300,7 +300,7 @@ div[data-testid="stNumberInput"] {
     border-radius: 10px !important;
     background-color: #FDF6E7 !important;
     padding: 0 !important;
-    height: 34px !important; /* target height */
+    height: 42px !important; /* Slightly taller */
     display: inline-flex !important;
     align-items: center !important;
 }
@@ -308,15 +308,15 @@ div[data-testid="stNumberInput"] {
 div[data-testid="stNumberInput"] input[type="number"] {
     border: none !important;
     background: transparent !important;
-    padding: 0 0.4rem !important;
-    height: 28px !important;
-    font-size: 16px !important;
+    padding: 0 0.6rem !important;
+    height: 36px !important;
+    font-size: 18px !important;
     margin: 0 !important;
-    line-height: 1 !important;
+    line-height: 1.2 !important;
 }
 
 div[data-testid="stNumberInput"] > div > div {
-    height: 28px !important;
+    height: 36px !important;
     display: flex !important;
     align-items: center !important;
 }
@@ -324,8 +324,8 @@ div[data-testid="stNumberInput"] > div > div {
 div[data-testid="stNumberInput"] > div > div > button {
     border: none !important;
     background: transparent !important;
-    height: 28px !important;
-    width: 28px !important;
+    height: 36px !important;
+    width: 36px !important;
     padding: 0 !important;
     margin: 0 !important;
     display: flex !important;
