@@ -348,14 +348,12 @@ div[data-testid="stNumberInput"] > div > div:focus-within {
     outline: none !important;
 }
 
-/* Wrap border around the entire number input including +/- buttons */
+/* Wrap border around entire number input container including +/- */
 div[data-testid="stNumberInput"] {
     border: 2px solid #93BCDC !important;
     border-radius: 10px !important;
-    padding: 0.1rem 0.5rem 0.1rem 0.5rem !important;
     background-color: #FDF6E7 !important;
-    display: inline-flex;
-    align-items: center;
+    padding: 0.2rem 0.5rem 0.2rem 0.5rem !important;
 }
 
 /* Remove inner borders to avoid double borders */
@@ -364,7 +362,7 @@ div[data-testid="stNumberInput"] > div > div {
     box-shadow: none !important;
 }
 
-/* Optional: Adjust spacing inside input for cleaner look */
+/* Style the input box itself */
 div[data-testid="stNumberInput"] input[type="number"] {
     background-color: #FDF6E7 !important;
     border: none !important;
