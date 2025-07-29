@@ -1,44 +1,4 @@
-if 'high' in label_str:
-                    st.markdown(f"""
-                    <div class="result-high-risk pulse-animation">
-                        <h2>⚠️ High Risk Assessment</h2>
-                        <h3>Prediction: {label}</h3>
-                        <p style="font-size: 1.1rem; margin-top: 1rem;">
-                            Our analysis indicates elevated risk factors based on your current health profile. 
-                            We strongly recommend consulting with healthcare professionals for comprehensive 
-                            evaluation and personalized prevention strategies.
-                        </p>
-                        <div style="background-color: rgba(255, 255, 255, 0.8); padding: 1rem; border-radius: 10px; margin-top: 1rem; color: #2d3436;">
-                            <strong>🏥 Next Steps:</strong> Schedule a consultation with your doctor to discuss these findings and develop a personalized care plan.
-                        </div>
-                    </div>
-                    """, unsafe_allow_html=True)
-                    
-                elif 'low' in label_str:
-                    st.markdown(f"""
-                    <div class="result-low-risk">
-                        <h2>✅ Low Risk Assessment</h2>
-                        <h3>Prediction: {label}</h3>
-                        <p style="font-size: 1.1rem; margin-top: 1rem;">
-                            Excellent news! Your current health profile indicates lower risk factors. 
-                            Continue maintaining your healthy lifestyle habits and regular medical checkups 
-                            to preserve your cognitive health.
-                        </p>
-                        <div style="background-color: rgba(255, 255, 255, 0.8); padding: 1rem; border-radius: 10px; margin-top: 1rem; color: #2d3436;">
-                            <strong>🌟 Keep it up:</strong> Your healthy choices are making a positive impact on your brain health!
-                        </div>
-                    </div>
-                    """, unsafe_allow_html=True)
-                    
-                elif 'moderate' in label_str:
-                    st.markdown(f"""
-                    <div class="result-moderate-risk">
-                        <h2>🔶 Moderate Risk Assessment</h2>
-                        <h3>Prediction: {label}</h3>
-                        <p style="font-size: 1.1rem; margin-top: 1rem;">
-                            Your assessment shows moderate risk factors that warrant attention. 
-                            This is an excellent opportunity to implement preventive strategies 
-                            animport streamlit as st
+import streamlit as st
 import pandas as pd
 import numpy as np
 import pickle
@@ -505,28 +465,49 @@ with col2:
                 label_str = str(label).lower()
                 if 'high' in label_str:
                     st.markdown(f"""
-                    <div class="result-high-risk pulse-animation fade-in-up">
-                        <h2 style="margin-bottom: 1rem; font-weight: 800;">⚠️ Elevated Risk Assessment</h2>
-                        <h3 style="margin-bottom: 1.5rem; font-weight: 600;">Analysis Result: {label}</h3>
-                        <p style="font-size: 1.15rem; margin-bottom: 1.5rem; line-height: 1.6;">
-                            Our AI analysis indicates elevated risk factors based on your current health profile. 
+                    <div class="result-high-risk pulse-animation">
+                        <h2>⚠️ High Risk Assessment</h2>
+                        <h3>Prediction: {label}</h3>
+                        <p style="font-size: 1.1rem; margin-top: 1rem;">
+                            Our analysis indicates elevated risk factors based on your current health profile. 
                             We strongly recommend consulting with healthcare professionals for comprehensive 
                             evaluation and personalized prevention strategies.
                         </p>
-                        <div style="background: rgba(255, 255, 255, 0.15); padding: 1.25rem; border-radius: 12px; backdrop-filter: blur(10px);">
-                            <strong>🏥 Recommended Next Steps:</strong> Schedule a consultation with your doctor to discuss these findings and develop a personalized cognitive health plan.
+                        <div style="background-color: rgba(255, 255, 255, 0.8); padding: 1rem; border-radius: 10px; margin-top: 1rem; color: #2d3436;">
+                            <strong>🏥 Next Steps:</strong> Schedule a consultation with your doctor to discuss these findings and develop a personalized care plan.
                         </div>
                     </div>
                     """, unsafe_allow_html=True)
-                else:
+                    
+                elif 'low' in label_str:
                     st.markdown(f"""
-                    <div style="background-color: #d1e5f4; color: #2d3436; padding: 1.5rem; border-radius: 15px; text-align: center; border: 1px solid #93BCDC;">
-                        <h2>📊 Assessment Complete</h2>
+                    <div class="result-low-risk">
+                        <h2>✅ Low Risk Assessment</h2>
                         <h3>Prediction: {label}</h3>
                         <p style="font-size: 1.1rem; margin-top: 1rem;">
-                            Please consult with healthcare professionals for proper evaluation and 
-                            continue maintaining healthy lifestyle habits.
+                            Excellent news! Your current health profile indicates lower risk factors. 
+                            Continue maintaining your healthy lifestyle habits and regular medical checkups 
+                            to preserve your cognitive health.
                         </p>
+                        <div style="background-color: rgba(255, 255, 255, 0.8); padding: 1rem; border-radius: 10px; margin-top: 1rem; color: #2d3436;">
+                            <strong>🌟 Keep it up:</strong> Your healthy choices are making a positive impact on your brain health!
+                        </div>
+                    </div>
+                    """, unsafe_allow_html=True)
+                    
+                elif 'moderate' in label_str:
+                    st.markdown(f"""
+                    <div class="result-moderate-risk">
+                        <h2>🔶 Moderate Risk Assessment</h2>
+                        <h3>Prediction: {label}</h3>
+                        <p style="font-size: 1.1rem; margin-top: 1rem;">
+                            Your assessment shows moderate risk factors that warrant attention. 
+                            This is an excellent opportunity to implement preventive strategies 
+                            and discuss your results with healthcare providers.
+                        </p>
+                        <div style="background-color: rgba(255, 255, 255, 0.8); padding: 1rem; border-radius: 10px; margin-top: 1rem; color: #2d3436;">
+                            <strong>💪 Take Action:</strong> Small changes now can make a significant difference in your future cognitive health.
+                        </div>
                     </div>
                     """, unsafe_allow_html=True)
                 
@@ -714,95 +695,4 @@ st.markdown("""
         </p>
     </div>
 </div>
-""", unsafe_allow_html=True), 0.15); backdrop-filter: blur(20px); padding: 2rem; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.25); margin-bottom: 2rem;">
-        <h3 style="color: white; text-align: center; margin-bottom: 1.5rem; font-weight: 700;">📊 Advanced AI Assessment</h3>
-        <div style="color: rgba(255, 255, 255, 0.95); line-height: 1.7;">
-            <div style="background: rgba(255, 255, 255, 0.1); padding: 1rem; border-radius: 12px; margin-bottom: 1rem;">
-                <p style="margin: 0;"><strong>🤖 AI Technology:</strong><br>XGBoost machine learning model</p>
-            </div>
-            <div style="background: rgba(255, 255, 255, 0.1); padding: 1rem; border-radius: 12px; margin-bottom: 1rem;">
-                <p style="margin: 0;"><strong>📈 Comprehensive Analysis:</strong><br>24 evidence-based risk factors</p>
-            </div>
-            <div style="background: rgba(255, 255, 255, 0.1); padding: 1rem; border-radius: 12px; margin-bottom: 1rem;">
-                <p style="margin: 0;"><strong>🔬 Research-Based:</strong><br>Peer-reviewed medical literature</p>
-            </div>
-            <div style="background: rgba(255, 255, 255, 0.1); padding: 1rem; border-radius: 12px;">
-                <p style="margin: 0;"><strong>🎯 Personalized:</strong><br>Tailored cognitive insights</p>
-            </div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    st.markdown("""
-    <div style="background: linear-gradient(135deg, #ff4757, #ff3838); padding: 2rem; border-radius: 20px; color: white; margin-bottom: 2rem; box-shadow: 0 8px 25px rgba(255, 71, 87, 0.3);">
-        <h4 style="margin: 0 0 1.2rem 0; text-align: center; font-weight: 700;">⚠️ Medical Disclaimer</h4>
-        <p style="margin: 0; font-size: 0.95rem; line-height: 1.6; text-shadow: 1px 1px 2px rgba(0,0,0,0.2);">
-            This AI tool provides educational insights based on research data and should never replace professional medical advice, diagnosis, or treatment. Always consult qualified healthcare professionals for medical decisions.
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    st.markdown("""
-    <div style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(20px); padding: 2rem; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.25);">
-        <h4 style="color: white; text-align: center; margin-bottom: 1.5rem; font-weight: 700;">🔗 Trusted Resources</h4>
-        <div style="color: rgba(255, 255, 255, 0.95); display: flex; flex-direction: column; gap: 1rem;">
-            <a href="https://www.alz.org" target="_blank" style="color: white; text-decoration: none; background: rgba(255, 255, 255, 0.1); padding: 0.8rem; border-radius: 10px; transition: all 0.3s ease; display: flex; align-items: center; gap: 0.5rem;">
-                🏥 Alzheimer's Association
-            </a>
-            <a href="https://www.nia.nih.gov" target="_blank" style="color: white; text-decoration: none; background: rgba(255, 255, 255, 0.1); padding: 0.8rem; border-radius: 10px; transition: all 0.3s ease; display: flex; align-items: center; gap: 0.5rem;">
-                🔬 National Institute on Aging
-            </a>
-            <a href="https://www.cdc.gov/aging/aginginfo/alzheimers.htm" target="_blank" style="color: white; text-decoration: none; background: rgba(255, 255, 255, 0.1); padding: 0.8rem; border-radius: 10px; transition: all 0.3s ease; display: flex; align-items: center; gap: 0.5rem;">
-                📋 CDC Alzheimer's Resources
-            </a>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-# Modern footer with enhanced styling
-st.markdown("<br><br>", unsafe_allow_html=True)
-st.markdown("""
-<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 3rem; border-radius: 24px; text-align: center; margin-top: 3rem; backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 16px 50px rgba(0, 0, 0, 0.1);">
-    <h4 style="color: white; margin: 0 0 1rem 0; font-weight: 800; font-size: 1.4rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">🧠 Alzheimer's Risk Assessment Tool</h4>
-    <p style="color: rgba(255, 255, 255, 0.9); margin: 0 0 1.5rem 0; font-size: 1rem; line-height: 1.6;">
-        Developed by <strong>Chenwei Pan</strong> • Powered by Advanced Machine Learning • For Educational Purposes
-    </p>
-    <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.3);">
-        <p style="color: rgba(255, 255, 255, 0.8); margin: 0; font-size: 0.9rem; line-height: 1.5;">
-            This application represents cutting-edge research in computational healthcare and should be used alongside professional medical guidance.
-        </p>
-    </div>
-</div>
-""", unsafe_allow_html=True))
-                    
-                elif 'low' in label_str:
-                    st.markdown(f"""
-                    <div class="result-low-risk fade-in-up">
-                        <h2 style="margin-bottom: 1rem; font-weight: 800;">✅ Positive Health Assessment</h2>
-                        <h3 style="margin-bottom: 1.5rem; font-weight: 600;">Analysis Result: {label}</h3>
-                        <p style="font-size: 1.15rem; margin-bottom: 1.5rem; line-height: 1.6;">
-                            Excellent news! Your current health profile indicates favorable risk factors. 
-                            Continue maintaining your healthy lifestyle habits and regular medical checkups 
-                            to preserve and enhance your cognitive health.
-                        </p>
-                        <div style="background: rgba(255, 255, 255, 0.15); padding: 1.25rem; border-radius: 12px; backdrop-filter: blur(10px);">
-                            <strong>🌟 Keep Up the Great Work:</strong> Your healthy choices are making a positive impact on your brain health journey!
-                        </div>
-                    </div>
-                    """, unsafe_allow_html=True)
-                    
-                elif 'moderate' in label_str:
-                    st.markdown(f"""
-                    <div class="result-moderate-risk fade-in-up">
-                        <h2 style="margin-bottom: 1rem; font-weight: 800;">🔶 Moderate Risk Assessment</h2>
-                        <h3 style="margin-bottom: 1.5rem; font-weight: 600;">Analysis Result: {label}</h3>
-                        <p style="font-size: 1.15rem; margin-bottom: 1.5rem; line-height: 1.6;">
-                            Your assessment shows moderate risk factors that warrant attention. 
-                            This is an excellent opportunity to implement preventive strategies 
-                            and discuss your results with healthcare providers.
-                        </p>
-                        <div style="background: rgba(255, 255, 255, 0.15); padding: 1.25rem; border-radius: 12px; backdrop-filter: blur(10px);">
-                            <strong>💪 Take Proactive Action:</strong> Small changes now can make a significant difference in your future cognitive health outcomes.
-                        </div>
-                    </div>
-                    """, unsafe_allow_html=True
+""", unsafe_allow_html=True)
