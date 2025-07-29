@@ -309,6 +309,27 @@ div[data-baseweb="input"] > div:focus-within {
     box-shadow: 0 0 0 0.2rem rgba(209, 229, 244, 0.25) !important;
 }
 
+/* Remove all borders for Streamlit number input */
+div[data-baseweb="input"] > div {
+    background-color: #FDF6E7 !important;
+    border: none !important;
+    border-radius: 10px !important;
+    color: black !important;
+    transition: all 0.3s ease !important;
+}
+
+div[data-baseweb="input"] > div:focus-within {
+    border-color: transparent !important;
+    box-shadow: none !important;
+}
+
+div[data-baseweb="input"] > div > input {
+    background-color: #FDF6E7 !important;
+    border: none !important;
+    border-radius: 10px !important;
+    color: black !important;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
