@@ -1,8 +1,4 @@
-# === LIFESTYLE TIPS SECTION ===
-st.markdown("""
-<div class="tips-container">
-    <h2>🧘 Evidence-Based Prevention Strategies</h2>
-    <p style="text-alignimport streamlit as st
+import streamlit as st
 import pandas as pd
 import numpy as np
 import pickle
@@ -307,7 +303,6 @@ def get_user_input():
                         f"**{feature}** (0-15, higher = more depressed):", 
                         min_value=0, max_value=15, value=2, step=1, key=feature
                     )
-
                 elif feature == 'Stress Levels':
                     value = st.number_input(
                         f"**{feature}** (0-10, higher = more stress):", 
