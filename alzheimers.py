@@ -294,6 +294,21 @@ st.markdown("""
     footer {visibility: hidden;}
     .stDeployButton {display:none;}
     header {visibility: hidden;}
+
+    /* Final fix for Streamlit number input rendering inconsistencies */
+div[data-baseweb="input"] > div {
+    background-color: #FDF6E7 !important;
+    border: 2px solid #93BCDC !important;
+    border-radius: 10px !important;
+    color: black !important;
+    transition: all 0.3s ease !important;
+}
+
+div[data-baseweb="input"] > div:focus-within {
+    border-color: #d1e5f4 !important;
+    box-shadow: 0 0 0 0.2rem rgba(209, 229, 244, 0.25) !important;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
