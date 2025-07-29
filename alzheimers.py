@@ -153,31 +153,69 @@ st.markdown("""
         box-shadow: 0 0 0 0.2rem rgba(209, 229, 244, 0.25);
     }
     
-    /* Number input styling to match selectbox */
+    /* Number input styling to match selectbox - comprehensive fix */
     .stNumberInput > div > div > input {
         background-color: #FDF6E7 !important;
         color: black !important;
         border-radius: 10px !important;
         border: 2px solid #93BCDC !important;
         transition: all 0.3s ease !important;
+        box-shadow: none !important;
     }
     
     .stNumberInput > div > div {
+        background-color: transparent !important;
+        border: none !important;
+        border-radius: 10px !important;
+        transition: all 0.3s ease !important;
+        box-shadow: none !important;
+    }
+    
+    .stNumberInput > div {
+        background-color: transparent !important;
+        border: none !important;
+    }
+    
+    .stNumberInput input[type="number"] {
         background-color: #FDF6E7 !important;
+        color: black !important;
         border-radius: 10px !important;
         border: 2px solid #93BCDC !important;
         transition: all 0.3s ease !important;
+        box-shadow: none !important;
+        padding: 0.5rem !important;
     }
     
-    .stNumberInput > div > div:focus-within {
-        border-color: #d1e5f4 !important;
-        box-shadow: 0 0 0 0.2rem rgba(209, 229, 244, 0.25) !important;
-    }
-    
-    .stNumberInput > div > div > input:focus {
+    .stNumberInput input[type="number"]:focus {
         border-color: #d1e5f4 !important;
         box-shadow: 0 0 0 0.2rem rgba(209, 229, 244, 0.25) !important;
         outline: none !important;
+        background-color: #FDF6E7 !important;
+    }
+    
+    .stNumberInput > div > div:focus-within {
+        border: none !important;
+        box-shadow: none !important;
+    }
+    
+    .stNumberInput > div > div:focus-within input {
+        border-color: #d1e5f4 !important;
+        box-shadow: 0 0 0 0.2rem rgba(209, 229, 244, 0.25) !important;
+        background-color: #FDF6E7 !important;
+    }
+    
+    /* Override any default number input styling */
+    div[data-testid="stNumberInput"] > div > div > input {
+        background-color: #FDF6E7 !important;
+        border: 2px solid #93BCDC !important;
+        border-radius: 10px !important;
+        color: black !important;
+    }
+    
+    div[data-testid="stNumberInput"] input:focus {
+        background-color: #FDF6E7 !important;
+        border-color: #d1e5f4 !important;
+        box-shadow: 0 0 0 0.2rem rgba(209, 229, 244, 0.25) !important;
     }
     
     /* Sidebar width adjustment */
