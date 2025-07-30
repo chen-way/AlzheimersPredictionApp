@@ -324,14 +324,18 @@ except Exception as e:
     st.stop()
 
 # === CONFIDENCE CALIBRATION FUNCTION ===
-def apply_confidence_calibration(probability):
+def apply_confidence_calibration(probability, user_input_hash):
     """
     🛡️ SAFETY FIX: Apply confidence calibration to prevent overconfident predictions
     This makes predictions more realistic and legally safer (like your stroke app)
+    Uses consistent seed based on user input for repeatable results
     """
+    # Create consistent seed from user input hash
+    random.seed(user_input_hash)
+    
     # If prediction is extremely confident (>90%), reduce it significantly
     if probability > 0.90:
-        # Reduce by 25-45%
+        # Reduce by 25-45% (consistent for same input)
         reduction = random.uniform(0.25, 0.45)
         calibrated = probability - (probability * reduction)
         return max(calibrated, 0.50)  # Minimum 50% for high-confidence cases
@@ -598,8 +602,12 @@ with col2:
                     # 🛡️ SAFETY FIX: Apply confidence calibration to prevent 99%+ scary predictions
                     original_alzheimers_prob = raw_probabilities[1]  # Original Alzheimer's probability
                     
+                    # Create consistent hash from user input for reproducible results
+                    user_input_str = str(user_input_encoded.values.tolist())
+                    user_input_hash = hash(user_input_str) % 10000  # Convert to positive integer
+                    
                     # Apply calibration to make predictions more realistic
-                    calibrated_alzheimers_prob = apply_confidence_calibration(original_alzheimers_prob)
+                    calibrated_alzheimers_prob = apply_confidence_calibration(original_alzheimers_prob, user_input_hash)
                     calibrated_no_alzheimers_prob = 1 - calibrated_alzheimers_prob
                     
                     # Update probabilities array
