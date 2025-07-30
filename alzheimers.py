@@ -693,7 +693,7 @@ with col1:
             """, unsafe_allow_html=True)
 
 # Add spacing between random tip and complete guide
-st.markdown("<br><br>", unsafe_allow_html=True)
+st.markdown("<br>", unsafe_allow_html=True)
 
 # Show all tips in an enhanced expandable section
 with st.expander("📋 View Complete Prevention Guide", expanded=False):
