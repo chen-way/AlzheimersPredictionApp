@@ -333,6 +333,45 @@ st.markdown("""
     .stDeployButton {display:none;}
     header {visibility: hidden;}
 
+    /* Add this CSS to your existing number input section to remove the small border */
+
+/* Target all possible number input elements and remove borders */
+div[data-testid="stNumberInput"] input[type="number"] {
+    border: none !important;
+    background: transparent !important;
+    height: 100% !important;
+    font-size: 16px !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 12px !important;
+    line-height: 1.2 !important;
+    color: black !important;
+    outline: none !important;
+    box-shadow: none !important;
+    text-align: left !important;
+}
+
+/* Remove any focus borders on the input */
+div[data-testid="stNumberInput"] input[type="number"]:focus {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+}
+
+/* Additional targeting for stubborn borders */
+div[data-testid="stNumberInput"] input {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+div[data-testid="stNumberInput"] input:focus {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
     </style>
 """, unsafe_allow_html=True)
 
