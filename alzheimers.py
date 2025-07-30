@@ -87,7 +87,6 @@ st.markdown("""
         box-shadow: 0 0 0 0.2rem rgba(209, 229, 244, 0.25) !important;
     }
 
- 
 /* AGGRESSIVE FIX - Replace your number input CSS section with this */
 
 /* Target the main number input container - RESTORE OUTER BORDER */
@@ -212,10 +211,10 @@ div[data-testid="stNumberInput"] button:hover {
     background: rgba(147, 188, 220, 0.4) !important;
 }
 
-/* Focus effect for the main container only - KEEP OUTER BORDER */
+/* Focus effect for the main container only - NO SHADOW */
 div[data-testid="stNumberInput"]:focus-within > div {
     border-color: #d1e5f4 !important;
-    box-shadow: 0 0 6px rgba(209, 229, 244, 0.8) !important;
+    box-shadow: none !important;
 }
 
 /* PRESERVE outer border while removing inner ones */
