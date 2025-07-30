@@ -31,45 +31,58 @@ st.markdown("""
         box-shadow: 0 0 0 0.2rem rgba(209, 229, 244, 0.25) !important;
     }
 
-    /* Remove any gaps between button elements */
-div[data-testid="stNumberInput"] > div > div > div {
-    display: flex !important;
-    gap: 0 !important;
+  /* Completely eliminate all spacing in number inputs */
+div[data-testid="stNumberInput"] * {
     margin: 0 !important;
     padding: 0 !important;
-}
-
-/* Target the specific container that holds the buttons */
-div[data-testid="stNumberInput"] > div > div > div:last-child {
-    display: flex !important;
     gap: 0 !important;
-    margin-left: auto !important;
-    width: auto !important;
+    column-gap: 0 !important;
+    row-gap: 0 !important;
 }
 
-/* Make sure buttons are right next to each other */
-div[data-testid="stNumberInput"] button {
+/* Force buttons to be absolutely positioned */
+div[data-testid="stNumberInput"] {
+    position: relative !important;
+}
+
+/* Position minus button */
+div[data-testid="stNumberInput"] button:first-of-type {
+    position: absolute !important;
+    right: 35px !important;
+    top: 2px !important;
+    bottom: 2px !important;
+    width: 35px !important;
     margin: 0 !important;
-    padding: 8px !important;
+    padding: 0 !important;
     border: none !important;
     background: rgba(147, 188, 220, 0.2) !important;
-    height: 100% !important;
-    width: 35px !important;
     border-radius: 0 !important;
-    flex-shrink: 0 !important;
+    z-index: 10 !important;
 }
 
-/* Make the first button (minus) have no right margin */
-div[data-testid="stNumberInput"] button:first-of-type {
-    border-top-right-radius: 0 !important;
-    border-bottom-right-radius: 0 !important;
-}
-
-/* Make the last button (plus) have rounded right corners */
+/* Position plus button */
 div[data-testid="stNumberInput"] button:last-of-type {
+    position: absolute !important;
+    right: 0px !important;
+    top: 2px !important;
+    bottom: 2px !important;
+    width: 35px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    background: rgba(147, 188, 220, 0.2) !important;
     border-top-right-radius: 8px !important;
     border-bottom-right-radius: 8px !important;
+    z-index: 10 !important;
 }
+
+/* Adjust input field to account for buttons */
+div[data-testid="stNumberInput"] input {
+    padding-right: 75px !important;
+    text-align: left !important;
+    padding-left: 12px !important;
+}
+
     </style>
 """, unsafe_allow_html=True)
 
