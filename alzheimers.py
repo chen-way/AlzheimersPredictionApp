@@ -87,95 +87,139 @@ st.markdown("""
         box-shadow: 0 0 0 0.2rem rgba(209, 229, 244, 0.25) !important;
     }
 
-    /* NUMBER INPUT STYLING - CONSOLIDATED AND CLEAN */
-    div[data-testid="stNumberInput"] > div {
-        border: 2px solid #93BCDC !important;
-        border-radius: 10px !important;
-        background-color: #FDF6E7 !important;
-        height: 42px !important;
-        display: flex !important;
-        align-items: center !important;
-        padding: 0 !important;
-        overflow: hidden !important;
-    }
+ 
+/* AGGRESSIVE FIX - Replace your number input CSS section with this */
 
-    /* Remove ALL inner styling that creates the cream rectangle */
-    div[data-testid="stNumberInput"] > div > div {
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        height: 100% !important;
-        width: 100% !important;
-        display: flex !important;
-        align-items: center !important;
-    }
+/* Target the main number input container */
+div[data-testid="stNumberInput"] > div {
+    border: 2px solid #93BCDC !important;
+    border-radius: 10px !important;
+    background-color: #FDF6E7 !important;
+    height: 42px !important;
+    display: flex !important;
+    align-items: center !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+}
 
-    /* Style the input field */
-    div[data-testid="stNumberInput"] input[type="number"] {
-        border: none !important;
-        background: transparent !important;
-        height: 100% !important;
-        font-size: 16px !important;
-        width: 100% !important;
-        margin: 0 !important;
-        padding: 0 12px !important;
-        line-height: 1.2 !important;
-        color: black !important;
-        outline: none !important;
-        box-shadow: none !important;
-        text-align: left !important;
-    }
+/* COMPLETELY hide the inner container that creates the cream border */
+div[data-testid="stNumberInput"] > div > div:first-child {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    flex: 1 !important;
+}
 
-    /* Button styling - FORCE THEM TOGETHER */
-    div[data-testid="stNumberInput"] button {
-        border: none !important;
-        background: rgba(147, 188, 220, 0.2) !important;
-        height: 100% !important;
-        width: 35px !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        display: flex !important;
-        justify-content: center !important;
-        align-items: center !important;
-        transition: background-color 0.2s ease !important;
-        flex-shrink: 0 !important;
-    }
+/* Hide ANY inner div that might be creating borders */
+div[data-testid="stNumberInput"] > div > div > div {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
 
-    /* CRITICAL: Remove spacing between buttons */
-    div[data-testid="stNumberInput"] button:first-of-type {
-        border-radius: 0 !important;
-        margin-right: 0 !important;
-    }
+/* Style the actual input field - NUCLEAR APPROACH */
+div[data-testid="stNumberInput"] input[type="number"] {
+    border: none !important;
+    background: transparent !important;
+    height: 100% !important;
+    font-size: 16px !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 12px !important;
+    line-height: 1.2 !important;
+    color: black !important;
+    outline: none !important;
+    box-shadow: none !important;
+    text-align: left !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: textfield !important;
+}
 
-    div[data-testid="stNumberInput"] button:last-of-type {
-        border-top-right-radius: 8px !important;
-        border-bottom-right-radius: 8px !important;
-        margin-left: 0 !important;
-    }
+/* Remove focus borders completely */
+div[data-testid="stNumberInput"] input[type="number"]:focus {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+}
 
-    /* Force button container to align right with NO gaps */
-    div[data-testid="stNumberInput"] > div > div:has(button) {
-        display: flex !important;
-        gap: 0 !important;
-        margin-left: auto !important;
-        width: 70px !important;
-        height: 100% !important;
-        align-items: center !important;
-        justify-content: flex-end !important;
-    }
+/* Target ALL possible input elements inside */
+div[data-testid="stNumberInput"] input {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+}
 
-    /* Hover effects */
-    div[data-testid="stNumberInput"] button:hover {
-        background: rgba(147, 188, 220, 0.4) !important;
-    }
+/* Button styling remains the same */
+div[data-testid="stNumberInput"] button {
+    border: none !important;
+    background: rgba(147, 188, 220, 0.2) !important;
+    height: 100% !important;
+    width: 35px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    transition: background-color 0.2s ease !important;
+    flex-shrink: 0 !important;
+}
 
-    /* Focus effect for the main container */
-    div[data-testid="stNumberInput"]:focus-within > div {
-        border-color: #d1e5f4 !important;
-        box-shadow: 0 0 6px rgba(209, 229, 244, 0.8) !important;
-    }
+/* CRITICAL: Force the button container to align right with NO gaps */
+div[data-testid="stNumberInput"] > div > div:has(button) {
+    display: flex !important;
+    gap: 0 !important;
+    margin-left: auto !important;
+    width: 70px !important;
+    height: 100% !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Button positioning */
+div[data-testid="stNumberInput"] button:first-of-type {
+    border-radius: 0 !important;
+    margin-right: 0 !important;
+}
+
+div[data-testid="stNumberInput"] button:last-of-type {
+    border-top-right-radius: 8px !important;
+    border-bottom-right-radius: 8px !important;
+    margin-left: 0 !important;
+}
+
+/* Hover effects */
+div[data-testid="stNumberInput"] button:hover {
+    background: rgba(147, 188, 220, 0.4) !important;
+}
+
+/* Focus effect for the main container only */
+div[data-testid="stNumberInput"]:focus-within > div {
+    border-color: #d1e5f4 !important;
+    box-shadow: 0 0 6px rgba(209, 229, 244, 0.8) !important;
+}
+
+/* NUCLEAR OPTION: Hide any remaining borders */
+div[data-testid="stNumberInput"] * {
+    box-shadow: none !important;
+}
+
+div[data-testid="stNumberInput"] *:not(button) {
+    border: none !important;
+}
 
     /* Prediction button styling */
     .predict-button {
@@ -332,45 +376,6 @@ st.markdown("""
     footer {visibility: hidden;}
     .stDeployButton {display:none;}
     header {visibility: hidden;}
-
-    /* Add this CSS to your existing number input section to remove the small border */
-
-/* Target all possible number input elements and remove borders */
-div[data-testid="stNumberInput"] input[type="number"] {
-    border: none !important;
-    background: transparent !important;
-    height: 100% !important;
-    font-size: 16px !important;
-    width: 100% !important;
-    margin: 0 !important;
-    padding: 0 12px !important;
-    line-height: 1.2 !important;
-    color: black !important;
-    outline: none !important;
-    box-shadow: none !important;
-    text-align: left !important;
-}
-
-/* Remove any focus borders on the input */
-div[data-testid="stNumberInput"] input[type="number"]:focus {
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-    background: transparent !important;
-}
-
-/* Additional targeting for stubborn borders */
-div[data-testid="stNumberInput"] input {
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-}
-
-div[data-testid="stNumberInput"] input:focus {
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-}
 
     </style>
 """, unsafe_allow_html=True)
