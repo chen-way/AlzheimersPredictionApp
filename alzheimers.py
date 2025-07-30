@@ -30,6 +30,12 @@ st.markdown("""
         border-color: #d1e5f4 !important;
         box-shadow: 0 0 0 0.2rem rgba(209, 229, 244, 0.25) !important;
     }
+
+    /* Temporary - add this to see what's happening */
+div[data-testid="stNumberInput"] * {
+    border: 1px solid red !important;
+}
+
     </style>
 """, unsafe_allow_html=True)
 
