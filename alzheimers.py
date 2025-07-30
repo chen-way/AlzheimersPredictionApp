@@ -323,7 +323,9 @@ st.markdown("""
     .stDeployButton {display:none;}
     header {visibility: hidden;}
 
-/* Target only the number input container */
+/* Replace your number input CSS section with this improved version */
+
+/* Target the main number input container */
 div[data-testid="stNumberInput"] > div {
     border: 2px solid #93BCDC !important;
     border-radius: 10px !important;
@@ -331,43 +333,72 @@ div[data-testid="stNumberInput"] > div {
     height: 42px !important;
     display: flex !important;
     align-items: center !important;
-    padding: 0 0.4rem !important;
+    padding: 0 !important;
+    overflow: hidden !important;
 }
 
-/* Input inside */
+/* Hide the inner cream rectangle completely */
+div[data-testid="stNumberInput"] > div > div {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+/* Style the actual input field */
 div[data-testid="stNumberInput"] input[type="number"] {
     border: none !important;
     background: transparent !important;
-    height: 36px !important;
-    font-size: 18px !important;
+    height: 100% !important;
+    font-size: 16px !important;
     width: 100% !important;
     margin: 0 !important;
+    padding: 0 12px !important;
     line-height: 1.2 !important;
+    color: black !important;
+    outline: none !important;
+    box-shadow: none !important;
 }
 
-/* Buttons + container */
-div[data-testid="stNumberInput"] > div > div {
-    display: flex !important;
-    height: 36px !important;
-}
-
+/* Style the increment/decrement buttons */
 div[data-testid="stNumberInput"] > div > div > button {
     border: none !important;
-    background: transparent !important;
-    height: 36px !important;
-    width: 36px !important;
+    background: rgba(147, 188, 220, 0.2) !important;
+    height: 100% !important;
+    width: 32px !important;
     padding: 0 !important;
     margin: 0 !important;
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
+    transition: background-color 0.2s ease !important;
 }
 
-/* Focus effect */
+div[data-testid="stNumberInput"] > div > div > button:hover {
+    background: rgba(147, 188, 220, 0.4) !important;
+}
+
+/* Focus effect for the main container */
 div[data-testid="stNumberInput"]:focus-within > div {
     border-color: #d1e5f4 !important;
     box-shadow: 0 0 6px rgba(209, 229, 244, 0.8) !important;
     outline: none !important;
+}
+
+/* Remove any additional inner borders or backgrounds */
+div[data-testid="stNumberInput"] * {
+    box-shadow: none !important;
+}
+
+div[data-testid="stNumberInput"] > div > div > div {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
 }
 
 </style>
