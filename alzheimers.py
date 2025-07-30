@@ -31,11 +31,45 @@ st.markdown("""
         box-shadow: 0 0 0 0.2rem rgba(209, 229, 244, 0.25) !important;
     }
 
-    /* Temporary - add this to see what's happening */
-div[data-testid="stNumberInput"] * {
-    border: 1px solid red !important;
+    /* Remove any gaps between button elements */
+div[data-testid="stNumberInput"] > div > div > div {
+    display: flex !important;
+    gap: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
+/* Target the specific container that holds the buttons */
+div[data-testid="stNumberInput"] > div > div > div:last-child {
+    display: flex !important;
+    gap: 0 !important;
+    margin-left: auto !important;
+    width: auto !important;
+}
+
+/* Make sure buttons are right next to each other */
+div[data-testid="stNumberInput"] button {
+    margin: 0 !important;
+    padding: 8px !important;
+    border: none !important;
+    background: rgba(147, 188, 220, 0.2) !important;
+    height: 100% !important;
+    width: 35px !important;
+    border-radius: 0 !important;
+    flex-shrink: 0 !important;
+}
+
+/* Make the first button (minus) have no right margin */
+div[data-testid="stNumberInput"] button:first-of-type {
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+/* Make the last button (plus) have rounded right corners */
+div[data-testid="stNumberInput"] button:last-of-type {
+    border-top-right-radius: 8px !important;
+    border-bottom-right-radius: 8px !important;
+}
     </style>
 """, unsafe_allow_html=True)
 
