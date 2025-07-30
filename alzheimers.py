@@ -174,6 +174,32 @@ div[data-testid="stNumberInput"] *:hover:focus {
     box-shadow: none !important;
 }
 
+/* Additional shadow removal for main area number inputs */
+div[data-testid="stNumberInput"],
+div[data-testid="stNumberInput"]:focus-within,
+div[data-testid="stNumberInput"]:hover,
+div[data-testid="stNumberInput"]:active {
+    box-shadow: none !important;
+}
+
+/* Target any remaining Streamlit default shadows */
+.stNumberInput,
+.stNumberInput:focus-within,
+.stNumberInput:hover {
+    box-shadow: none !important;
+}
+
+/* Remove any webkit/browser default shadows */
+div[data-testid="stNumberInput"] input::-webkit-outer-spin-button,
+div[data-testid="stNumberInput"] input::-webkit-inner-spin-button {
+    -webkit-appearance: none !important;
+    margin: 0 !important;
+}
+
+div[data-testid="stNumberInput"] input[type=number] {
+    -moz-appearance: textfield !important;
+}
+
 /* Button styling remains the same */
 div[data-testid="stNumberInput"] button {
     border: none !important;
@@ -230,6 +256,7 @@ div[data-testid="stNumberInput"]:focus-within > div {
 div[data-testid="stNumberInput"] *:not(> div):not(button) {
     border: none !important;
 }
+
     /* Prediction button styling */
     .predict-button {
         background-color: #d1e5f4 !important;
