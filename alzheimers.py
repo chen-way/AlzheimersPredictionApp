@@ -544,22 +544,23 @@ with col2:
                     # Get label from target encoder and make it more meaningful
                     raw_label = target_encoder.inverse_transform([prediction])[0]
                     
-                    # Define risk levels based on the model's prediction and probability
+                    # Define risk levels based on probability percentages
                     def interpret_prediction_with_thresholds(raw_pred, probabilities):
-                        raw_str = str(raw_pred).lower()
-                        max_prob = max(probabilities)
+                        # Get the probability of the positive class (assuming index 1 is high risk)
+                        # If binary classification, probabilities[1] is usually the positive class
+                        if len(probabilities) == 2:
+                            risk_probability = probabilities[1] * 100  # Convert to percentage
+                        else:
+                            # For multi-class, use the maximum probability
+                            risk_probability = max(probabilities) * 100
                         
-                        # If model predicts high risk with good confidence (60%+)
-                        if raw_str in ['1', '1.0', 'high', 'high risk', 'positive', 'yes'] and max_prob >= 0.60:
+                        # Classify based on percentage ranges
+                        if risk_probability >= 60:
                             return "High Risk"
-                        # If model predicts low risk with good confidence (60%+) 
-                        elif raw_str in ['0', '0.0', 'low', 'low risk', 'negative', 'no'] and max_prob >= 0.60:
-                            return "Low Risk"
-                        # If model predicts moderate risk OR confidence is low
-                        elif raw_str in ['2', '2.0', 'moderate', 'medium'] or max_prob < 0.60:
+                        elif risk_probability >= 30:
                             return "Moderate Risk"
                         else:
-                            return "Moderate Risk"  # Default to moderate for safety
+                            return "Low Risk"
                     
                     label = interpret_prediction_with_thresholds(raw_label, probability)
                     
