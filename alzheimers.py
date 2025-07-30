@@ -415,7 +415,6 @@ div[data-testid="stNumberInput"] > div > div > div {
     border: none !important;
     box-shadow: none !important;
 }
-
 </style>
 """, unsafe_allow_html=True)
 
