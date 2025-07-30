@@ -90,7 +90,7 @@ st.markdown("""
  
 /* AGGRESSIVE FIX - Replace your number input CSS section with this */
 
-/* Target the main number input container */
+/* Target the main number input container - RESTORE OUTER BORDER */
 div[data-testid="stNumberInput"] > div {
     border: 2px solid #93BCDC !important;
     border-radius: 10px !important;
@@ -100,6 +100,12 @@ div[data-testid="stNumberInput"] > div {
     align-items: center !important;
     padding: 0 !important;
     overflow: hidden !important;
+}
+
+/* Ensure the outer border stays visible and styled */
+div[data-testid="stNumberInput"]:focus-within > div {
+    border-color: #d1e5f4 !important;
+    box-shadow: 0 0 6px rgba(209, 229, 244, 0.8) !important;
 }
 
 /* COMPLETELY hide the inner container that creates the cream border */
@@ -206,18 +212,14 @@ div[data-testid="stNumberInput"] button:hover {
     background: rgba(147, 188, 220, 0.4) !important;
 }
 
-/* Focus effect for the main container only */
+/* Focus effect for the main container only - KEEP OUTER BORDER */
 div[data-testid="stNumberInput"]:focus-within > div {
     border-color: #d1e5f4 !important;
     box-shadow: 0 0 6px rgba(209, 229, 244, 0.8) !important;
 }
 
-/* NUCLEAR OPTION: Hide any remaining borders */
-div[data-testid="stNumberInput"] * {
-    box-shadow: none !important;
-}
-
-div[data-testid="stNumberInput"] *:not(button) {
+/* PRESERVE outer border while removing inner ones */
+div[data-testid="stNumberInput"] *:not(> div):not(button) {
     border: none !important;
 }
 
