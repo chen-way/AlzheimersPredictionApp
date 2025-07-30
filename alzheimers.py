@@ -6,74 +6,9 @@ import gzip
 import time
 import random
 
+# SINGLE, CLEAN CSS SECTION - NO CONFLICTS
 st.markdown("""
     <style>
-    /* Outer container styling */
-    div[data-baseweb="input"] > div {
-        background-color: #fffef7 !important;
-        border: 2px solid #93BCDC !important;
-        border-radius: 10px !important;
-        color: black !important;
-        padding: 6px !important;
-    }
-
-    /* Remove grey rectangle inside the input box */
-    div[data-baseweb="input"] input {
-        background-color: transparent !important;
-        box-shadow: none !important;
-        border: none !important;
-        color: black !important;
-    }
-
-    /* Optional: handle focus styling */
-    div[data-baseweb="input"] > div:focus-within {
-        border-color: #d1e5f4 !important;
-        box-shadow: 0 0 0 0.2rem rgba(209, 229, 244, 0.25) !important;
-    }
-
-/* Simple approach - just remove spacing between buttons */
-div[data-testid="stNumberInput"] button {
-    margin: 0 !important;
-    padding: 8px 12px !important;
-    border: none !important;
-    background: rgba(147, 188, 220, 0.2) !important;
-    height: 38px !important;
-    min-width: 32px !important;
-    border-radius: 0 !important;
-}
-
-/* Make buttons stick together */
-div[data-testid="stNumberInput"] button + button {
-    margin-left: -1px !important;
-}
-
-/* Round the right side of the last button */
-div[data-testid="stNumberInput"] button:last-of-type {
-    border-top-right-radius: 8px !important;
-    border-bottom-right-radius: 8px !important;
-}
-
-/* Ensure input field has proper spacing */
-div[data-testid="stNumberInput"] input {
-    text-align: left !important;
-    padding-left: 12px !important;
-}
-
-    </style>
-""", unsafe_allow_html=True)
-
-
-# Enhanced page configuration with custom styling
-st.set_page_config(
-    page_title="Alzheimer's Risk Assessment", 
-    layout="wide",
-    page_icon="🧠",
-    initial_sidebar_state="expanded"
-)
-
-# Light blue CSS styling similar to stroke app
-st.markdown("""
-<style>
     /* Light blue background */
     .stApp {
         background-color: #e5f3fd !important;
@@ -117,6 +52,131 @@ st.markdown("""
         border: 1px solid #93BCDC;
     }
     
+    /* SELECT BOX STYLING */
+    .stSelectbox > div > div {
+        background-color: #FDF6E7 !important;
+        color: black !important;
+        border-radius: 10px !important;
+        border: 2px solid #93BCDC !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    .stSelectbox > div > div:focus-within {
+        border-color: #d1e5f4 !important;
+        box-shadow: 0 0 0 0.2rem rgba(209, 229, 244, 0.25) !important;
+    }
+
+    /* TEXT INPUT STYLING (for any text inputs) */
+    div[data-baseweb="input"] > div {
+        background-color: #FDF6E7 !important;
+        border: 2px solid #93BCDC !important;
+        border-radius: 10px !important;
+        color: black !important;
+        padding: 6px !important;
+    }
+
+    div[data-baseweb="input"] input {
+        background-color: transparent !important;
+        box-shadow: none !important;
+        border: none !important;
+        color: black !important;
+    }
+
+    div[data-baseweb="input"] > div:focus-within {
+        border-color: #d1e5f4 !important;
+        box-shadow: 0 0 0 0.2rem rgba(209, 229, 244, 0.25) !important;
+    }
+
+    /* NUMBER INPUT STYLING - CONSOLIDATED AND CLEAN */
+    div[data-testid="stNumberInput"] > div {
+        border: 2px solid #93BCDC !important;
+        border-radius: 10px !important;
+        background-color: #FDF6E7 !important;
+        height: 42px !important;
+        display: flex !important;
+        align-items: center !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+    }
+
+    /* Remove ALL inner styling that creates the cream rectangle */
+    div[data-testid="stNumberInput"] > div > div {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        height: 100% !important;
+        width: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+    }
+
+    /* Style the input field */
+    div[data-testid="stNumberInput"] input[type="number"] {
+        border: none !important;
+        background: transparent !important;
+        height: 100% !important;
+        font-size: 16px !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 12px !important;
+        line-height: 1.2 !important;
+        color: black !important;
+        outline: none !important;
+        box-shadow: none !important;
+        text-align: left !important;
+    }
+
+    /* Button styling - FORCE THEM TOGETHER */
+    div[data-testid="stNumberInput"] button {
+        border: none !important;
+        background: rgba(147, 188, 220, 0.2) !important;
+        height: 100% !important;
+        width: 35px !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        transition: background-color 0.2s ease !important;
+        flex-shrink: 0 !important;
+    }
+
+    /* CRITICAL: Remove spacing between buttons */
+    div[data-testid="stNumberInput"] button:first-of-type {
+        border-radius: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    div[data-testid="stNumberInput"] button:last-of-type {
+        border-top-right-radius: 8px !important;
+        border-bottom-right-radius: 8px !important;
+        margin-left: 0 !important;
+    }
+
+    /* Force button container to align right with NO gaps */
+    div[data-testid="stNumberInput"] > div > div:has(button) {
+        display: flex !important;
+        gap: 0 !important;
+        margin-left: auto !important;
+        width: 70px !important;
+        height: 100% !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+    }
+
+    /* Hover effects */
+    div[data-testid="stNumberInput"] button:hover {
+        background: rgba(147, 188, 220, 0.4) !important;
+    }
+
+    /* Focus effect for the main container */
+    div[data-testid="stNumberInput"]:focus-within > div {
+        border-color: #d1e5f4 !important;
+        box-shadow: 0 0 6px rgba(209, 229, 244, 0.8) !important;
+    }
+
     /* Prediction button styling */
     .predict-button {
         background-color: #d1e5f4 !important;
@@ -196,85 +256,6 @@ st.markdown("""
         min-width: 350px !important;
     }
     
-    /* Input field styling */
-    .stSelectbox > div > div {
-        background-color: #FDF6E7 !important;
-        color: black !important;
-        border-radius: 10px;
-        border: 2px solid #93BCDC;
-        transition: all 0.3s ease;
-    }
-    
-    .stSelectbox > div > div:focus-within {
-        border-color: #d1e5f4;
-        box-shadow: 0 0 0 0.2rem rgba(209, 229, 244, 0.25);
-    }
-    
-    /* Number input styling to match selectbox - comprehensive fix */
-    .stNumberInput > div > div > input {
-        background-color: #FDF6E7 !important;
-        color: black !important;
-        border-radius: 10px !important;
-        border: 2px solid #93BCDC !important;
-        transition: all 0.3s ease !important;
-        box-shadow: none !important;
-    }
-    
-    .stNumberInput > div > div {
-        background-color: transparent !important;
-        border: none !important;
-        border-radius: 10px !important;
-        transition: all 0.3s ease !important;
-        box-shadow: none !important;
-    }
-    
-    .stNumberInput > div {
-        background-color: transparent !important;
-        border: none !important;
-    }
-    
-    .stNumberInput input[type="number"] {
-        background-color: #FDF6E7 !important;
-        color: black !important;
-        border-radius: 10px !important;
-        border: 2px solid #93BCDC !important;
-        transition: all 0.3s ease !important;
-        box-shadow: none !important;
-        padding: 0.5rem !important;
-    }
-    
-    .stNumberInput input[type="number"]:focus {
-        border-color: #d1e5f4 !important;
-        box-shadow: 0 0 0 0.2rem rgba(209, 229, 244, 0.25) !important;
-        outline: none !important;
-        background-color: #FDF6E7 !important;
-    }
-    
-    .stNumberInput > div > div:focus-within {
-        border: none !important;
-        box-shadow: none !important;
-    }
-    
-    .stNumberInput > div > div:focus-within input {
-        border-color: #d1e5f4 !important;
-        box-shadow: 0 0 0 0.2rem rgba(209, 229, 244, 0.25) !important;
-        background-color: #FDF6E7 !important;
-    }
-    
-    /* Override any default number input styling */
-    div[data-testid="stNumberInput"] > div > div > input {
-        background-color: #FDF6E7 !important;
-        border: 2px solid #93BCDC !important;
-        border-radius: 10px !important;
-        color: black !important;
-    }
-    
-    div[data-testid="stNumberInput"] input:focus {
-        background-color: #FDF6E7 !important;
-        border-color: #d1e5f4 !important;
-        box-shadow: 0 0 0 0.2rem rgba(209, 229, 244, 0.25) !important;
-    }
-    
     /* Sidebar width adjustment */
     .css-1d391kg {
         width: 350px !important;
@@ -352,101 +333,16 @@ st.markdown("""
     .stDeployButton {display:none;}
     header {visibility: hidden;}
 
-/* Replace your number input CSS section with this improved version */
-
-/* Target the main number input container */
-div[data-testid="stNumberInput"] > div {
-    border: 2px solid #93BCDC !important;
-    border-radius: 10px !important;
-    background-color: #FDF6E7 !important;
-    height: 42px !important;
-    display: flex !important;
-    align-items: center !important;
-    padding: 0 !important;
-    overflow: hidden !important;
-}
-
-/* Hide the inner cream rectangle completely */
-div[data-testid="stNumberInput"] > div > div {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    height: 100% !important;
-    width: 100% !important;
-    display: flex !important;
-    align-items: center !important;
-}
-
-/* Style the actual input field */
-div[data-testid="stNumberInput"] input[type="number"] {
-    border: none !important;
-    background: transparent !important;
-    height: 100% !important;
-    font-size: 16px !important;
-    width: 100% !important;
-    margin: 0 !important;
-    padding: 0 12px !important;
-    line-height: 1.2 !important;
-    color: black !important;
-    outline: none !important;
-    box-shadow: none !important;
-}
-
-/* Style the increment/decrement buttons */
-div[data-testid="stNumberInput"] > div > div > button {
-    border: none !important;
-    background: rgba(147, 188, 220, 0.2) !important;
-    height: 100% !important;
-    width: 32px !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    transition: background-color 0.2s ease !important;
-    margin-left: auto !important;
-}
-
-/* Ensure the button container pushes buttons to the right */
-div[data-testid="stNumberInput"] > div > div {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    height: 100% !important;
-    width: 100% !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: flex-end !important;
-}
-
-div[data-testid="stNumberInput"] > div > div > button:hover {
-    background: rgba(147, 188, 220, 0.4) !important;
-}
-
-/* Focus effect for the main container */
-div[data-testid="stNumberInput"]:focus-within > div {
-    border-color: #d1e5f4 !important;
-    box-shadow: 0 0 6px rgba(209, 229, 244, 0.8) !important;
-    outline: none !important;
-}
-
-/* Remove any additional inner borders or backgrounds */
-div[data-testid="stNumberInput"] * {
-    box-shadow: none !important;
-}
-
-div[data-testid="stNumberInput"] > div > div > div {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-}
-
-</style>
+    </style>
 """, unsafe_allow_html=True)
+
+# Enhanced page configuration with custom styling
+st.set_page_config(
+    page_title="Alzheimer's Risk Assessment", 
+    layout="wide",
+    page_icon="🧠",
+    initial_sidebar_state="expanded"
+)
 
 # === LOAD MODEL AND ENCODERS (gzip) ===
 try:
@@ -630,6 +526,8 @@ st.markdown("<br>", unsafe_allow_html=True)
 # Get user input with modern styling
 user_input_df = get_user_input()
 
+# === REST OF YOUR APPLICATION CODE CONTINUES HERE === 
+# (I'm truncating this for space, but include all your prediction logic, tips, sidebar, etc.)
 # === PREDICTION SECTION ===
 st.markdown("<br><br>", unsafe_allow_html=True)
 st.markdown("""
