@@ -520,23 +520,46 @@ with col2:
                 prediction = model.predict(user_input_encoded)[0]
                 probability = model.predict_proba(user_input_encoded)[0]
                 
-                # Get label from target encoder and make it more meaningful
-                raw_label = target_encoder.inverse_transform([prediction])[0]
-                
-                # Convert raw labels to meaningful descriptions
-                def interpret_prediction(raw_pred):
-                    raw_str = str(raw_pred).lower()
+                # Define risk levels based on probability thresholds
+                def interpret_risk_from_probability(probabilities):
+                    # Get the maximum probability (most likely class)
+                    max_prob = max(probabilities)
                     
-                    if raw_str in ['1', '1.0', 'high', 'high risk', 'positive', 'yes']:
-                        return "High Risk"
-                    elif raw_str in ['0', '0.0', 'low', 'low risk', 'negative', 'no']:
-                        return "Low Risk"
-                    elif raw_str in ['2', '2.0', 'moderate', 'medium']:
-                        return "Moderate Risk"
-                    else:
-                        return f"Risk Level {raw_pred}"
+                    # Define thresholds
+                    if max_prob >= 0.70:  # 70% or higher
+                        if probabilities[1] == max_prob:  # Assuming index 1 is high risk
+                            return "High Risk", max_prob
+                        elif probabilities[0] == max_prob:  # Assuming index 0 is low risk
+                            return "Low Risk", max_prob
+                        else:
+                            return "Moderate Risk", max_prob
+                    elif max_prob >= 0.50:  # 50-69%
+                        return "Moderate Risk", max_prob
+                    else:  # Below 50%
+                        return "Low Risk", max_prob
                 
-                label = interpret_prediction(raw_label)
+                # Alternative: Use probability-based classification
+                # Get highest probability risk level
+                risk_classes = target_encoder.classes_
+                max_prob_idx = np.argmax(probability)
+                max_prob_value = probability[max_prob_idx]
+                predicted_class = risk_classes[max_prob_idx]
+                
+                # Apply our custom thresholds
+                if max_prob_value >= 0.70:
+                    # High confidence prediction
+                    if 'high' in str(predicted_class).lower() or predicted_class == 1:
+                        label = "High Risk"
+                    elif 'low' in str(predicted_class).lower() or predicted_class == 0:
+                        label = "Low Risk"
+                    else:
+                        label = "Moderate Risk"
+                elif max_prob_value >= 0.40:
+                    # Moderate confidence - always moderate risk
+                    label = "Moderate Risk"
+                else:
+                    # Low confidence - default to low risk
+                    label = "Low Risk"
                 
                 # Clear progress bar
                 progress_bar.empty()
