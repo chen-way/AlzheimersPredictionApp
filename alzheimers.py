@@ -593,25 +593,7 @@ with col2:
                     </div>
                     """, unsafe_allow_html=True)
                 
-                # Confidence scores
-                if len(probability) > 1:
-                    st.markdown("<br>", unsafe_allow_html=True)
-                    st.markdown("""
-                    <div style="background-color: #FDF6E7; padding: 1.5rem; border-radius: 15px; border: 1px solid #93BCDC;">
-                        <h4 style="color: #2d3436; text-align: center; margin-bottom: 1rem;">📈 Confidence Analysis</h4>
-                    </div>
-                    """, unsafe_allow_html=True)
-                    
-                    # Create beautiful metrics display
-                    prob_cols = st.columns(len(probability))
-                    for i, (risk_level, prob) in enumerate(zip(target_encoder.classes_, probability)):
-                        with prob_cols[i]:
-                            st.markdown(f"""
-                            <div class="metric-container">
-                                <h4 style="color: #2d3436; margin: 0;">{risk_level}</h4>
-                                <h2 style="color: #1E5A96; margin: 0.5rem 0;">{prob:.1%}</h2>
-                            </div>
-                            """, unsafe_allow_html=True)
+
                 
             except Exception as e:
                 st.markdown(f"""
