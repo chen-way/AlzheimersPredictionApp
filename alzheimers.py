@@ -639,4 +639,168 @@ with col2:
             except Exception as e:
                 st.markdown(f"""
                 <div style="background-color: #ffcccb; color: #d63031; padding: 1.5rem; border-radius: 15px; text-align: center; border: 2px solid #ff7675;">
-                    <h3>⚠️ Analysis Error</h
+                    <h3>⚠️ Analysis Error</h3>
+                    <p>We encountered an issue processing your data: {str(e)}</p>
+                    <p>Please check your inputs and try again, or contact support if the issue persists.</p>
+                </div>
+                """, unsafe_allow_html=True)
+
+# === LIFESTYLE TIPS SECTION ===
+st.markdown("""
+<div class="tips-container">
+    <h2>🧘 Evidence-Based Prevention Strategies</h2>
+    <p style="text-align: center; font-size: 1.1rem; color: #2d3436; margin-bottom: 2rem;">
+        Discover scientifically-backed lifestyle changes that can help reduce your Alzheimer's risk
+    </p>
+</div>
+""", unsafe_allow_html=True)
+
+# Tips
+tips = [
+    {
+        "icon": "🫐",
+        "title": "Brain-Healthy Nutrition",
+        "tip": "Follow a Mediterranean diet rich in leafy greens, berries, fatty fish, nuts, and olive oil. These foods contain antioxidants and omega-3 fatty acids that support brain health.",
+        "color": "#d1e5f4"
+    },
+    {
+        "icon": "🚶",
+        "title": "Regular Physical Exercise",
+        "tip": "Engage in at least 150 minutes of moderate aerobic exercise weekly. Activities like walking, swimming, or dancing improve blood flow to the brain and promote neuroplasticity.",
+        "color": "#d4edda"
+    },
+    {
+        "icon": "🧩",
+        "title": "Cognitive Stimulation",
+        "tip": "Challenge your brain regularly with puzzles, reading, learning new languages, or playing musical instruments. Mental stimulation builds cognitive reserve.",
+        "color": "#fff3cd"
+    },
+    {
+        "icon": "👫",
+        "title": "Social Engagement",
+        "tip": "Maintain strong social connections through family time, friendships, community activities, or volunteering. Social interaction protects against cognitive decline.",
+        "color": "#f8d7da"
+    },
+    {
+        "icon": "😴",
+        "title": "Quality Sleep",
+        "tip": "Prioritize 7-9 hours of quality sleep nightly. During sleep, your brain clears toxic proteins associated with Alzheimer's disease.",
+        "color": "#e2e3f0"
+    },
+    {
+        "icon": "🚭",
+        "title": "Avoid Harmful Substances",
+        "tip": "Quit smoking and limit alcohol consumption. These substances increase inflammation and damage brain cells over time.",
+        "color": "#ffcccb"
+    },
+    {
+        "icon": "🩺",
+        "title": "Manage Health Conditions",
+        "tip": "Keep blood pressure, diabetes, and cholesterol levels under control. Cardiovascular health is directly linked to brain health.",
+        "color": "#cce5ff"
+    },
+    {
+        "icon": "🧘",
+        "title": "Stress Management",
+        "tip": "Practice stress-reduction techniques like meditation, yoga, or deep breathing. Chronic stress releases hormones that can damage the brain.",
+        "color": "#d1f2eb"
+    },
+    {
+        "icon": "🏥",
+        "title": "Regular Medical Checkups",
+        "tip": "Schedule annual health screenings and discuss cognitive health with your healthcare provider. Early detection and intervention are key.",
+        "color": "#fce4ec"
+    },
+    {
+        "icon": "🎯",
+        "title": "Maintain Life Purpose",
+        "tip": "Engage in meaningful activities that give you a sense of purpose. Having goals and staying motivated supports mental well-being.",
+        "color": "#e8f5e8"
+    }
+]
+
+# Random tip section
+col1, col2 = st.columns([1, 3])
+with col1:
+    if st.button("💡 Get Random Prevention Tip", use_container_width=True, 
+                 help="Click for a personalized health recommendation"):
+        selected_tip = random.choice(tips)
+        with col2:
+            st.markdown(f"""
+            <div style="background-color: {selected_tip['color']}; padding: 1.5rem; border-radius: 15px; color: #2d3436; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #93BCDC;">
+                <h4>{selected_tip['icon']} {selected_tip['title']}</h4>
+                <p style="margin: 0; font-size: 1.05rem; line-height: 1.6;">{selected_tip['tip']}</p>
+            </div>
+            """, unsafe_allow_html=True)
+
+# Add spacing between random tip and complete guide
+st.markdown("<br>", unsafe_allow_html=True)
+
+# Show all tips in an enhanced expandable section
+with st.expander("📋 View Complete Prevention Guide", expanded=False):
+    # Create a grid layout for tips
+    for i in range(0, len(tips), 2):
+        cols = st.columns(2)
+        for j, col in enumerate(cols):
+            if i + j < len(tips):
+                tip = tips[i + j]
+                with col:
+                    st.markdown(f"""
+                    <div style="background-color: {tip['color']}; padding: 1.5rem; border-radius: 15px; color: #2d3436; margin-bottom: 1rem; height: 180px; display: flex; flex-direction: column; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #93BCDC;">
+                        <h5 style="margin: 0 0 1rem 0; display: flex; align-items: center; gap: 0.5rem;">
+                            <span style="font-size: 1.5rem;">{tip['icon']}</span>
+                            {tip['title']}
+                        </h5>
+                        <p style="margin: 0; font-size: 0.95rem; line-height: 1.5;">{tip['tip']}</p>
+                    </div>
+                    """, unsafe_allow_html=True)
+
+# === ENHANCED SIDEBAR INFORMATION ===
+with st.sidebar:
+    st.markdown("""
+    <div style="background-color: #FDF6E7; padding: 1.5rem; border-radius: 15px; border: 1px solid #93BCDC; margin-bottom: 2rem;">
+        <h3 style="color: #2d3436; text-align: center; margin-bottom: 1rem;">📊 About This Assessment</h3>
+        <div style="color: #2d3436; line-height: 1.6;">
+            <p><strong>🤖 AI Technology:</strong> Advanced XGBoost machine learning model</p>
+            <p><strong>📈 Comprehensive Analysis:</strong> 24 evidence-based risk factors</p>
+            <p><strong>🔬 Research-Based:</strong> Built on peer-reviewed medical literature</p>
+            <p><strong>🎯 Personalized:</strong> Tailored insights for your unique profile</p>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style="background-color: #ffcccb; padding: 1.5rem; border-radius: 15px; color: #d63031; margin-bottom: 2rem; border: 2px solid #ff7675;">
+        <h4 style="margin: 0 0 1rem 0; text-align: center;">⚠️ Important Medical Disclaimer</h4>
+        <p style="margin: 0; font-size: 0.9rem; line-height: 1.5;">
+            This tool provides educational insights based on research data and should never replace professional medical advice, diagnosis, or treatment. Always consult qualified healthcare professionals for medical decisions and personalized care planning.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style="background-color: #FDF6E7; padding: 1.5rem; border-radius: 15px; border: 1px solid #93BCDC;">
+        <h4 style="color: #2d3436; text-align: center; margin-bottom: 1rem;">🔗 Trusted Resources</h4>
+        <div style="color: #2d3436;">
+            <p><a href="https://www.alz.org" target="_blank" style="color: #1E5A96; text-decoration: none;">🏥 Alzheimer's Association</a></p>
+            <p><a href="https://www.nia.nih.gov" target="_blank" style="color: #1E5A96; text-decoration: none;">🔬 National Institute on Aging</a></p>
+            <p><a href="https://www.cdc.gov/alzheimers-dementia/about/alzheimers.html?CDC_AAref_Val=https://www.cdc.gov/aging/aginginfo/alzheimers.htm" target="_blank" style="color: #1E5A96; text-decoration: none;">📋 CDC Alzheimer's Resources</a></p>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+# Footer with reduced spacing
+st.markdown("<br>", unsafe_allow_html=True)
+st.markdown("""
+<div style="background-color: #d1e5f4; padding: 2rem; border-radius: 15px; text-align: center; margin-top: 1rem; border: 1px solid #93BCDC;">
+    <h4 style="color: #2d3436; margin: 0 0 1rem 0;">🧠 Alzheimer's Risk Assessment Tool</h4>
+    <p style="color: #636e72; margin: 0; font-size: 0.9rem;">
+        Developed by <strong>Chenwei Pan</strong> • Powered by Advanced Machine Learning • For Educational Purposes
+    </p>
+    <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #93BCDC;">
+        <p style="color: #636e72; margin: 0; font-size: 0.8rem;">
+            This application represents cutting-edge research in computational healthcare and should be used alongside professional medical guidance.
+        </p>
+    </div>
+</div>
+""", unsafe_allow_html=True)
