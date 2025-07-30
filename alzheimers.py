@@ -412,7 +412,7 @@ def get_user_input():
                 if feature == 'Age':
                     value = st.number_input(
                         f"**{feature}** (years):", 
-                        min_value=18, max_value=120, value=65, step=1, key=feature
+                        min_value=10, max_value=120, value=65, step=1, key=feature
                     )
                 elif feature == 'BMI':
                     value = st.number_input(
