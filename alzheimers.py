@@ -619,14 +619,11 @@ with col2:
                     # Enhanced results display (similar to your stroke app logic)
                     st.markdown("<br>", unsafe_allow_html=True)
                     
-                    # Display metrics
-                    col1, col2 = st.columns(2)
-                    with col1:
-                        st.metric("Alzheimer's Risk", f"{alzheimers_risk:.1f}%")
-                        st.metric("No Alzheimer's", f"{no_risk:.1f}%")
+                    # Display main risk metric only
+                    col1, col2, col3 = st.columns([1, 2, 1])
                     with col2:
-                        st.metric("Model Prediction", f"Class {prediction}")
-                        st.metric("Confidence", f"{max(probabilities)*100:.1f}%")
+                        st.metric("Alzheimer's Risk Assessment", f"{alzheimers_risk:.1f}%", 
+                                help="Statistical risk based on your health profile")
                     
                     # Risk interpretation (using same thresholds as your stroke app)
                     if alzheimers_risk >= 60:  # High risk (60%+)
@@ -823,11 +820,11 @@ st.markdown("""
     <p style="color: #636e72;">Knowledge is power. Use these insights to make informed decisions about your health and lifestyle. 
     Remember, many risk factors for Alzheimer's disease are modifiable through healthy choices.</p>
     
-    <div style="margin-top: 1rem;">
+    <div style="margin-top: 1rem; color: #636e72;">
         <strong>Useful Resources:</strong><br>
-        • Alzheimer's Association: alz.org<br>
-        • National Institute on Aging: nia.nih.gov<br>
-        • Brain Health Research: brainhealthregistry.org
+        • Alzheimer's Association: <a href="https://alz.org" target="_blank" style="color: #007bff;">alz.org</a><br>
+        • National Institute on Aging: <a href="https://nia.nih.gov" target="_blank" style="color: #007bff;">nia.nih.gov</a><br>
+        • Brain Health Research: <a href="https://brainhealthregistry.org" target="_blank" style="color: #007bff;">brainhealthregistry.org</a>
     </div>
 </div>
 """, unsafe_allow_html=True)
