@@ -543,6 +543,13 @@ with col2:
                     
                     # Get label from target encoder and make it more meaningful
                     raw_label = target_encoder.inverse_transform([prediction])[0]
+
+                    # Make prediction only for adults (40+)
+prediction = model.predict(user_input_encoded)[0]
+probability = model.predict_proba(user_input_encoded)[0]
+
+# Get label from target encoder and make it more meaningful
+raw_label = target_encoder.inverse_transform([prediction])[0]
                     
                     # Define risk levels based on the model's prediction and probability
                     def interpret_prediction_with_thresholds(raw_pred, probabilities):
