@@ -516,50 +516,52 @@ with col2:
                 # Ensure all features are present and in the right order
                 user_input_encoded = user_input_encoded[feature_names]
                 
-                # Make prediction
+                # Get user's age for safety check
+                user_age = user_input_df['Age'].iloc[0]
+                
+                # Safety check for young users
+                if user_age < 40:
+                    st.markdown(f"""
+                    <div style="background-color: #d4edda; color: #155724; padding: 1.5rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 15px rgba(21, 87, 36, 0.2); margin: 1rem 0; border: 2px solid #28a745;">
+                        <h2>🌟 Age-Appropriate Assessment</h2>
+                        <h3>Current Age: {user_age} years</h3>
+                        <p style="font-size: 1.1rem; margin-top: 1rem;">
+                            Great news! At your age, Alzheimer's disease is extremely rare and typically not a concern. 
+                            This assessment tool is designed for adults, typically those over 50 years old.
+                        </p>
+                        <div style="background-color: rgba(255, 255, 255, 0.8); padding: 1rem; border-radius: 10px; margin-top: 1rem; color: #2d3436;">
+                            <strong>🧠 Focus on Brain Health:</strong> Keep building healthy habits like regular exercise, good sleep, 
+                            learning new things, and eating nutritious foods - these are great for your developing brain!
+                        </div>
+                    </div>
+                    """, unsafe_allow_html=True)
+                    return  # Exit early, don't run the model
+                
+                # Make prediction only for adults
                 prediction = model.predict(user_input_encoded)[0]
                 probability = model.predict_proba(user_input_encoded)[0]
                 
-                # Define risk levels based on probability thresholds
-                def interpret_risk_from_probability(probabilities):
-                    # Get the maximum probability (most likely class)
+                # Get label from target encoder and make it more meaningful
+                raw_label = target_encoder.inverse_transform([prediction])[0]
+                
+                # Define risk levels based on the model's prediction and probability
+                def interpret_prediction_with_thresholds(raw_pred, probabilities):
+                    raw_str = str(raw_pred).lower()
                     max_prob = max(probabilities)
                     
-                    # Define thresholds
-                    if max_prob >= 0.70:  # 70% or higher
-                        if probabilities[1] == max_prob:  # Assuming index 1 is high risk
-                            return "High Risk", max_prob
-                        elif probabilities[0] == max_prob:  # Assuming index 0 is low risk
-                            return "Low Risk", max_prob
-                        else:
-                            return "Moderate Risk", max_prob
-                    elif max_prob >= 0.50:  # 50-69%
-                        return "Moderate Risk", max_prob
-                    else:  # Below 50%
-                        return "Low Risk", max_prob
-                
-                # Alternative: Use probability-based classification
-                # Get highest probability risk level
-                risk_classes = target_encoder.classes_
-                max_prob_idx = np.argmax(probability)
-                max_prob_value = probability[max_prob_idx]
-                predicted_class = risk_classes[max_prob_idx]
-                
-                # Apply our custom thresholds
-                if max_prob_value >= 0.70:
-                    # High confidence prediction
-                    if 'high' in str(predicted_class).lower() or predicted_class == 1:
-                        label = "High Risk"
-                    elif 'low' in str(predicted_class).lower() or predicted_class == 0:
-                        label = "Low Risk"
+                    # If model predicts high risk with good confidence (60%+)
+                    if raw_str in ['1', '1.0', 'high', 'high risk', 'positive', 'yes'] and max_prob >= 0.60:
+                        return "High Risk"
+                    # If model predicts low risk with good confidence (60%+) 
+                    elif raw_str in ['0', '0.0', 'low', 'low risk', 'negative', 'no'] and max_prob >= 0.60:
+                        return "Low Risk"
+                    # If model predicts moderate risk OR confidence is low
+                    elif raw_str in ['2', '2.0', 'moderate', 'medium'] or max_prob < 0.60:
+                        return "Moderate Risk"
                     else:
-                        label = "Moderate Risk"
-                elif max_prob_value >= 0.40:
-                    # Moderate confidence - always moderate risk
-                    label = "Moderate Risk"
-                else:
-                    # Low confidence - default to low risk
-                    label = "Low Risk"
+                        return "Moderate Risk"  # Default to moderate for safety
+                
+                label = interpret_prediction_with_thresholds(raw_label, probability)
                 
                 # Clear progress bar
                 progress_bar.empty()
@@ -785,4 +787,4 @@ st.markdown("""
         </p>
     </div>
 </div>
-""", unsafe_allow_html=True)
+""", unsafe_allow_html=True) 
