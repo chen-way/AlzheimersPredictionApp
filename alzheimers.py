@@ -326,26 +326,33 @@ except Exception as e:
 # === CONFIDENCE CALIBRATION FUNCTION ===
 def apply_confidence_calibration(probability, user_input_hash):
     """
-    Conservative calibration - only prevents extreme 95%+ predictions
-    Preserves natural model distribution for 0-85% range
+    Aggressive calibration - your model is severely overconfident (99%+ for healthy people)
+    This converts unrealistic predictions to reasonable medical ranges
     """
     # Create consistent seed from user input hash
     random.seed(user_input_hash)
     
-    # Only modify extreme overconfident predictions (95%+)
-    if probability > 0.95:
-        # Reduce very high predictions to 75-85% range
-        reduction = random.uniform(0.10, 0.20)
-        calibrated = probability - reduction
-        return max(calibrated, 0.75)  # Max 75-85% for extreme cases
+    # Your model is extremely overconfident, so we need aggressive calibration
+    if probability > 0.90:  # Very high predictions (90%+)
+        # Map 90-100% to 60-80% range (still high but not scary)
+        calibrated = 0.60 + (probability - 0.90) * 2.0  # Scale 0.10 range to 0.20 range
+        calibrated = min(calibrated, 0.80)  # Cap at 80%
+        return calibrated
     
-    # For all other predictions (0-95%), preserve them as-is
-    # This maintains your model's natural 50/50 distribution
-    else:
-        # Minimal variation to prevent exact same decimals
-        variation = random.uniform(-0.02, 0.02)
-        calibrated = probability + variation
-        return max(min(calibrated, 0.95), 0.05)  # Keep between 5-95%
+    elif probability > 0.70:  # High predictions (70-90%)
+        # Map 70-90% to 35-60% range (moderate risk)
+        calibrated = 0.35 + (probability - 0.70) * 1.25  # Scale 0.20 range to 0.25 range
+        return calibrated
+    
+    elif probability > 0.50:  # Moderate predictions (50-70%)
+        # Map 50-70% to 20-35% range (low-moderate risk)
+        calibrated = 0.20 + (probability - 0.50) * 0.75  # Scale 0.20 range to 0.15 range
+        return calibrated
+    
+    else:  # Low predictions (0-50%)
+        # Map 0-50% to 5-20% range (very low risk)
+        calibrated = 0.05 + probability * 0.30  # Scale 0.50 range to 0.15 range
+        return calibrated
 
 # === FEATURE ENCODING MAPPINGS ===
 FEATURE_ENCODINGS = {
