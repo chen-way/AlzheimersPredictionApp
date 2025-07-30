@@ -522,7 +522,7 @@ st.markdown("""
         • Brain Health Research: <a href="https://brainhealthregistry.org" target="_blank" style="color: #007bff;">brainhealthregistry.org</a>
     </div>
 </div>
-""", unsafe_allow_html=True)_allow_html=True)
+""", unsafe_allow_html=True)
 
 # Get user input
 user_input_df = get_user_input()
@@ -701,4 +701,18 @@ with col1:
             <li><strong>Stay Social:</strong> Maintain relationships and community connections</li>
         </ul>
     </div>
-    """, unsafe
+    """, unsafe_allow_html=True)
+
+with col2:
+    st.markdown("""
+    <div class="tips-container">
+        <h3>🔬 Risk Factors You Can Control</h3>
+        <ul>
+            <li><strong>Physical Activity:</strong> 150+ minutes moderate exercise weekly</li>
+            <li><strong>Diet Quality:</strong> Mediterranean or MIND diet patterns</li>
+            <li><strong>Sleep Hygiene:</strong> Consistent sleep schedule, quality rest</li>
+            <li><strong>Stress Management:</strong> Meditation, relaxation techniques</li>
+            <li><strong>Social Connections:</strong> Regular meaningful interactions</li>
+        </ul>
+    </div>
+    """, unsafe_allow_html=True)
