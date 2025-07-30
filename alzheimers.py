@@ -579,7 +579,7 @@ with col2:
                     progress_bar.empty()
                     st.error(f"⚠️ **Missing Required Information:** {', '.join(missing_fields)}")
                     st.info("Please fill in all fields for an accurate assessment.")
-                    return
+                    st.stop()  # Use st.stop() instead of return in Streamlit
                 
                 # Encode categorical features for the model
                 user_input_encoded = encode_categorical_features(user_input_df)
