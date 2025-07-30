@@ -377,6 +377,21 @@ div[data-testid="stNumberInput"] > div > div > button {
     justify-content: center !important;
     align-items: center !important;
     transition: background-color 0.2s ease !important;
+    margin-left: auto !important;
+}
+
+/* Ensure the button container pushes buttons to the right */
+div[data-testid="stNumberInput"] > div > div {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
 }
 
 div[data-testid="stNumberInput"] > div > div > button:hover {
