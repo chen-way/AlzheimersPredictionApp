@@ -66,7 +66,7 @@ st.markdown("""
         box-shadow: 0 0 0 0.2rem rgba(209, 229, 244, 0.25) !important;
     }
 
-    /* TEXT INPUT STYLING (for any text inputs) */
+    /* TEXT INPUT STYLING */
     div[data-baseweb="input"] > div {
         background-color: #FDF6E7 !important;
         border: 2px solid #93BCDC !important;
@@ -87,192 +87,40 @@ st.markdown("""
         box-shadow: 0 0 0 0.2rem rgba(209, 229, 244, 0.25) !important;
     }
 
-/* AGGRESSIVE FIX - Replace your number input CSS section with this */
-
-/* Target the main number input container - RESTORE OUTER BORDER */
-div[data-testid="stNumberInput"] > div {
-    border: 2px solid #93BCDC !important;
-    border-radius: 10px !important;
-    background-color: #FDF6E7 !important;
-    height: 42px !important;
-    display: flex !important;
-    align-items: center !important;
-    padding: 0 !important;
-    overflow: hidden !important;
-}
-
-/* Ensure the outer border stays visible and styled */
-div[data-testid="stNumberInput"]:focus-within > div {
-    border-color: #d1e5f4 !important;
-    box-shadow: 0 0 6px rgba(209, 229, 244, 0.8) !important;
-}
-
-/* COMPLETELY hide the inner container that creates the cream border */
-div[data-testid="stNumberInput"] > div > div:first-child {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    height: 100% !important;
-    width: 100% !important;
-    display: flex !important;
-    align-items: center !important;
-    flex: 1 !important;
-}
-
-/* Hide ANY inner div that might be creating borders */
-div[data-testid="stNumberInput"] > div > div > div {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-}
-
-/* Style the actual input field - NUCLEAR APPROACH */
-div[data-testid="stNumberInput"] input[type="number"] {
-    border: none !important;
-    background: transparent !important;
-    height: 100% !important;
-    font-size: 16px !important;
-    width: 100% !important;
-    margin: 0 !important;
-    padding: 0 12px !important;
-    line-height: 1.2 !important;
-    color: black !important;
-    outline: none !important;
-    box-shadow: none !important;
-    text-align: left !important;
-    appearance: none !important;
-    -webkit-appearance: none !important;
-    -moz-appearance: textfield !important;
-}
-
-/* Remove focus borders completely */
-div[data-testid="stNumberInput"] input[type="number"]:focus {
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-    background: transparent !important;
-}
-
-/* Target ALL possible input elements inside */
-div[data-testid="stNumberInput"] input {
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-    background: transparent !important;
-}
-
-/* NUCLEAR SHADOW REMOVAL - target all possible shadow sources */
-div[data-testid="stNumberInput"] *,
-div[data-testid="stNumberInput"] *:focus,
-div[data-testid="stNumberInput"] *:focus-within,
-div[data-testid="stNumberInput"] *:active,
-div[data-testid="stNumberInput"] *:hover:focus {
-    box-shadow: none !important;
-}
-
-/* Additional shadow removal for main area number inputs */
-div[data-testid="stNumberInput"],
-div[data-testid="stNumberInput"]:focus-within,
-div[data-testid="stNumberInput"]:hover,
-div[data-testid="stNumberInput"]:active {
-    box-shadow: none !important;
-}
-
-/* Target any remaining Streamlit default shadows */
-.stNumberInput,
-.stNumberInput:focus-within,
-.stNumberInput:hover {
-    box-shadow: none !important;
-}
-
-/* Remove any webkit/browser default shadows */
-div[data-testid="stNumberInput"] input::-webkit-outer-spin-button,
-div[data-testid="stNumberInput"] input::-webkit-inner-spin-button {
-    -webkit-appearance: none !important;
-    margin: 0 !important;
-}
-
-div[data-testid="stNumberInput"] input[type=number] {
-    -moz-appearance: textfield !important;
-}
-
-/* Button styling remains the same */
-div[data-testid="stNumberInput"] button {
-    border: none !important;
-    background: rgba(147, 188, 220, 0.2) !important;
-    height: 100% !important;
-    width: 35px !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    transition: background-color 0.2s ease !important;
-    flex-shrink: 0 !important;
-}
-
-/* CRITICAL: Force the button container to align right with NO gaps */
-div[data-testid="stNumberInput"] > div > div:has(button) {
-    display: flex !important;
-    gap: 0 !important;
-    margin-left: auto !important;
-    width: 70px !important;
-    height: 100% !important;
-    align-items: center !important;
-    justify-content: flex-end !important;
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-}
-
-/* Button positioning */
-div[data-testid="stNumberInput"] button:first-of-type {
-    border-radius: 0 !important;
-    margin-right: 0 !important;
-}
-
-div[data-testid="stNumberInput"] button:last-of-type {
-    border-top-right-radius: 8px !important;
-    border-bottom-right-radius: 8px !important;
-    margin-left: 0 !important;
-}
-
-/* Hover effects */
-div[data-testid="stNumberInput"] button:hover {
-    background: rgba(147, 188, 220, 0.4) !important;
-}
-
-/* Focus effect for the main container only - NO SHADOW */
-div[data-testid="stNumberInput"]:focus-within > div {
-    border-color: #d1e5f4 !important;
-    box-shadow: none !important;
-}
-
-/* PRESERVE outer border while removing inner ones */
-div[data-testid="stNumberInput"] *:not(> div):not(button) {
-    border: none !important;
-}
-
-    /* Prediction button styling */
-    .predict-button {
-        background-color: #d1e5f4 !important;
-        color: black !important;
-        border: none !important;
-        border-radius: 25px !important;
-        padding: 0.75rem 2rem !important;
-        font-size: 1.1rem !important;
-        font-weight: 600 !important;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
-        transition: all 0.3s ease !important;
+    /* NUMBER INPUT STYLING - Simplified */
+    div[data-testid="stNumberInput"] > div {
+        border: 2px solid #93BCDC !important;
+        border-radius: 10px !important;
+        background-color: #FDF6E7 !important;
+        height: 42px !important;
+        display: flex !important;
+        align-items: center !important;
     }
-    
-    .predict-button:hover {
-        background-color: #93BCDC !important;
+
+    div[data-testid="stNumberInput"]:focus-within > div {
+        border-color: #d1e5f4 !important;
+    }
+
+    div[data-testid="stNumberInput"] input[type="number"] {
+        border: none !important;
+        background: transparent !important;
+        height: 100% !important;
+        width: 100% !important;
+        padding: 0 12px !important;
         color: black !important;
+        outline: none !important;
+    }
+
+    div[data-testid="stNumberInput"] button {
+        border: none !important;
+        background: rgba(147, 188, 220, 0.2) !important;
+        height: 100% !important;
+        width: 35px !important;
+        transition: background-color 0.2s ease !important;
+    }
+
+    div[data-testid="stNumberInput"] button:hover {
+        background: rgba(147, 188, 220, 0.4) !important;
     }
     
     /* Results containers */
@@ -326,31 +174,13 @@ div[data-testid="stNumberInput"] *:not(> div):not(button) {
     }
     
     /* Sidebar styling */
-    .css-1d391kg {
-        background-color: #FDF6E7 !important;
-    }
-    
     .stSidebar {
         background-color: #FDF6E7 !important;
         width: 350px !important;
         min-width: 350px !important;
     }
     
-    /* Sidebar width adjustment */
-    .css-1d391kg {
-        width: 350px !important;
-    }
-    
-    .css-1cypcdb {
-        width: 350px !important;
-    }
-    
     section[data-testid="stSidebar"] {
-        width: 350px !important;
-        min-width: 350px !important;
-    }
-    
-    section[data-testid="stSidebar"] > div {
         width: 350px !important;
         min-width: 350px !important;
     }
@@ -398,15 +228,6 @@ div[data-testid="stNumberInput"] *:not(> div):not(button) {
         background: linear-gradient(to right, #B3E5FC, #1E5A96) !important;
     }
     
-    /* Risk text styling */
-    .risk-text {
-        font-weight: bold;
-        font-size: 18px;
-        padding: 5px;
-    }
-    .risk-high { color: red !important; }
-    .risk-low { color: green !important; }
-    
     /* Hide Streamlit default elements */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
@@ -436,7 +257,6 @@ except FileNotFoundError:
     st.stop()
 
 # === FEATURE ENCODING MAPPINGS ===
-# These mappings convert categorical strings to numbers for the model
 FEATURE_ENCODINGS = {
     'Country': {country: idx for idx, country in enumerate(['USA', 'Canada', 'UK', 'Germany', 'France', 'Japan', 'South Korea', 'India', 'China', 'Brazil', 'South Africa', 'Australia', 'Russia', 'Mexico', 'Italy'])},
     'Gender': {'Male': 1, 'Female': 0},
@@ -460,7 +280,6 @@ FEATURE_ENCODINGS = {
 }
 
 # === FEATURE DEFINITIONS ===
-# Categorical feature options
 CATEGORICAL_OPTIONS = {
     'Country': ['USA', 'Canada', 'UK', 'Germany', 'France', 'Japan', 'South Korea', 'India', 'China', 'Brazil', 'South Africa', 'Australia', 'Russia', 'Mexico', 'Italy'],
     'Gender': ['Male', 'Female'],
@@ -483,7 +302,6 @@ CATEGORICAL_OPTIONS = {
     'Air Pollution Exposure': ['Minimal', 'Slight', 'Moderate', 'High', 'Severe']
 }
 
-# Numerical features
 NUMERICAL_FEATURES = ['Age', 'BMI', 'Cognitive Test Score', 'Depression Level', 'Stress Levels']
 
 # === FEATURE LIST (ordered for model) ===
@@ -566,7 +384,7 @@ def get_user_input():
     return pd.DataFrame([user_data])
 
 # === MAIN APP ===
-# Light header styling similar to stroke app
+# Header
 st.markdown("""
 <div class="main-header">
     <h1>🧠 Alzheimer's Risk Assessment</h1>
@@ -574,7 +392,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Enhanced information section
+# Information section
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
     st.markdown("""
@@ -584,7 +402,10 @@ with col2:
     </div>
     """, unsafe_allow_html=True)
 
-# Enhanced expandable help section
+# Extra spacing before expandable section
+st.markdown("<br><br>", unsafe_allow_html=True)
+
+# Expandable help section
 with st.expander("ℹ️ How to use this assessment tool", expanded=False):
     st.markdown("""
     <div style="background-color: #d1e5f4; padding: 1.5rem; border-radius: 10px; color: #2d3436;">
@@ -603,13 +424,11 @@ with st.expander("ℹ️ How to use this assessment tool", expanded=False):
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-# Get user input with modern styling
+# Get user input
 user_input_df = get_user_input()
 
-# === REST OF YOUR APPLICATION CODE CONTINUES HERE === 
-# (I'm truncating this for space, but include all your prediction logic, tips, sidebar, etc.)
 # === PREDICTION SECTION ===
-st.markdown("<br><br>", unsafe_allow_html=True)
+st.markdown("<br>", unsafe_allow_html=True)
 st.markdown("""
 <div style="background-color: #d1e5f4; padding: 1rem; border-radius: 10px; margin: 1rem 0; border: 1px solid #93BCDC;">
     <h3 style="color: #2d3436; text-align: center; margin: 0;">🎯 Risk Assessment</h3>
@@ -662,7 +481,7 @@ with col2:
                 # Clear progress bar
                 progress_bar.empty()
                 
-                # Enhanced results display with modern styling
+                # Enhanced results display
                 st.markdown("<br>", unsafe_allow_html=True)
                 
                 label_str = str(label).lower()
@@ -714,7 +533,7 @@ with col2:
                     </div>
                     """, unsafe_allow_html=True)
                 
-                # Enhanced confidence scores with light styling
+                # Confidence scores
                 if len(probability) > 1:
                     st.markdown("<br>", unsafe_allow_html=True)
                     st.markdown("""
@@ -753,7 +572,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Enhanced tips with light styling
+# Tips
 tips = [
     {
         "icon": "🫐",
@@ -817,7 +636,7 @@ tips = [
     }
 ]
 
-# Create tip cards with light styling
+# Random tip section
 col1, col2 = st.columns([1, 3])
 with col1:
     if st.button("💡 Get Random Prevention Tip", use_container_width=True, 
@@ -884,10 +703,10 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
-# Footer with light styling
-st.markdown("<br><br>", unsafe_allow_html=True)
+# Footer with reduced spacing
+st.markdown("<br>", unsafe_allow_html=True)
 st.markdown("""
-<div style="background-color: #d1e5f4; padding: 2rem; border-radius: 15px; text-align: center; margin-top: 3rem; border: 1px solid #93BCDC;">
+<div style="background-color: #d1e5f4; padding: 2rem; border-radius: 15px; text-align: center; margin-top: 1rem; border: 1px solid #93BCDC;">
     <h4 style="color: #2d3436; margin: 0 0 1rem 0;">🧠 Alzheimer's Risk Assessment Tool</h4>
     <p style="color: #636e72; margin: 0; font-size: 0.9rem;">
         Developed by <strong>Chenwei Pan</strong> • Powered by Advanced Machine Learning • For Educational Purposes
