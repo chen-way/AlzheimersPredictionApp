@@ -165,6 +165,15 @@ div[data-testid="stNumberInput"] input {
     background: transparent !important;
 }
 
+/* NUCLEAR SHADOW REMOVAL - target all possible shadow sources */
+div[data-testid="stNumberInput"] *,
+div[data-testid="stNumberInput"] *:focus,
+div[data-testid="stNumberInput"] *:focus-within,
+div[data-testid="stNumberInput"] *:active,
+div[data-testid="stNumberInput"] *:hover:focus {
+    box-shadow: none !important;
+}
+
 /* Button styling remains the same */
 div[data-testid="stNumberInput"] button {
     border: none !important;
@@ -221,7 +230,6 @@ div[data-testid="stNumberInput"]:focus-within > div {
 div[data-testid="stNumberInput"] *:not(> div):not(button) {
     border: none !important;
 }
-
     /* Prediction button styling */
     .predict-button {
         background-color: #d1e5f4 !important;
