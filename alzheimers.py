@@ -31,54 +31,30 @@ st.markdown("""
         box-shadow: 0 0 0 0.2rem rgba(209, 229, 244, 0.25) !important;
     }
 
-  /* Completely eliminate all spacing in number inputs */
-div[data-testid="stNumberInput"] * {
+/* Simple approach - just remove spacing between buttons */
+div[data-testid="stNumberInput"] button {
     margin: 0 !important;
-    padding: 0 !important;
-    gap: 0 !important;
-    column-gap: 0 !important;
-    row-gap: 0 !important;
-}
-
-/* Force buttons to be absolutely positioned */
-div[data-testid="stNumberInput"] {
-    position: relative !important;
-}
-
-/* Position minus button */
-div[data-testid="stNumberInput"] button:first-of-type {
-    position: absolute !important;
-    right: 35px !important;
-    top: 2px !important;
-    bottom: 2px !important;
-    width: 35px !important;
-    margin: 0 !important;
-    padding: 0 !important;
+    padding: 8px 12px !important;
     border: none !important;
     background: rgba(147, 188, 220, 0.2) !important;
+    height: 38px !important;
+    min-width: 32px !important;
     border-radius: 0 !important;
-    z-index: 10 !important;
 }
 
-/* Position plus button */
+/* Make buttons stick together */
+div[data-testid="stNumberInput"] button + button {
+    margin-left: -1px !important;
+}
+
+/* Round the right side of the last button */
 div[data-testid="stNumberInput"] button:last-of-type {
-    position: absolute !important;
-    right: 0px !important;
-    top: 2px !important;
-    bottom: 2px !important;
-    width: 35px !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    border: none !important;
-    background: rgba(147, 188, 220, 0.2) !important;
     border-top-right-radius: 8px !important;
     border-bottom-right-radius: 8px !important;
-    z-index: 10 !important;
 }
 
-/* Adjust input field to account for buttons */
+/* Ensure input field has proper spacing */
 div[data-testid="stNumberInput"] input {
-    padding-right: 75px !important;
     text-align: left !important;
     padding-left: 12px !important;
 }
