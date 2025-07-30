@@ -627,8 +627,10 @@ with col2:
                         # Show key feature values that might be causing issues  
                         st.write("**Key Risk Factors:**")
                         st.write(f"- Age: {user_input_df['Age'].iloc[0]}")
-                        st.write(f"- Family History: {user_input_df[\"Family History of Alzheimer's\"].iloc[0]}")
-                        st.write(f"- APOE Gene: {user_input_df[\"Genetic Risk Factor (APOE-ε4 allele)\"].iloc[0]}")
+                        family_history = user_input_df["Family History of Alzheimer's"].iloc[0]
+                        st.write(f"- Family History: {family_history}")
+                        apoe_gene = user_input_df["Genetic Risk Factor (APOE-ε4 allele)"].iloc[0]
+                        st.write(f"- APOE Gene: {apoe_gene}")
                         st.write(f"- Cognitive Score: {user_input_df['Cognitive Test Score'].iloc[0]}")
                     
                     # Show calibration info if significant change
