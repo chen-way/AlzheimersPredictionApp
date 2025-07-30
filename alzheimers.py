@@ -87,7 +87,7 @@ st.markdown("""
         box-shadow: 0 0 0 0.2rem rgba(209, 229, 244, 0.25) !important;
     }
 
-    /* NUMBER INPUT STYLING - Simplified */
+    /* NUMBER INPUT STYLING - Complete fix for inner border */
     div[data-testid="stNumberInput"] > div {
         border: 2px solid #93BCDC !important;
         border-radius: 10px !important;
@@ -95,10 +95,36 @@ st.markdown("""
         height: 42px !important;
         display: flex !important;
         align-items: center !important;
+        padding: 0 !important;
+        overflow: hidden !important;
     }
 
     div[data-testid="stNumberInput"]:focus-within > div {
         border-color: #d1e5f4 !important;
+        box-shadow: none !important;
+    }
+
+    /* HIDE all inner containers that create the cream border */
+    div[data-testid="stNumberInput"] > div > div:first-child {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        height: 100% !important;
+        width: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        flex: 1 !important;
+    }
+
+    /* Hide ANY inner div that might be creating borders */
+    div[data-testid="stNumberInput"] > div > div > div {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
     }
 
     div[data-testid="stNumberInput"] input[type="number"] {
@@ -109,6 +135,25 @@ st.markdown("""
         padding: 0 12px !important;
         color: black !important;
         outline: none !important;
+        box-shadow: none !important;
+        appearance: none !important;
+        -webkit-appearance: none !important;
+        -moz-appearance: textfield !important;
+    }
+
+    /* Remove focus borders completely */
+    div[data-testid="stNumberInput"] input[type="number"]:focus {
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+        background: transparent !important;
+    }
+
+    /* Remove all shadows from all elements */
+    div[data-testid="stNumberInput"] *,
+    div[data-testid="stNumberInput"] *:focus,
+    div[data-testid="stNumberInput"] *:focus-within {
+        box-shadow: none !important;
     }
 
     div[data-testid="stNumberInput"] button {
@@ -117,10 +162,25 @@ st.markdown("""
         height: 100% !important;
         width: 35px !important;
         transition: background-color 0.2s ease !important;
+        flex-shrink: 0 !important;
     }
 
     div[data-testid="stNumberInput"] button:hover {
         background: rgba(147, 188, 220, 0.4) !important;
+    }
+
+    /* Button container positioning */
+    div[data-testid="stNumberInput"] > div > div:has(button) {
+        display: flex !important;
+        gap: 0 !important;
+        margin-left: auto !important;
+        width: 70px !important;
+        height: 100% !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
     }
     
     /* Results containers */
