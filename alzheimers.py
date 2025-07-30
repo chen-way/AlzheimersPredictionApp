@@ -4,7 +4,6 @@ import numpy as np
 import pickle
 import gzip
 import time
-import random
 
 # SINGLE, CLEAN CSS SECTION - NO CONFLICTS
 st.markdown("""
@@ -313,46 +312,27 @@ try:
     with gzip.open("target_encoder.pkl.gz", "rb") as f:
         target_encoder = pickle.load(f)
         
+    # Show model information for verification
     st.success("✅ Model loaded successfully!")
     
+    # Model verification section
+    with st.expander("🔍 Model Information", expanded=False):
+        st.write("**Model Type:**", type(model).__name__)
+        if hasattr(model, 'n_features_in_'):
+            st.write("**Expected Features:**", model.n_features_in_)
+        if hasattr(model, 'feature_names_in_'):
+            st.write("**Feature Names:**", list(model.feature_names_in_) if model.feature_names_in_ is not None else "None")
+        if hasattr(model, 'classes_'):
+            st.write("**Model Classes:**", model.classes_)
+            
 except FileNotFoundError as e:
     st.error("❌ Model files not found. Please ensure xgb_model.pkl.gz and target_encoder.pkl.gz are in the same directory.")
     st.error(f"Missing file: {str(e)}")
     st.stop()
 except Exception as e:
     st.error(f"❌ Error loading model: {str(e)}")
+    st.error("This might be a version compatibility issue or corrupted model file.")
     st.stop()
-
-# === CONFIDENCE CALIBRATION FUNCTION ===
-def apply_confidence_calibration(probability, user_input_hash):
-    """
-    Aggressive calibration - your model is severely overconfident (99%+ for healthy people)
-    This converts unrealistic predictions to reasonable medical ranges
-    """
-    # Create consistent seed from user input hash
-    random.seed(user_input_hash)
-    
-    # Your model is extremely overconfident, so we need aggressive calibration
-    if probability > 0.90:  # Very high predictions (90%+)
-        # Map 90-100% to 60-80% range (still high but not scary)
-        calibrated = 0.60 + (probability - 0.90) * 2.0  # Scale 0.10 range to 0.20 range
-        calibrated = min(calibrated, 0.80)  # Cap at 80%
-        return calibrated
-    
-    elif probability > 0.70:  # High predictions (70-90%)
-        # Map 70-90% to 35-60% range (moderate risk)
-        calibrated = 0.35 + (probability - 0.70) * 1.25  # Scale 0.20 range to 0.25 range
-        return calibrated
-    
-    elif probability > 0.50:  # Moderate predictions (50-70%)
-        # Map 50-70% to 20-35% range (low-moderate risk)
-        calibrated = 0.20 + (probability - 0.50) * 0.75  # Scale 0.20 range to 0.15 range
-        return calibrated
-    
-    else:  # Low predictions (0-50%)
-        # Map 0-50% to 5-20% range (very low risk)
-        calibrated = 0.05 + probability * 0.30  # Scale 0.50 range to 0.15 range
-        return calibrated
 
 # === FEATURE ENCODING MAPPINGS ===
 FEATURE_ENCODINGS = {
@@ -512,326 +492,6 @@ with col2:
     </div>
     """, unsafe_allow_html=True)
 
-# Extra spacing before expandable section
-st.markdown("<br><br>", unsafe_allow_html=True)
-
-# Expandable help section
-with st.expander("ℹ️ How to use this assessment tool", expanded=False):
-    st.markdown("""
-    <div style="background-color: #d1e5f4; padding: 1.5rem; border-radius: 10px; color: #2d3436;">
-        <h5>📋 Instructions:</h5>
-        <ol>
-            <li><strong>Complete the Assessment:</strong> Fill out all 24 health and lifestyle factors using the intuitive interface below</li>
-            <li><strong>Review Your Input:</strong> Ensure all information is accurate for the most reliable assessment</li>
-            <li><strong>Get Your Results:</strong> Click the prediction button to receive your personalized risk evaluation</li>
-            <li><strong>Explore Recommendations:</strong> Review evidence-based lifestyle suggestions tailored to your risk profile</li>
-        </ol>
-        <div style="background-color: #FDF6E7; padding: 1rem; border-radius: 8px; margin-top: 1rem; border: 1px solid #93BCDC;">
-            <strong>🏥 Medical Note:</strong> This tool provides educational insights based on research data. Always consult healthcare professionals for medical decisions and personalized care.
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-st.markdown("<br>", unsafe_allow_html=True)
-
-# Get user input
-user_input_df = get_user_input()
-
-# === PREDICTION SECTION ===
-st.markdown("<br>", unsafe_allow_html=True)
-st.markdown("""
-<div style="background-color: #d1e5f4; padding: 1rem; border-radius: 10px; margin: 1rem 0; border: 1px solid #93BCDC;">
-    <h3 style="color: #2d3436; text-align: center; margin: 0;">🎯 Risk Assessment</h3>
-</div>
-""", unsafe_allow_html=True)
-
-col1, col2, col3 = st.columns([1, 2, 1])
-
-with col2:
-    if st.button("🧪 Analyze My Alzheimer's Risk", type="primary", use_container_width=True, 
-                 help="Click to get your personalized AI-powered risk assessment"):
-        
-        # Enhanced loading animation
-        with st.spinner("🔍 Processing your health data with advanced AI algorithms..."):
-            # Create a progress bar for better UX
-            progress_bar = st.progress(0)
-            for i in range(100):
-                time.sleep(0.015)
-                progress_bar.progress(i + 1)
-            
-            try:
-                # Check for missing critical values first
-                critical_fields = ['Age', 'BMI', 'Cognitive Test Score', 'Depression Level', 'Stress Levels']
-                missing_fields = []
-                
-                for field in critical_fields:
-                    if pd.isna(user_input_df[field].iloc[0]) or user_input_df[field].iloc[0] in [0, None, ""]:
-                        missing_fields.append(field)
-                
-                if missing_fields:
-                    progress_bar.empty()
-                    st.error(f"⚠️ **Missing Required Information:** {', '.join(missing_fields)}")
-                    st.info("Please fill in all fields for an accurate assessment.")
-                    st.stop()
-                
-                # Encode categorical features for the model
-                user_input_encoded = encode_categorical_features(user_input_df)
-                
-                # Ensure all features are present and in the right order
-                user_input_encoded = user_input_encoded[feature_names]
-                
-                # Get user's age for safety check
-                user_age = user_input_df['Age'].iloc[0]
-                
-                # Safety check for young users
-                if user_age < 40:
-                    progress_bar.empty()
-                    st.markdown(f"""
-                    <div style="background-color: #d4edda; color: #155724; padding: 1.5rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 15px rgba(21, 87, 36, 0.2); margin: 1rem 0; border: 2px solid #28a745;">
-                        <h2>🌟 Age-Appropriate Assessment</h2>
-                        <h3>Current Age: {user_age} years</h3>
-                        <p style="font-size: 1.1rem; margin-top: 1rem;">
-                            Great news! At your age, Alzheimer's disease is extremely rare and typically not a concern. 
-                            This assessment tool is designed for adults, typically those over 50 years old.
-                        </p>
-                        <div style="background-color: rgba(255, 255, 255, 0.8); padding: 1rem; border-radius: 10px; margin-top: 1rem; color: #2d3436;">
-                            <strong>🧠 Focus on Brain Health:</strong> Keep building healthy habits like regular exercise, good sleep, 
-                            learning new things, and eating nutritious foods - these are great for your developing brain!
-                        </div>
-                    </div>
-                    """, unsafe_allow_html=True)
-                
-                else:
-                    # Make prediction for adults (40+)
-                    prediction = model.predict(user_input_encoded)[0]
-                    raw_probabilities = model.predict_proba(user_input_encoded)[0]
-                    
-                    # Get original Alzheimer's probability
-                    original_alzheimers_prob = raw_probabilities[1]  # Class 1 = Alzheimer's
-                    
-                    # Create consistent hash from user input for reproducible results
-                    user_input_str = str(user_input_encoded.values.tolist())
-                    user_input_hash = hash(user_input_str) % 10000  # Convert to positive integer
-                    
-                    # Apply calibration to make predictions more realistic
-                    calibrated_alzheimers_prob = apply_confidence_calibration(original_alzheimers_prob, user_input_hash)
-                    calibrated_no_alzheimers_prob = 1 - calibrated_alzheimers_prob
-                    
-                    # Update probabilities array
-                    probabilities = [calibrated_no_alzheimers_prob, calibrated_alzheimers_prob]
-                    
-                    # 🔍 DEBUG: Show what the model is actually seeing
-                    with st.expander("🔧 Debug: What the model sees", expanded=True):
-                        st.write("**Raw Input Data:**")
-                        st.dataframe(user_input_df)
-                        st.write("**Encoded Input Data:**")
-                        st.dataframe(user_input_encoded)
-                        st.write("**Model Input Shape:**", user_input_encoded.shape)
-                        st.write("**Raw Model Probability:**", f"{original_alzheimers_prob:.4f} ({original_alzheimers_prob*100:.1f}%)")
-                        st.write("**After Calibration:**", f"{calibrated_alzheimers_prob:.4f} ({calibrated_alzheimers_prob*100:.1f}%)")
-                        st.write("**Prediction Class:**", prediction)
-                        
-                        # Show key feature values that might be causing issues  
-                        st.write("**Key Risk Factors:**")
-                        st.write(f"- Age: {user_input_df['Age'].iloc[0]}")
-                        family_history = user_input_df["Family History of Alzheimer's"].iloc[0]
-                        st.write(f"- Family History: {family_history}")
-                        apoe_gene = user_input_df["Genetic Risk Factor (APOE-ε4 allele)"].iloc[0]
-                        st.write(f"- APOE Gene: {apoe_gene}")
-                        st.write(f"- Cognitive Score: {user_input_df['Cognitive Test Score'].iloc[0]}")
-                    
-                    # Show calibration info if significant change
-                    if abs(original_alzheimers_prob - calibrated_alzheimers_prob) > 0.15:
-                        st.info("🔧 **Note**: Applied confidence calibration to provide more realistic probabilities (similar to medical diagnostic tools).")
-                    
-                    # Calculate final risk metrics
-                    alzheimers_risk = calibrated_alzheimers_prob * 100  # Class 1 = Alzheimer's risk
-                    no_risk = calibrated_no_alzheimers_prob * 100  # Class 0 = No Alzheimer's
-                    
-                    # Clear progress bar
-                    progress_bar.empty()
-                    
-                    # Enhanced results display
-                    st.markdown("<br>", unsafe_allow_html=True)
-                    
-                    # Display main risk metric only
-                    col1, col2, col3 = st.columns([1, 2, 1])
-                    with col2:
-                        st.metric("Alzheimer's Risk Assessment", f"{alzheimers_risk:.1f}%", 
-                                help="Statistical risk based on your health profile")
-                    
-                    # Risk interpretation
-                    if alzheimers_risk >= 60:  # High risk (60%+)
-                        st.markdown(f"""
-                        <div class="result-high-risk pulse-animation">
-                            <h2>⚠️ High Risk Assessment</h2>
-                            <h3>Alzheimer's Risk: {alzheimers_risk:.1f}%</h3>
-                            <p style="font-size: 1.1rem; margin-top: 1rem;">
-                                Our analysis indicates elevated risk factors based on your current health profile. 
-                                We strongly recommend consulting with healthcare professionals for comprehensive 
-                                evaluation and personalized prevention strategies.
-                            </p>
-                            <div style="background-color: rgba(255, 255, 255, 0.8); padding: 1rem; border-radius: 10px; margin-top: 1rem; color: #2d3436;">
-                                <strong>🏥 Next Steps:</strong> Schedule a consultation with your doctor to discuss these findings and develop a personalized care plan.
-                            </div>
-                        </div>
-                        """, unsafe_allow_html=True)
-                        
-                    elif alzheimers_risk >= 30:  # Moderate risk (30-59%)
-                        st.markdown(f"""
-                        <div class="result-moderate-risk">
-                            <h2>🔶 Moderate Risk Assessment</h2>
-                            <h3>Alzheimer's Risk: {alzheimers_risk:.1f}%</h3>
-                            <p style="font-size: 1.1rem; margin-top: 1rem;">
-                                Your assessment shows moderate risk factors that warrant attention. 
-                                This is an excellent opportunity to implement preventive strategies 
-                                and discuss your results with healthcare providers.
-                            </p>
-                            <div style="background-color: rgba(255, 255, 255, 0.8); padding: 1rem; border-radius: 10px; margin-top: 1rem; color: #2d3436;">
-                                <strong>💪 Take Action:</strong> Small changes now can make a significant difference in your future cognitive health.
-                            </div>
-                        </div>
-                        """, unsafe_allow_html=True)
-                        
-                    else:  # Low risk (<30%)
-                        st.markdown(f"""
-                        <div class="result-low-risk">
-                            <h2>✅ Low Risk Assessment</h2>
-                            <h3>Alzheimer's Risk: {alzheimers_risk:.1f}%</h3>
-                            <p style="font-size: 1.1rem; margin-top: 1rem;">
-                                Excellent news! Your current health profile indicates lower risk factors. 
-                                Continue maintaining your healthy lifestyle habits and regular medical checkups 
-                                to preserve your cognitive health.
-                            </p>
-                            <div style="background-color: rgba(255, 255, 255, 0.8); padding: 1rem; border-radius: 10px; margin-top: 1rem; color: #2d3436;">
-                                <strong>🌟 Keep it up:</strong> Your healthy choices are making a positive impact on your brain health!
-                            </div>
-                        </div>
-                        """, unsafe_allow_html=True)
-
-                    # Enhanced recommendations based on risk level
-                    st.markdown("---")
-                    st.markdown("### 💡 Personalized Recommendations")
-                    
-                    if alzheimers_risk >= 60:
-                        st.error("""
-                        **🏥 High Priority Actions:**
-                        • Schedule immediate consultation with healthcare provider
-                        • Consider neurological evaluation and cognitive testing
-                        • Discuss family history and genetic factors with medical team
-                        • Implement comprehensive brain-healthy lifestyle changes
-                        • Regular monitoring and follow-up care
-                        • Consider joining support groups or educational programs
-                        """)
-                    elif alzheimers_risk >= 30:
-                        st.warning("""
-                        **🔶 Moderate Priority Actions:**
-                        • Increase physical activity (aim for 150+ minutes/week)
-                        • Adopt Mediterranean or MIND diet
-                        • Engage in daily cognitive challenges (reading, puzzles, learning)
-                        • Improve sleep quality (7-9 hours nightly)
-                        • Manage stress through meditation or relaxation techniques
-                        • Schedule regular health checkups
-                        """)
-                    else:
-                        st.success("""
-                        **✅ Maintenance Strategies:**
-                        • Continue current healthy lifestyle practices
-                        • Maintain regular physical activity and social engagement
-                        • Keep challenging your brain with new activities
-                        • Continue healthy diet and good sleep habits
-                        • Stay up-to-date with preventive healthcare
-                        • Monitor any changes in memory or cognition
-                        """)
-
-                    # Educational content with user testimonials
-                    st.markdown("---")
-                    st.markdown("### 📚 Understanding Your Results")
-                    
-                    with st.expander("🔬 How the AI Analysis Works", expanded=False):
-                        st.markdown("""
-                        **Our Advanced ML Model analyzes:**
-                        - **Demographics**: Age, gender, education, location
-                        - **Lifestyle Factors**: Exercise, diet, sleep, social engagement
-                        - **Medical History**: Chronic conditions, family history, genetic factors
-                        - **Cognitive Health**: Current cognitive function, depression, stress levels
-                        - **Environmental**: Air pollution, urban vs rural living
-                        
-                        The model was trained on comprehensive datasets and applies evidence-based 
-                        risk factors identified in current Alzheimer's research.
-                        """)
-                    
-                    with st.expander("👥 User Success Stories", expanded=False):
-                        st.markdown("""
-                        <div style="background-color: #f8f9fa; padding: 1rem; border-radius: 10px; margin: 1rem 0;">
-                            <div style="border-left: 3px solid #007bff; padding-left: 1rem; margin: 1rem 0; font-style: italic;">
-                                "This assessment helped me understand my risk factors and motivated me to make positive changes. 
-                                I've increased my exercise and improved my diet based on the recommendations." 
-                                <br><strong>- Sarah, 58, Teacher</strong>
-                            </div>
-                            <div style="border-left: 3px solid #007bff; padding-left: 1rem; margin: 1rem 0; font-style: italic;">
-                                "The results gave me concrete data to discuss with my doctor. We developed a prevention plan 
-                                that fits my lifestyle and addresses my specific risk factors."
-                                <br><strong>- Michael, 64, Engineer</strong>
-                            </div>
-                            <div style="border-left: 3px solid #007bff; padding-left: 1rem; margin: 1rem 0; font-style: italic;">
-                                "I used this tool to understand how my family history affects my risk. It helped me make 
-                                informed decisions about genetic testing and lifestyle modifications."
-                                <br><strong>- Dr. Patricia, 52, Healthcare Provider</strong>
-                            </div>
-                        </div>
-                        """, unsafe_allow_html=True)
-
-                    # Enhanced legal disclaimer with stronger protection
-                    st.markdown("---")
-                    st.error("""
-                    ⚠️ **COMPREHENSIVE MEDICAL DISCLAIMER:** 
-                    
-                    • **EDUCATIONAL TOOL ONLY** - This assessment is designed for learning and awareness purposes
-                    • **NOT A MEDICAL DIAGNOSIS** - Results are statistical estimates, not clinical diagnoses
-                    • **PROFESSIONAL CONSULTATION REQUIRED** - Always consult qualified healthcare professionals
-                    • **NO MEDICAL DECISIONS** - Do not make treatment or lifestyle decisions based solely on this tool
-                    • **INDIVIDUAL VARIATION** - Results may not reflect your actual medical condition
-                    • **RESEARCH-BASED** - Predictions based on population studies, not individual medical evaluation
-                    • **NO LIABILITY** - This tool does not replace professional medical advice, diagnosis, or treatment
-                    
-                    **For medical concerns, contact your healthcare provider immediately.**
-                    """)
-                    
-            except Exception as e:
-                progress_bar.empty()
-                st.error(f"❌ **Error during prediction:** {str(e)}")
-                st.error("Please check your inputs and try again. If the issue persists, contact support.")
-                
-                # Debug information for developers
-                with st.expander("🔧 Debug Information (for developers)", expanded=False):
-                    st.write("**Error Details:**")
-                    st.write(f"Error Type: {type(e).__name__}")
-                    st.write(f"Error Message: {str(e)}")
-                    st.write("**User Input Shape:**", user_input_encoded.shape if 'user_input_encoded' in locals() else "Not created")
-                    st.write("**Expected Features:**", len(feature_names))
-
-# === ADDITIONAL EDUCATIONAL CONTENT ===
-st.markdown("---")
-st.markdown("## 📖 Educational Resources")
-
-# Brain health tips
-col1, col2 = st.columns(2)
-
-with col1:
-    st.markdown("""
-    <div class="tips-container">
-        <h3>🧠 Brain Health Tips</h3>
-        <ul>
-            <li><strong>Stay Physically Active:</strong> Regular exercise increases blood flow to the brain</li>
-            <li><strong>Challenge Your Mind:</strong> Learn new skills, read, solve puzzles</li>
-            <li><strong>Eat Brain-Healthy Foods:</strong> Mediterranean diet rich in omega-3s</li>
-            <li><strong>Get Quality Sleep:</strong> 7-9 hours nightly for memory consolidation</li>
-            <li><strong>Stay Social:</strong> Maintain relationships and community connections</li>
-        </ul>
-    </div>
-    """, unsafe_allow_html=True)
-
 with col2:
     st.markdown("""
     <div class="tips-container">
@@ -862,4 +522,183 @@ st.markdown("""
         • Brain Health Research: <a href="https://brainhealthregistry.org" target="_blank" style="color: #007bff;">brainhealthregistry.org</a>
     </div>
 </div>
+""", unsafe_allow_html=True)_allow_html=True)
+
+# Get user input
+user_input_df = get_user_input()
+
+# === PREDICTION SECTION ===
+st.markdown("<br>", unsafe_allow_html=True)
+st.markdown("""
+<div style="background-color: #d1e5f4; padding: 1rem; border-radius: 10px; margin: 1rem 0; border: 1px solid #93BCDC;">
+    <h3 style="color: #2d3436; text-align: center; margin: 0;">🎯 Risk Assessment</h3>
+</div>
 """, unsafe_allow_html=True)
+
+col1, col2, col3 = st.columns([1, 2, 1])
+
+with col2:
+    if st.button("🧪 Analyze My Alzheimer's Risk", type="primary", use_container_width=True):
+        
+        with st.spinner("🔍 Processing your health data..."):
+            progress_bar = st.progress(0)
+            for i in range(100):
+                time.sleep(0.01)
+                progress_bar.progress(i + 1)
+            
+            try:
+                # Check for missing critical values
+                critical_fields = ['Age', 'BMI', 'Cognitive Test Score', 'Depression Level', 'Stress Levels']
+                missing_fields = []
+                
+                for field in critical_fields:
+                    if pd.isna(user_input_df[field].iloc[0]) or user_input_df[field].iloc[0] in [0, None, ""]:
+                        missing_fields.append(field)
+                
+                if missing_fields:
+                    progress_bar.empty()
+                    st.error(f"⚠️ **Missing Required Information:** {', '.join(missing_fields)}")
+                    st.info("Please fill in all fields for an accurate assessment.")
+                    st.stop()
+                
+                # Encode categorical features for the model
+                user_input_encoded = encode_categorical_features(user_input_df)
+                
+                # Ensure all features are present and in the right order
+                user_input_encoded = user_input_encoded[feature_names]
+                
+                # Get user's age for safety check
+                user_age = user_input_df['Age'].iloc[0]
+                
+                # Make prediction
+                prediction = model.predict(user_input_encoded)[0]
+                raw_probabilities = model.predict_proba(user_input_encoded)[0]
+                
+                # Clear progress bar
+                progress_bar.empty()
+                
+                # Debug section to see what's happening
+                with st.expander("🔧 Debug: Model Predictions", expanded=True):
+                    st.write("**Raw Input Data:**")
+                    st.dataframe(user_input_df)
+                    st.write("**Encoded Input Data:**")
+                    st.dataframe(user_input_encoded)
+                    st.write("**Model Input Shape:**", user_input_encoded.shape)
+                    st.write("**Raw Model Probabilities:**", raw_probabilities)
+                    st.write("**Prediction Class:**", prediction)
+                    st.write("**Class 0 (No Alzheimer's):**", f"{raw_probabilities[0]:.4f} ({raw_probabilities[0]*100:.1f}%)")
+                    st.write("**Class 1 (Alzheimer's):**", f"{raw_probabilities[1]:.4f} ({raw_probabilities[1]*100:.1f}%)")
+                    
+                    # Show key features
+                    family_history = user_input_df["Family History of Alzheimer's"].iloc[0]
+                    apoe_gene = user_input_df["Genetic Risk Factor (APOE-ε4 allele)"].iloc[0]
+                    st.write("**Key Risk Factors:**")
+                    st.write(f"- Age: {user_input_df['Age'].iloc[0]}")
+                    st.write(f"- Family History: {family_history}")
+                    st.write(f"- APOE Gene: {apoe_gene}")
+                    st.write(f"- Cognitive Score: {user_input_df['Cognitive Test Score'].iloc[0]}")
+                
+                # Use raw model predictions without artificial calibration
+                alzheimers_risk = raw_probabilities[1] * 100  # Class 1 = Alzheimer's risk
+                no_risk = raw_probabilities[0] * 100  # Class 0 = No Alzheimer's
+                
+                # Display main risk metric
+                col1, col2, col3 = st.columns([1, 2, 1])
+                with col2:
+                    st.metric("Alzheimer's Risk Assessment", f"{alzheimers_risk:.1f}%", 
+                             help="Raw model prediction probability")
+                
+                # Risk interpretation based on actual model output
+                if alzheimers_risk >= 70:  # High risk
+                    st.markdown(f"""
+                    <div class="result-high-risk">
+                        <h2>⚠️ High Risk Assessment</h2>
+                        <h3>Alzheimer's Risk: {alzheimers_risk:.1f}%</h3>
+                        <p>The model indicates elevated risk factors. Please consult healthcare professionals.</p>
+                    </div>
+                    """, unsafe_allow_html=True)
+                    
+                elif alzheimers_risk >= 30:  # Moderate risk
+                    st.markdown(f"""
+                    <div class="result-moderate-risk">
+                        <h2>🔶 Moderate Risk Assessment</h2>
+                        <h3>Alzheimer's Risk: {alzheimers_risk:.1f}%</h3>
+                        <p>The model shows moderate risk factors that warrant attention.</p>
+                    </div>
+                    """, unsafe_allow_html=True)
+                    
+                else:  # Low risk
+                    st.markdown(f"""
+                    <div class="result-low-risk">
+                        <h2>✅ Low Risk Assessment</h2>
+                        <h3>Alzheimer's Risk: {alzheimers_risk:.1f}%</h3>
+                        <p>Your current health profile indicates lower risk factors.</p>
+                    </div>
+                    """, unsafe_allow_html=True)
+
+                # Recommendations based on risk level
+                st.markdown("---")
+                st.markdown("### 💡 Recommendations")
+                
+                if alzheimers_risk >= 70:
+                    st.error("""
+                    **High Priority Actions:**
+                    • Schedule consultation with healthcare provider
+                    • Consider neurological evaluation
+                    • Implement comprehensive brain-healthy lifestyle changes
+                    """)
+                elif alzheimers_risk >= 30:
+                    st.warning("""
+                    **Moderate Priority Actions:**
+                    • Increase physical activity and cognitive challenges
+                    • Adopt brain-healthy diet (Mediterranean/MIND diet)
+                    • Improve sleep quality and stress management
+                    """)
+                else:
+                    st.success("""
+                    **Maintenance Strategies:**
+                    • Continue current healthy lifestyle practices
+                    • Maintain regular physical activity and social engagement
+                    • Keep challenging your brain with new activities
+                    """)
+
+                # Legal disclaimer
+                st.markdown("---")
+                st.error("""
+                ⚠️ **MEDICAL DISCLAIMER:** This tool provides educational insights only. 
+                Always consult healthcare professionals for medical decisions.
+                """)
+                    
+            except Exception as e:
+                progress_bar.empty()
+                st.error(f"❌ **Error during prediction:** {str(e)}")
+                st.error("Please check your inputs and try again.")
+                
+                # Debug information
+                with st.expander("🔧 Debug Information", expanded=False):
+                    st.write("**Error Details:**")
+                    st.write(f"Error Type: {type(e).__name__}")
+                    st.write(f"Error Message: {str(e)}")
+                    if 'user_input_encoded' in locals():
+                        st.write("**User Input Shape:**", user_input_encoded.shape)
+                        st.write("**Feature Names Length:**", len(feature_names))
+
+# Educational content
+st.markdown("---")
+st.markdown("## 📖 Educational Resources")
+
+col1, col2 = st.columns(2)
+
+with col1:
+    st.markdown("""
+    <div class="tips-container">
+        <h3>🧠 Brain Health Tips</h3>
+        <ul>
+            <li><strong>Stay Physically Active:</strong> Regular exercise increases blood flow to the brain</li>
+            <li><strong>Challenge Your Mind:</strong> Learn new skills, read, solve puzzles</li>
+            <li><strong>Eat Brain-Healthy Foods:</strong> Mediterranean diet rich in omega-3s</li>
+            <li><strong>Get Quality Sleep:</strong> 7-9 hours nightly for memory consolidation</li>
+            <li><strong>Stay Social:</strong> Maintain relationships and community connections</li>
+        </ul>
+    </div>
+    """, unsafe
