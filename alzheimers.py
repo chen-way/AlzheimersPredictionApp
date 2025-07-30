@@ -556,13 +556,13 @@ with col2:
                         
                         # Classify based on percentage ranges
                         if risk_probability >= 60:
-                            return "High Risk"
+                            return "High Risk", risk_probability
                         elif risk_probability >= 30:
-                            return "Moderate Risk"
+                            return "Moderate Risk", risk_probability
                         else:
-                            return "Low Risk"
+                            return "Low Risk", risk_probability
                     
-                    label = interpret_prediction_with_thresholds(raw_label, probability)
+                    label, risk_percentage = interpret_prediction_with_thresholds(raw_label, probability)
                     
                     # Clear progress bar
                     progress_bar.empty()
@@ -575,7 +575,7 @@ with col2:
                         st.markdown(f"""
                         <div class="result-high-risk pulse-animation">
                             <h2>⚠️ High Risk Assessment</h2>
-                            <h3>Prediction: {label}</h3>
+                            <h3>Prediction: {label} ({risk_percentage:.1f}%)</h3>
                             <p style="font-size: 1.1rem; margin-top: 1rem;">
                                 Our analysis indicates elevated risk factors based on your current health profile. 
                                 We strongly recommend consulting with healthcare professionals for comprehensive 
@@ -591,7 +591,7 @@ with col2:
                         st.markdown(f"""
                         <div class="result-low-risk">
                             <h2>✅ Low Risk Assessment</h2>
-                            <h3>Prediction: {label}</h3>
+                            <h3>Prediction: {label} ({risk_percentage:.1f}%)</h3>
                             <p style="font-size: 1.1rem; margin-top: 1rem;">
                                 Excellent news! Your current health profile indicates lower risk factors. 
                                 Continue maintaining your healthy lifestyle habits and regular medical checkups 
@@ -607,7 +607,7 @@ with col2:
                         st.markdown(f"""
                         <div class="result-moderate-risk">
                             <h2>🔶 Moderate Risk Assessment</h2>
-                            <h3>Prediction: {label}</h3>
+                            <h3>Prediction: {label} ({risk_percentage:.1f}%)</h3>
                             <p style="font-size: 1.1rem; margin-top: 1rem;">
                                 Your assessment shows moderate risk factors that warrant attention. 
                                 This is an excellent opportunity to implement preventive strategies 
