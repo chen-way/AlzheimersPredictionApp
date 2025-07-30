@@ -535,11 +535,11 @@ with col2:
                         </div>
                     </div>
                     """, unsafe_allow_html=True)
-                    return  # Exit early, don't run the model
                 
-                # Make prediction only for adults
-                prediction = model.predict(user_input_encoded)[0]
-                probability = model.predict_proba(user_input_encoded)[0]
+                else:
+                    # Make prediction only for adults (40+)
+                    prediction = model.predict(user_input_encoded)[0]
+                    probability = model.predict_proba(user_input_encoded)[0]
                 
                 # Get label from target encoder and make it more meaningful
                 raw_label = target_encoder.inverse_transform([prediction])[0]
@@ -787,4 +787,4 @@ st.markdown("""
         </p>
     </div>
 </div>
-""", unsafe_allow_html=True) 
+""", unsafe_allow_html=True)
