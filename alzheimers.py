@@ -540,84 +540,83 @@ with col2:
                     # Make prediction only for adults (40+)
                     prediction = model.predict(user_input_encoded)[0]
                     probability = model.predict_proba(user_input_encoded)[0]
-                
-                # Get label from target encoder and make it more meaningful
-                raw_label = target_encoder.inverse_transform([prediction])[0]
-                
-                # Define risk levels based on the model's prediction and probability
-                def interpret_prediction_with_thresholds(raw_pred, probabilities):
-                    raw_str = str(raw_pred).lower()
-                    max_prob = max(probabilities)
                     
-                    # If model predicts high risk with good confidence (60%+)
-                    if raw_str in ['1', '1.0', 'high', 'high risk', 'positive', 'yes'] and max_prob >= 0.60:
-                        return "High Risk"
-                    # If model predicts low risk with good confidence (60%+) 
-                    elif raw_str in ['0', '0.0', 'low', 'low risk', 'negative', 'no'] and max_prob >= 0.60:
-                        return "Low Risk"
-                    # If model predicts moderate risk OR confidence is low
-                    elif raw_str in ['2', '2.0', 'moderate', 'medium'] or max_prob < 0.60:
-                        return "Moderate Risk"
-                    else:
-                        return "Moderate Risk"  # Default to moderate for safety
-                
-                label = interpret_prediction_with_thresholds(raw_label, probability)
-                
-                # Clear progress bar
-                progress_bar.empty()
-                
-                # Enhanced results display
-                st.markdown("<br>", unsafe_allow_html=True)
-                
-                label_str = str(label).lower()
-                if 'high' in label_str:
-                    st.markdown(f"""
-                    <div class="result-high-risk pulse-animation">
-                        <h2>⚠️ High Risk Assessment</h2>
-                        <h3>Prediction: {label}</h3>
-                        <p style="font-size: 1.1rem; margin-top: 1rem;">
-                            Our analysis indicates elevated risk factors based on your current health profile. 
-                            We strongly recommend consulting with healthcare professionals for comprehensive 
-                            evaluation and personalized prevention strategies.
-                        </p>
-                        <div style="background-color: rgba(255, 255, 255, 0.8); padding: 1rem; border-radius: 10px; margin-top: 1rem; color: #2d3436;">
-                            <strong>🏥 Next Steps:</strong> Schedule a consultation with your doctor to discuss these findings and develop a personalized care plan.
-                        </div>
-                    </div>
-                    """, unsafe_allow_html=True)
+                    # Get label from target encoder and make it more meaningful
+                    raw_label = target_encoder.inverse_transform([prediction])[0]
                     
-                elif 'low' in label_str:
-                    st.markdown(f"""
-                    <div class="result-low-risk">
-                        <h2>✅ Low Risk Assessment</h2>
-                        <h3>Prediction: {label}</h3>
-                        <p style="font-size: 1.1rem; margin-top: 1rem;">
-                            Excellent news! Your current health profile indicates lower risk factors. 
-                            Continue maintaining your healthy lifestyle habits and regular medical checkups 
-                            to preserve your cognitive health.
-                        </p>
-                        <div style="background-color: rgba(255, 255, 255, 0.8); padding: 1rem; border-radius: 10px; margin-top: 1rem; color: #2d3436;">
-                            <strong>🌟 Keep it up:</strong> Your healthy choices are making a positive impact on your brain health!
-                        </div>
-                    </div>
-                    """, unsafe_allow_html=True)
+                    # Define risk levels based on the model's prediction and probability
+                    def interpret_prediction_with_thresholds(raw_pred, probabilities):
+                        raw_str = str(raw_pred).lower()
+                        max_prob = max(probabilities)
+                        
+                        # If model predicts high risk with good confidence (60%+)
+                        if raw_str in ['1', '1.0', 'high', 'high risk', 'positive', 'yes'] and max_prob >= 0.60:
+                            return "High Risk"
+                        # If model predicts low risk with good confidence (60%+) 
+                        elif raw_str in ['0', '0.0', 'low', 'low risk', 'negative', 'no'] and max_prob >= 0.60:
+                            return "Low Risk"
+                        # If model predicts moderate risk OR confidence is low
+                        elif raw_str in ['2', '2.0', 'moderate', 'medium'] or max_prob < 0.60:
+                            return "Moderate Risk"
+                        else:
+                            return "Moderate Risk"  # Default to moderate for safety
                     
-                elif 'moderate' in label_str:
-                    st.markdown(f"""
-                    <div class="result-moderate-risk">
-                        <h2>🔶 Moderate Risk Assessment</h2>
-                        <h3>Prediction: {label}</h3>
-                        <p style="font-size: 1.1rem; margin-top: 1rem;">
-                            Your assessment shows moderate risk factors that warrant attention. 
-                            This is an excellent opportunity to implement preventive strategies 
-                            and discuss your results with healthcare providers.
-                        </p>
-                        <div style="background-color: rgba(255, 255, 255, 0.8); padding: 1rem; border-radius: 10px; margin-top: 1rem; color: #2d3436;">
-                            <strong>💪 Take Action:</strong> Small changes now can make a significant difference in your future cognitive health.
+                    label = interpret_prediction_with_thresholds(raw_label, probability)
+                    
+                    # Clear progress bar
+                    progress_bar.empty()
+                    
+                    # Enhanced results display
+                    st.markdown("<br>", unsafe_allow_html=True)
+                    
+                    label_str = str(label).lower()
+                    if 'high' in label_str:
+                        st.markdown(f"""
+                        <div class="result-high-risk pulse-animation">
+                            <h2>⚠️ High Risk Assessment</h2>
+                            <h3>Prediction: {label}</h3>
+                            <p style="font-size: 1.1rem; margin-top: 1rem;">
+                                Our analysis indicates elevated risk factors based on your current health profile. 
+                                We strongly recommend consulting with healthcare professionals for comprehensive 
+                                evaluation and personalized prevention strategies.
+                            </p>
+                            <div style="background-color: rgba(255, 255, 255, 0.8); padding: 1rem; border-radius: 10px; margin-top: 1rem; color: #2d3436;">
+                                <strong>🏥 Next Steps:</strong> Schedule a consultation with your doctor to discuss these findings and develop a personalized care plan.
+                            </div>
                         </div>
-                    </div>
-                    """, unsafe_allow_html=True)
-                
+                        """, unsafe_allow_html=True)
+                        
+                    elif 'low' in label_str:
+                        st.markdown(f"""
+                        <div class="result-low-risk">
+                            <h2>✅ Low Risk Assessment</h2>
+                            <h3>Prediction: {label}</h3>
+                            <p style="font-size: 1.1rem; margin-top: 1rem;">
+                                Excellent news! Your current health profile indicates lower risk factors. 
+                                Continue maintaining your healthy lifestyle habits and regular medical checkups 
+                                to preserve your cognitive health.
+                            </p>
+                            <div style="background-color: rgba(255, 255, 255, 0.8); padding: 1rem; border-radius: 10px; margin-top: 1rem; color: #2d3436;">
+                                <strong>🌟 Keep it up:</strong> Your healthy choices are making a positive impact on your brain health!
+                            </div>
+                        </div>
+                        """, unsafe_allow_html=True)
+                        
+                    elif 'moderate' in label_str:
+                        st.markdown(f"""
+                        <div class="result-moderate-risk">
+                            <h2>🔶 Moderate Risk Assessment</h2>
+                            <h3>Prediction: {label}</h3>
+                            <p style="font-size: 1.1rem; margin-top: 1rem;">
+                                Your assessment shows moderate risk factors that warrant attention. 
+                                This is an excellent opportunity to implement preventive strategies 
+                                and discuss your results with healthcare providers.
+                            </p>
+                            <div style="background-color: rgba(255, 255, 255, 0.8); padding: 1rem; border-radius: 10px; margin-top: 1rem; color: #2d3436;">
+                                <strong>💪 Take Action:</strong> Small changes now can make a significant difference in your future cognitive health.
+                            </div>
+                        </div>
+                        """, unsafe_allow_html=True)
 
                 
             except Exception as e:
