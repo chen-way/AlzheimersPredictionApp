@@ -609,16 +609,7 @@ with col2:
                     """, unsafe_allow_html=True)
                 
                 else:
-                    # 🔍 DEBUG: Show what the model is actually seeing
-                    with st.expander("🔧 Debug: What the model sees", expanded=False):
-                        st.write("**Raw Input Data:**")
-                        st.dataframe(user_input_df)
-                        st.write("**Encoded Input Data:**")
-                        st.dataframe(user_input_encoded)
-                        st.write("**Model Input Shape:**", user_input_encoded.shape)
-                        st.write("**Raw Model Probability:**", f"{original_alzheimers_prob:.4f}")
-                        st.write("**After Calibration:**", f"{calibrated_alzheimers_prob:.4f}")
-                    
+                else:
                     # Make prediction for adults (40+)
                     prediction = model.predict(user_input_encoded)[0]
                     raw_probabilities = model.predict_proba(user_input_encoded)[0]
@@ -636,6 +627,24 @@ with col2:
                     
                     # Update probabilities array
                     probabilities = [calibrated_no_alzheimers_prob, calibrated_alzheimers_prob]
+                    
+                    # 🔍 DEBUG: Show what the model is actually seeing
+                    with st.expander("🔧 Debug: What the model sees", expanded=True):
+                        st.write("**Raw Input Data:**")
+                        st.dataframe(user_input_df)
+                        st.write("**Encoded Input Data:**")
+                        st.dataframe(user_input_encoded)
+                        st.write("**Model Input Shape:**", user_input_encoded.shape)
+                        st.write("**Raw Model Probability:**", f"{original_alzheimers_prob:.4f} ({original_alzheimers_prob*100:.1f}%)")
+                        st.write("**After Calibration:**", f"{calibrated_alzheimers_prob:.4f} ({calibrated_alzheimers_prob*100:.1f}%)")
+                        st.write("**Prediction Class:**", prediction)
+                        
+                        # Show key feature values that might be causing issues  
+                        st.write("**Key Risk Factors:**")
+                        st.write(f"- Age: {user_input_df['Age'].iloc[0]}")
+                        st.write(f"- Family History: {user_input_df['Family History of Alzheimer\\'s'].iloc[0]}")
+                        st.write(f"- APOE Gene: {user_input_df['Genetic Risk Factor (APOE-ε4 allele)'].iloc[0]}")
+                        st.write(f"- Cognitive Score: {user_input_df['Cognitive Test Score'].iloc[0]}")
                     
                     # Show calibration info if significant change
                     if abs(original_alzheimers_prob - calibrated_alzheimers_prob) > 0.15:
