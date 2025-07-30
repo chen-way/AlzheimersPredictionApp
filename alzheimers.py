@@ -326,38 +326,24 @@ except Exception as e:
 # === CONFIDENCE CALIBRATION FUNCTION ===
 def apply_confidence_calibration(probability, user_input_hash):
     """
-    🛡️ SAFETY FIX: Apply confidence calibration to prevent overconfident predictions
-    This makes predictions more realistic and legally safer (like your stroke app)
-    Uses consistent seed based on user input for repeatable results
+    Conservative calibration - only prevents extreme 95%+ predictions
+    Preserves natural model distribution for 0-85% range
     """
     # Create consistent seed from user input hash
     random.seed(user_input_hash)
     
-    # If prediction is extremely confident (>90%), reduce it significantly
-    if probability > 0.90:
-        # Reduce by 25-45% (consistent for same input)
-        reduction = random.uniform(0.25, 0.45)
-        calibrated = probability - (probability * reduction)
-        return max(calibrated, 0.50)  # Minimum 50% for high-confidence cases
+    # Only modify extreme overconfident predictions (95%+)
+    if probability > 0.95:
+        # Reduce very high predictions to 75-85% range
+        reduction = random.uniform(0.10, 0.20)
+        calibrated = probability - reduction
+        return max(calibrated, 0.75)  # Max 75-85% for extreme cases
     
-    # If prediction is very confident (>80%), reduce it moderately  
-    elif probability > 0.80:
-        # Reduce by 15-30%
-        reduction = random.uniform(0.15, 0.30)
-        calibrated = probability - (probability * reduction)
-        return max(calibrated, 0.40)  # Minimum 40% for moderate-confidence cases
-    
-    # If prediction is confident (>70%), reduce it slightly
-    elif probability > 0.70:
-        # Reduce by 5-15%
-        reduction = random.uniform(0.05, 0.15)
-        calibrated = probability - (probability * reduction)
-        return max(calibrated, 0.30)  # Minimum 30%
-    
-    # For lower confidence predictions, apply minimal adjustment
+    # For all other predictions (0-95%), preserve them as-is
+    # This maintains your model's natural 50/50 distribution
     else:
-        # Small random variation to make it more realistic
-        variation = random.uniform(-0.05, 0.05)
+        # Minimal variation to prevent exact same decimals
+        variation = random.uniform(-0.02, 0.02)
         calibrated = probability + variation
         return max(min(calibrated, 0.95), 0.05)  # Keep between 5-95%
 
@@ -579,7 +565,7 @@ with col2:
                     progress_bar.empty()
                     st.error(f"⚠️ **Missing Required Information:** {', '.join(missing_fields)}")
                     st.info("Please fill in all fields for an accurate assessment.")
-                    st.stop()  # Use st.stop() instead of return in Streamlit
+                    st.stop()
                 
                 # Encode categorical features for the model
                 user_input_encoded = encode_categorical_features(user_input_df)
@@ -609,13 +595,12 @@ with col2:
                     """, unsafe_allow_html=True)
                 
                 else:
-                else:
                     # Make prediction for adults (40+)
                     prediction = model.predict(user_input_encoded)[0]
                     raw_probabilities = model.predict_proba(user_input_encoded)[0]
                     
-                    # 🛡️ SAFETY FIX: Apply confidence calibration to prevent 99%+ scary predictions
-                    original_alzheimers_prob = raw_probabilities[1]  # Original Alzheimer's probability
+                    # Get original Alzheimer's probability
+                    original_alzheimers_prob = raw_probabilities[1]  # Class 1 = Alzheimer's
                     
                     # Create consistent hash from user input for reproducible results
                     user_input_str = str(user_input_encoded.values.tolist())
@@ -650,14 +635,14 @@ with col2:
                     if abs(original_alzheimers_prob - calibrated_alzheimers_prob) > 0.15:
                         st.info("🔧 **Note**: Applied confidence calibration to provide more realistic probabilities (similar to medical diagnostic tools).")
                     
-                    # Calculate final risk metrics (same logic as your stroke app)
+                    # Calculate final risk metrics
                     alzheimers_risk = calibrated_alzheimers_prob * 100  # Class 1 = Alzheimer's risk
                     no_risk = calibrated_no_alzheimers_prob * 100  # Class 0 = No Alzheimer's
                     
                     # Clear progress bar
                     progress_bar.empty()
                     
-                    # Enhanced results display (similar to your stroke app logic)
+                    # Enhanced results display
                     st.markdown("<br>", unsafe_allow_html=True)
                     
                     # Display main risk metric only
@@ -666,7 +651,7 @@ with col2:
                         st.metric("Alzheimer's Risk Assessment", f"{alzheimers_risk:.1f}%", 
                                 help="Statistical risk based on your health profile")
                     
-                    # Risk interpretation (using same thresholds as your stroke app)
+                    # Risk interpretation
                     if alzheimers_risk >= 60:  # High risk (60%+)
                         st.markdown(f"""
                         <div class="result-high-risk pulse-animation">
