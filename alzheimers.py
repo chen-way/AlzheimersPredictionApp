@@ -567,6 +567,20 @@ with col2:
                 progress_bar.progress(i + 1)
             
             try:
+                # Check for missing critical values first
+                critical_fields = ['Age', 'BMI', 'Cognitive Test Score', 'Depression Level', 'Stress Levels']
+                missing_fields = []
+                
+                for field in critical_fields:
+                    if pd.isna(user_input_df[field].iloc[0]) or user_input_df[field].iloc[0] in [0, None, ""]:
+                        missing_fields.append(field)
+                
+                if missing_fields:
+                    progress_bar.empty()
+                    st.error(f"⚠️ **Missing Required Information:** {', '.join(missing_fields)}")
+                    st.info("Please fill in all fields for an accurate assessment.")
+                    return
+                
                 # Encode categorical features for the model
                 user_input_encoded = encode_categorical_features(user_input_df)
                 
@@ -595,6 +609,16 @@ with col2:
                     """, unsafe_allow_html=True)
                 
                 else:
+                    # 🔍 DEBUG: Show what the model is actually seeing
+                    with st.expander("🔧 Debug: What the model sees", expanded=False):
+                        st.write("**Raw Input Data:**")
+                        st.dataframe(user_input_df)
+                        st.write("**Encoded Input Data:**")
+                        st.dataframe(user_input_encoded)
+                        st.write("**Model Input Shape:**", user_input_encoded.shape)
+                        st.write("**Raw Model Probability:**", f"{original_alzheimers_prob:.4f}")
+                        st.write("**After Calibration:**", f"{calibrated_alzheimers_prob:.4f}")
+                    
                     # Make prediction for adults (40+)
                     prediction = model.predict(user_input_encoded)[0]
                     raw_probabilities = model.predict_proba(user_input_encoded)[0]
