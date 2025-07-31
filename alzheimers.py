@@ -682,8 +682,6 @@ with col2:
 st.markdown("---")
 st.markdown("## 📖 Educational Resources")
 
-col1, col2 = st.columns([1, 2])
-
 # Initialize session state variables for tips
 if 'brain_tip' not in st.session_state:
     st.session_state.brain_tip = None
@@ -709,10 +707,13 @@ lifestyle_tips = [
     "💧 Stay hydrated and maintain a healthy weight."
 ]
 
+# First row: Brain Health Tips and Warning Signs (equal height)
+col1, col2 = st.columns(2)
+
 with col1:
     st.markdown("""
-    <div class="tips-container">
-        <h3>🧠 Brain Health Tips</h3>
+    <div style="background-color: #FDF6E7; padding: 2rem; border-radius: 20px; margin: 2rem 0; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); border: 1px solid #93BCDC; height: 400px; overflow-y: auto;">
+        <h3 style="color: #2d3436; text-align: center; margin-bottom: 1.5rem;">🧠 Brain Health Tips</h3>
         <ul>
             <li><strong>Stay Physically Active:</strong> Regular exercise increases blood flow to the brain</li>
             <li><strong>Challenge Your Mind:</strong> Learn new skills, read, solve puzzles</li>
@@ -722,36 +723,10 @@ with col1:
         </ul>
     </div>
     """, unsafe_allow_html=True)
-    
-    # Random tip buttons
-    col_a, col_b = st.columns(2)
-    with col_a:
-        if st.button("🧠 Get Brain Tip"):
-            st.session_state.brain_tip = random.choice(brain_tips)
-    with col_b:
-        if st.button("🌟 Get Lifestyle Tip"):
-            st.session_state.lifestyle_tip = random.choice(lifestyle_tips)
-    
-    if st.session_state.brain_tip:
-        st.success(st.session_state.brain_tip)
-    if st.session_state.lifestyle_tip:
-        st.success(st.session_state.lifestyle_tip)
-    
-    # Show all tips button
-    if st.button("📋 Show All Tips"):
-        st.session_state.show_all_tips = not st.session_state.show_all_tips
-    
-    if st.session_state.show_all_tips:
-        with st.expander("🧠 All Brain Health Tips", expanded=True):
-            for tip in brain_tips:
-                st.write(f"• {tip}")
-        with st.expander("🌟 All Lifestyle Tips", expanded=True):
-            for tip in lifestyle_tips:
-                st.write(f"• {tip}")
 
 with col2:
     st.markdown("""
-    <div style="background-color: #FDF6E7; padding: 2rem; border-radius: 20px; margin: 2rem 0; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); border: 1px solid #93BCDC; height: fit-content;">
+    <div style="background-color: #FDF6E7; padding: 2rem; border-radius: 20px; margin: 2rem 0; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); border: 1px solid #93BCDC; height: 400px; overflow-y: auto;">
         <h3 style="color: #2d3436; text-align: center; margin-bottom: 1.5rem;">⚠️ Warning Signs to Watch</h3>
         <ul>
             <li><strong>Memory Loss:</strong> Forgetting recently learned information</li>
@@ -764,19 +739,64 @@ with col2:
     </div>
     """, unsafe_allow_html=True)
 
+# Second row: Interactive Tips Section
+st.markdown("### 💡 Get Personalized Tips")
+col_a, col_b, col_c = st.columns(3)
+
+with col_a:
+    if st.button("🧠 Get Brain Tip", use_container_width=True):
+        st.session_state.brain_tip = random.choice(brain_tips)
+
+with col_b:
+    if st.button("🌟 Get Lifestyle Tip", use_container_width=True):
+        st.session_state.lifestyle_tip = random.choice(lifestyle_tips)
+
+with col_c:
+    if st.button("📋 Show All Tips", use_container_width=True):
+        st.session_state.show_all_tips = not st.session_state.show_all_tips
+
+# Display random tips
+if st.session_state.brain_tip:
+    st.success(f"🧠 **Brain Tip:** {st.session_state.brain_tip}")
+if st.session_state.lifestyle_tip:
+    st.success(f"🌟 **Lifestyle Tip:** {st.session_state.lifestyle_tip}")
+
+# Show all tips section
+if st.session_state.show_all_tips:
+    st.markdown("---")
+    col_tips1, col_tips2 = st.columns(2)
+    
+    with col_tips1:
+        st.markdown("#### 🧠 All Brain Health Tips")
+        for i, tip in enumerate(brain_tips, 1):
+            st.write(f"{i}. {tip}")
+    
+    with col_tips2:
+        st.markdown("#### 🌟 All Lifestyle Tips")
+        for i, tip in enumerate(lifestyle_tips, 1):
+            st.write(f"{i}. {tip}")
+
 # Footer with additional resources
 st.markdown("---")
-st.markdown("""
-<div style="background-color: #d1e5f4; padding: 2rem; border-radius: 15px; text-align: center; border: 1px solid #93BCDC;">
-    <h4 style="color: #2d3436;">🌟 Take Control of Your Brain Health</h4>
-    <p style="color: #636e72;">Knowledge is power. Use these insights to make informed decisions about your health and lifestyle. 
-    Remember, many risk factors for Alzheimer's disease are modifiable through healthy choices.</p>
+
+# Resources section with proper HTML rendering
+col1, col2, col3 = st.columns([1, 2, 1])
+with col2:
+    st.markdown("### 🌟 Take Control of Your Brain Health")
+    st.markdown("""
+    Knowledge is power. Use these insights to make informed decisions about your health and lifestyle. 
+    Remember, many risk factors for Alzheimer's disease are modifiable through healthy choices.
+    """)
     
-    <div style="margin-top: 1rem; color: #636e72;">
-        <strong>Useful Resources:</strong><br>
-        • Alzheimer's Association: <a href="https://alz.org" target="_blank" style="color: #007bff;">alz.org</a><br>
-        • National Institute on Aging: <a href="https://nia.nih.gov" target="_blank" style="color: #007bff;">nia.nih.gov</a><br>
-        • Brain Health Research: <a href="https://brainhealthregistry.org" target="_blank" style="color: #007bff;">brainhealthregistry.org</a>
-    </div>
-</div>
-""", unsafe_allow_html=True)
+    st.markdown("#### 📚 Useful Resources:")
+    st.markdown("• **Alzheimer's Association:** [alz.org](https://alz.org)")
+    st.markdown("• **National Institute on Aging:** [nia.nih.gov](https://nia.nih.gov)")  
+    st.markdown("• **Brain Health Research:** [brainhealthregistry.org](https://brainhealthregistry.org)")
+
+# Final disclaimer
+st.markdown("---")
+st.info("""
+💡 **Remember:** This tool is for educational purposes only. Always consult with healthcare professionals 
+for medical advice, diagnosis, or treatment decisions. Early detection and lifestyle modifications can 
+make a significant difference in brain health outcomes.
+""")
