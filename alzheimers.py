@@ -78,17 +78,26 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# Load models and encoders
 @st.cache_resource
 def load_models():
-    """Load the compressed Random Forest model and preprocessing objects"""
+    """Load the trained Random Forest model and preprocessing objects"""
     try:
+        # Load the compressed model files with correct names
         model = joblib.load('model_compressed.pkl.gz')
         scaler = joblib.load('scaler_compressed.pkl.gz')
         encoders = joblib.load('encoders_compressed.pkl.gz')
+        
+        st.success("✅ All models loaded successfully!")
         return model, scaler, encoders
+        
     except FileNotFoundError as e:
-        st.error(f"Compressed model files not found: {e}")
-        st.error("Please make sure model_compressed.pkl.gz, scaler_compressed.pkl.gz, and encoders_compressed.pkl.gz are in the app directory")
+        st.error(f"Model files not found: {e}")
+        st.error("Looking for: model_compressed.pkl.gz, scaler_compressed.pkl.gz, encoders_compressed.pkl.gz")
+        st.stop()
+    except Exception as e:
+        st.error(f"Error loading models: {e}")
+        st.error("This might be a version compatibility issue. Please check the model files.")
         st.stop()
 
 # Load the models
