@@ -522,24 +522,83 @@ with col2:
                 # FIXED: Encode categorical variables first, THEN scale
                 input_encoded = input_data.copy()
                 
+                # Debug: Check what's in the encoders
+                st.write("**Available Encoders:**", list(label_encoders.keys()) if label_encoders else "None")
+                
+                # Create a mapping for feature names that might have encoding issues
+                feature_mapping = {
+                    "Family History of Alzheimer's": ["Family History of Alzheimer's", "Family History of Alzheimer's", "Family_History_of_Alzheimers", "Family History"]
+                }
+                
+                # Manual encoding since encoders seem to be missing
+                # Create simple label encoding based on the categorical options
+                encoding_maps = {}
+                for feature, options in CATEGORICAL_OPTIONS.items():
+                    encoding_maps[feature] = {option: idx for idx, option in enumerate(options)}
+                
                 # Encode all categorical variables
                 for column in input_data.columns:
                     if column in CATEGORICAL_OPTIONS:  # This is a categorical feature
-                        if column in label_encoders:
-                            try:
-                                input_encoded[column] = label_encoders[column].transform(input_data[column])
-                            except ValueError as ve:
-                                st.warning(f"Warning: Unknown value for {column}: {input_data[column].iloc[0]}. Using default encoding.")
-                                # Use the first class as default (usually corresponds to 0)
+                        original_value = input_data[column].iloc[0]
+                        
+                        # Try to find the encoder first
+                        encoder_found = False
+                        if label_encoders:
+                            # Try different possible names for this column
+                            possible_names = [column]
+                            if column in feature_mapping:
+                                possible_names.extend(feature_mapping[column])
+                            
+                            for possible_name in possible_names:
+                                if possible_name in label_encoders:
+                                    try:
+                                        input_encoded[column] = label_encoders[possible_name].transform([original_value])[0]
+                                        encoder_found = True
+                                        break
+                                    except (ValueError, KeyError):
+                                        continue
+                        
+                        # If no encoder found, use manual mapping
+                        if not encoder_found:
+                            if column in encoding_maps and original_value in encoding_maps[column]:
+                                input_encoded[column] = encoding_maps[column][original_value]
+                                st.info(f"Using manual encoding for {column}: {original_value} → {encoding_maps[column][original_value]}")
+                            else:
                                 input_encoded[column] = 0
-                        else:
-                            st.warning(f"Warning: No encoder found for {column}. Setting to 0.")
-                            input_encoded[column] = 0
+                                st.warning(f"Using default value 0 for {column}: {original_value}")
                 
                 # Ensure exact column order matches what model expects
                 if hasattr(model, 'feature_names_in_') and model.feature_names_in_ is not None:
                     expected_features = list(model.feature_names_in_)
-                    input_encoded = input_encoded.reindex(columns=expected_features, fill_value=0)
+                    st.write("**Expected by model:**", expected_features)
+                    
+                    # Create a new dataframe with exact feature names expected by model
+                    model_input = pd.DataFrame()
+                    for expected_feature in expected_features:
+                        if expected_feature in input_encoded.columns:
+                            model_input[expected_feature] = input_encoded[expected_feature]
+                        else:
+                            # Try to find a close match
+                            found_match = False
+                            for input_col in input_encoded.columns:
+                                # Handle apostrophe variations
+                                if (expected_feature.replace("'", "'") == input_col or 
+                                    expected_feature.replace("'", "'") == input_col or
+                                    expected_feature == input_col.replace("'", "'") or
+                                    expected_feature == input_col.replace("'", "'")):
+                                    model_input[expected_feature] = input_encoded[input_col]
+                                    found_match = True
+                                    st.info(f"Mapped {input_col} → {expected_feature}")
+                                    break
+                            
+                            if not found_match:
+                                model_input[expected_feature] = 0
+                                st.warning(f"Feature {expected_feature} not found, using 0")
+                    
+                    input_encoded = model_input
+                else:
+                    # If no feature names stored, use current order
+                    pass
                 
                 # Convert all columns to numeric (this should now be safe)
                 for col in input_encoded.columns:
