@@ -10,7 +10,15 @@ import time
 import random
 warnings.filterwarnings('ignore')
 
-# MOBILE-OPTIMIZED CSS SECTION
+# Enhanced mobile-friendly page configuration - MUST BE FIRST
+st.set_page_config(
+    page_title="Alzheimer's Risk Assessment", 
+    layout="wide",
+    page_icon="🧠",
+    initial_sidebar_state="collapsed"
+)
+
+# MOBILE-OPTIMIZED CSS SECTION - Fixed for iOS compatibility
 st.markdown("""
     <style>
     /* Mobile-first responsive design */
@@ -66,7 +74,7 @@ st.markdown("""
         border-radius: 8px !important;
         border: 2px solid #93BCDC !important;
         transition: all 0.3s ease !important;
-        min-height: 44px !important; /* Touch-friendly */
+        min-height: 44px !important;
     }
     
     .stSelectbox > div > div:focus-within {
@@ -81,7 +89,7 @@ st.markdown("""
         border-radius: 8px !important;
         color: black !important;
         padding: 8px !important;
-        min-height: 44px !important; /* Touch-friendly */
+        min-height: 44px !important;
     }
 
     div[data-baseweb="input"] input {
@@ -89,7 +97,7 @@ st.markdown("""
         box-shadow: none !important;
         border: none !important;
         color: black !important;
-        font-size: 16px !important; /* Prevents zoom on iOS */
+        font-size: 16px !important;
     }
 
     div[data-baseweb="input"] > div:focus-within {
@@ -102,20 +110,12 @@ st.markdown("""
         border: 2px solid #93BCDC !important;
         border-radius: 8px !important;
         background-color: #FDF6E7 !important;
-        min-height: 44px !important; /* Touch-friendly */
+        min-height: 44px !important;
         display: flex !important;
         align-items: center !important;
         flex: 1 !important;
         padding: 0 !important;
         overflow: hidden !important;
-    }
-
-    div[data-testid="stNumberInput"] > div > div > div {
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-        padding: 0 !important;
-        margin: 0 !important;
     }
 
     div[data-testid="stNumberInput"] input[type="number"] {
@@ -130,64 +130,21 @@ st.markdown("""
         appearance: none !important;
         -webkit-appearance: none !important;
         -moz-appearance: textfield !important;
-        font-size: 16px !important; /* Prevents zoom on iOS */
-    }
-
-    div[data-testid="stNumberInput"] input[type="number"]:focus {
-        border: none !important;
-        outline: none !important;
-        box-shadow: none !important;
-        background: transparent !important;
-    }
-
-    div[data-testid="stNumberInput"] *,
-    div[data-testid="stNumberInput"] *:focus,
-    div[data-testid="stNumberInput"] *:focus-within {
-        box-shadow: none !important;
+        font-size: 16px !important;
     }
 
     div[data-testid="stNumberInput"] button {
         border: none !important;
         background: rgba(147, 188, 220, 0.2) !important;
         height: 100% !important;
-        width: 40px !important; /* Slightly larger for mobile */
+        width: 40px !important;
         transition: background-color 0.2s ease !important;
         flex-shrink: 0 !important;
-        min-height: 44px !important; /* Touch-friendly */
+        min-height: 44px !important;
     }
 
     div[data-testid="stNumberInput"] button:hover {
         background: rgba(147, 188, 220, 0.4) !important;
-    }
-
-    div[data-testid="stNumberInput"] > div > div:has(button) {
-        display: flex !important;
-        gap: 0 !important;
-        margin-left: auto !important;
-        width: 80px !important;
-        height: 100% !important;
-        align-items: center !important;
-        justify-content: flex-end !important;
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-    }
-
-    div[data-testid="stNumberInput"] > div > div:first-child {
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        height: 100% !important;
-        width: 100% !important;
-        display: flex !important;
-        align-items: center !important;
-    }
-
-    div[data-testid="stNumberInput"]:focus-within > div {
-        border-color: #d1e5f4 !important;
-        box-shadow: none !important;
     }
     
     /* Mobile-optimized results containers */
@@ -245,20 +202,18 @@ st.markdown("""
         font-size: 1.2rem !important;
     }
     
-    /* Mobile-optimized sidebar - hide on mobile, show as collapsible */
+    /* Mobile-optimized sidebar */
     @media (max-width: 768px) {
         .stSidebar {
             display: none !important;
         }
         
-        /* Make content full width on mobile */
         .main .block-container {
             padding-left: 1rem !important;
             padding-right: 1rem !important;
             max-width: 100% !important;
         }
         
-        /* Stack columns on mobile */
         .stColumns {
             flex-direction: column !important;
         }
@@ -268,13 +223,11 @@ st.markdown("""
             margin-bottom: 0.5rem !important;
         }
         
-        /* Make buttons full width on mobile */
         .stButton > button {
             width: 100% !important;
             margin-bottom: 0.5rem !important;
         }
         
-        /* Adjust header for mobile */
         .main-header h1 {
             font-size: 1.5rem !important;
         }
@@ -289,11 +242,11 @@ st.markdown("""
         background-color: #d1e5f4 !important;
         color: black !important;
         border-radius: 8px;
-        font-size: 16px !important; /* Prevents zoom on iOS */
-        padding: 12px 20px !important; /* Larger touch target */
+        font-size: 16px !important;
+        padding: 12px 20px !important;
         transition: background-color 0.3s ease, color 0.3s ease;
         border: none;
-        min-height: 44px !important; /* Touch-friendly */
+        min-height: 44px !important;
         cursor: pointer;
     }
     
@@ -379,15 +332,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Enhanced mobile-friendly page configuration
-st.set_page_config(
-    page_title="Alzheimer's Risk Assessment", 
-    layout="wide",
-    page_icon="🧠",
-    initial_sidebar_state="collapsed"  # Collapsed by default for mobile
-)
-
-# Load models
+# Load models - with better error handling
 @st.cache_resource
 def load_models():
     """Load the trained Random Forest model and preprocessing objects"""
@@ -397,11 +342,11 @@ def load_models():
         encoders = joblib.load('encoders_compressed.pkl.gz')
         return model, scaler, encoders
     except FileNotFoundError as e:
-        st.error(f"❌ Model files not found: {e}")
+        st.error("Model files not found. Please check file locations.")
         st.error("Looking for: model_compressed.pkl.gz, scaler_compressed.pkl.gz, encoders_compressed.pkl.gz")
         st.stop()
     except Exception as e:
-        st.error(f"❌ Error loading model: {str(e)}")
+        st.error(f"Error loading model: {str(e)}")
         st.error("This might be a version compatibility issue or corrupted model file.")
         st.stop()
 
@@ -447,8 +392,8 @@ def get_user_input():
     user_data = {}
     
     # Mobile-first: single column layout for better mobile experience
-    st.markdown("### 📝 Health Information Form")
-    st.markdown("*Please fill in all fields for the most accurate assessment*")
+    st.write("### 📝 Health Information Form")
+    st.write("*Please fill in all fields for the most accurate assessment*")
     
     # Group related features for better organization on mobile
     feature_groups = {
@@ -518,16 +463,13 @@ def make_prediction(user_input_df):
         
         # Under 50 automatic low risk check
         if user_age < 50:
-            st.markdown(f"""
-            <div class="result-low-risk">
-                <h2>✅ Low Risk Assessment</h2>
-                <h3>Alzheimer's Risk: Very Low</h3>
-                <p>Age under 50 typically indicates very low risk. Continue healthy lifestyle practices!</p>
-            </div>
-            """, unsafe_allow_html=True)
+            # Using st.write instead of st.markdown to avoid regex issues
+            st.success("✅ Low Risk Assessment")
+            st.write(f"**Alzheimer's Risk: Very Low**")
+            st.write("Age under 50 typically indicates very low risk. Continue healthy lifestyle practices!")
             
-            st.markdown("---")
-            st.markdown("### 💡 Maintenance Strategies")
+            st.write("---")
+            st.write("### 💡 Maintenance Strategies")
             st.success("""
             **Maintenance Strategies:**
             • Continue current healthy lifestyle practices
@@ -619,21 +561,17 @@ def make_prediction(user_input_df):
         alzheimers_risk = raw_probabilities[1] * 100
         
         # Display main risk metric - mobile optimized
-        st.markdown("### 🎯 Your Risk Assessment")
+        st.write("### 🎯 Your Risk Assessment")
         st.metric("Alzheimer's Risk Assessment", f"{alzheimers_risk:.1f}%", 
                  help="Raw model prediction probability")
         
         # Risk interpretation based on actual model output
         if alzheimers_risk >= 70:  # High risk
-            st.markdown(f"""
-            <div class="result-high-risk">
-                <h2>⚠️ High Risk Assessment</h2>
-                <h3>Alzheimer's Risk: {alzheimers_risk:.1f}%</h3>
-                <p>The model indicates elevated risk factors. Please consult healthcare professionals.</p>
-            </div>
-            """, unsafe_allow_html=True)
+            st.error("⚠️ High Risk Assessment")
+            st.write(f"**Alzheimer's Risk: {alzheimers_risk:.1f}%**")
+            st.write("The model indicates elevated risk factors. Please consult healthcare professionals.")
             
-            st.markdown("### 💡 Recommendations")
+            st.write("### 💡 Recommendations")
             st.error("""
             **High Priority Actions:**
             • Schedule consultation with healthcare provider
@@ -642,15 +580,11 @@ def make_prediction(user_input_df):
             """)
             
         elif alzheimers_risk >= 30:  # Moderate risk
-            st.markdown(f"""
-            <div class="result-moderate-risk">
-                <h2>🔶 Moderate Risk Assessment</h2>
-                <h3>Alzheimer's Risk: {alzheimers_risk:.1f}%</h3>
-                <p>The model shows moderate risk factors that warrant attention.</p>
-            </div>
-            """, unsafe_allow_html=True)
+            st.warning("🔶 Moderate Risk Assessment")
+            st.write(f"**Alzheimer's Risk: {alzheimers_risk:.1f}%**")
+            st.write("The model shows moderate risk factors that warrant attention.")
             
-            st.markdown("### 💡 Recommendations")
+            st.write("### 💡 Recommendations")
             st.warning("""
             **Moderate Priority Actions:**
             • Increase physical activity and cognitive challenges
@@ -659,15 +593,11 @@ def make_prediction(user_input_df):
             """)
             
         else:  # Low risk
-            st.markdown(f"""
-            <div class="result-low-risk">
-                <h2>✅ Low Risk Assessment</h2>
-                <h3>Alzheimer's Risk: {alzheimers_risk:.1f}%</h3>
-                <p>Your current health profile indicates lower risk factors.</p>
-            </div>
-            """, unsafe_allow_html=True)
+            st.success("✅ Low Risk Assessment")
+            st.write(f"**Alzheimer's Risk: {alzheimers_risk:.1f}%**")
+            st.write("Your current health profile indicates lower risk factors.")
             
-            st.markdown("### 💡 Recommendations")
+            st.write("### 💡 Recommendations")
             st.success("""
             **Maintenance Strategies:**
             • Continue current healthy lifestyle practices
@@ -676,7 +606,7 @@ def make_prediction(user_input_df):
             """)
 
         # Legal disclaimer
-        st.markdown("---")
+        st.write("---")
         st.error("""
         ⚠️ **MEDICAL DISCLAIMER:** This tool provides educational insights only. 
         Always consult healthcare professionals for medical decisions.
@@ -688,29 +618,22 @@ def make_prediction(user_input_df):
         st.error(f"❌ **Error during prediction:** {str(e)}")
         return None
 
-# Header
-st.markdown("""
-<div class="main-header">
-    <h1>🧠 Alzheimer's Risk Assessment</h1>
-    <p>AI-powered risk evaluation with personalized insights</p>
-</div>
-""", unsafe_allow_html=True)
+# Header - using st.write to avoid regex issues
+st.write("# 🧠 Alzheimer's Risk Assessment")
+st.write("*AI-powered risk evaluation with personalized insights*")
 
-# Enhanced legal disclaimer at the top
-st.markdown("""
-<div style="background-color: #fff3cd; border: 1px solid #ffeaa7; padding: 1rem; border-radius: 10px; margin: 1rem 0;">
-    <h4 style="color: #856404; margin-top: 0; font-size: 1rem;">⚠️ IMPORTANT MEDICAL DISCLAIMER</h4>
-    <p style="color: #856404; margin: 0; font-size: 0.85rem;">
-        <strong>This tool is for EDUCATIONAL PURPOSES ONLY</strong> and should never be used for actual medical diagnosis. 
-        The predictions are based on statistical models and should not replace professional medical evaluation. 
-        Always consult qualified healthcare professionals for medical advice, diagnosis, or treatment decisions.
-    </p>
-</div>
-""", unsafe_allow_html=True)
+# Enhanced legal disclaimer at the top - using st.write
+st.warning("""
+⚠️ **IMPORTANT MEDICAL DISCLAIMER**
+
+**This tool is for EDUCATIONAL PURPOSES ONLY** and should never be used for actual medical diagnosis. 
+The predictions are based on statistical models and should not replace professional medical evaluation. 
+Always consult qualified healthcare professionals for medical advice, diagnosis, or treatment decisions.
+""")
 
 # Information section - mobile optimized
 with st.expander("🔬 How it works", expanded=False):
-    st.markdown("""
+    st.write("""
     Our machine learning model analyzes 24 comprehensive health factors to provide personalized risk assessment and evidence-based recommendations.
     
     **Key Features:**
@@ -724,8 +647,8 @@ with st.expander("🔬 How it works", expanded=False):
 user_input_df = get_user_input()
 
 # === PREDICTION SECTION ===
-st.markdown("<br>", unsafe_allow_html=True)
-st.markdown("### 🎯 Get Your Risk Assessment")
+st.write("")
+st.write("### 🎯 Get Your Risk Assessment")
 
 # Mobile-friendly button layout
 if st.button("🧪 Analyze My Alzheimer's Risk", type="primary", use_container_width=True):
@@ -762,9 +685,9 @@ if st.button("🧪 Analyze My Alzheimer's Risk", type="primary", use_container_w
             st.error(f"❌ **Error during prediction:** {str(e)}")
             st.error("Please check your inputs and try again.")
 
-# Educational content - mobile optimized
-st.markdown("---")
-st.markdown("## 📖 Educational Resources")
+# Educational content - mobile optimized using st.write
+st.write("---")
+st.write("## 📖 Educational Resources")
 
 # Initialize session state variables for tips
 if 'brain_tip' not in st.session_state:
@@ -792,35 +715,30 @@ lifestyle_tips = [
 ]
 
 # Mobile-optimized layout: stacked sections
-st.markdown("### 🧠 Brain Health Tips")
-st.markdown("""
-<div class="tips-container">
-    <ul style="margin: 0; padding-left: 1.2rem;">
-        <li><strong>Stay Physically Active:</strong> Regular exercise increases blood flow to the brain</li>
-        <li><strong>Challenge Your Mind:</strong> Learn new skills, read, solve puzzles</li>
-        <li><strong>Eat Brain-Healthy Foods:</strong> Mediterranean diet rich in omega-3s</li>
-        <li><strong>Get Quality Sleep:</strong> 7-9 hours nightly for memory consolidation</li>
-        <li><strong>Stay Social:</strong> Maintain relationships and community connections</li>
-    </ul>
-</div>
-""", unsafe_allow_html=True)
+st.write("### 🧠 Brain Health Tips")
+st.info("""
+**Key Brain Health Strategies:**
+• Stay Physically Active: Regular exercise increases blood flow to the brain
+• Challenge Your Mind: Learn new skills, read, solve puzzles
+• Eat Brain-Healthy Foods: Mediterranean diet rich in omega-3s
+• Get Quality Sleep: 7-9 hours nightly for memory consolidation
+• Stay Social: Maintain relationships and community connections
+""")
 
-st.markdown("### ⚠️ Warning Signs to Watch")
-st.markdown("""
-<div class="tips-container">
-    <ul style="margin: 0; padding-left: 1.2rem;">
-        <li><strong>Memory Loss:</strong> Forgetting recently learned information</li>
-        <li><strong>Planning Problems:</strong> Difficulty with familiar tasks</li>
-        <li><strong>Confusion:</strong> Losing track of time or place</li>
-        <li><strong>Language Issues:</strong> Trouble finding the right words</li>
-        <li><strong>Mood Changes:</strong> Depression, anxiety, or personality changes</li>
-    </ul>
-    <p style="margin-top: 1rem; margin-bottom: 0;"><strong>If you notice these signs, consult a healthcare professional.</strong></p>
-</div>
-""", unsafe_allow_html=True)
+st.write("### ⚠️ Warning Signs to Watch")
+st.info("""
+**Important Warning Signs:**
+• Memory Loss: Forgetting recently learned information
+• Planning Problems: Difficulty with familiar tasks
+• Confusion: Losing track of time or place
+• Language Issues: Trouble finding the right words
+• Mood Changes: Depression, anxiety, or personality changes
+
+**If you notice these signs, consult a healthcare professional.**
+""")
 
 # Interactive Tips Section - mobile optimized
-st.markdown("### 💡 Get Personalized Tips")
+st.write("### 💡 Get Personalized Tips")
 
 # Stack buttons vertically on mobile for better touch experience
 col1, col2, col3 = st.columns(3)
@@ -844,35 +762,32 @@ if st.session_state.lifestyle_tip:
 
 # Show all tips section - mobile friendly
 if st.session_state.show_all_tips:
-    st.markdown("---")
+    st.write("---")
     
-    st.markdown("#### 🧠 All Brain Health Tips")
+    st.write("#### 🧠 All Brain Health Tips")
     for i, tip in enumerate(brain_tips, 1):
         st.write(f"{i}. {tip}")
     
-    st.markdown("#### 🌟 All Lifestyle Tips")
+    st.write("#### 🌟 All Lifestyle Tips")
     for i, tip in enumerate(lifestyle_tips, 1):
         st.write(f"{i}. {tip}")
 
 # Footer with additional resources - mobile optimized
-st.markdown("---")
-st.markdown("### 🌟 Take Control of Your Brain Health")
+st.write("---")
+st.write("### 🌟 Take Control of Your Brain Health")
 
-st.markdown("""
-<div class="tips-container">
-    <p style="margin-bottom: 1rem;">
-        Knowledge is power. Use these insights to make informed decisions about your health and lifestyle. 
-        Remember, many risk factors for Alzheimer's disease are modifiable through healthy choices.
-    </p>
-    <h4 style="margin-bottom: 0.5rem;">📚 Useful Resources:</h4>
-    <p style="margin-bottom: 0.25rem;">• <strong>Alzheimer's Association:</strong> <a href="https://alz.org" target="_blank" style="color: #007bff;">alz.org</a></p>
-    <p style="margin-bottom: 0.25rem;">• <strong>National Institute on Aging:</strong> <a href="https://nia.nih.gov" target="_blank" style="color: #007bff;">nia.nih.gov</a></p>
-    <p style="margin-bottom: 0;">• <strong>Brain Health Research:</strong> <a href="https://brainhealthregistry.org" target="_blank" style="color: #007bff;">brainhealthregistry.org</a></p>
-</div>
-""", unsafe_allow_html=True)
+st.info("""
+Knowledge is power. Use these insights to make informed decisions about your health and lifestyle. 
+Remember, many risk factors for Alzheimer's disease are modifiable through healthy choices.
+
+**📚 Useful Resources:**
+• **Alzheimer's Association:** alz.org
+• **National Institute on Aging:** nia.nih.gov
+• **Brain Health Research:** brainhealthregistry.org
+""")
 
 # Final disclaimer
-st.markdown("---")
+st.write("---")
 st.info("""
 💡 **Remember:** This tool is for educational purposes only. Always consult with healthcare professionals 
 for medical advice, diagnosis, or treatment decisions. Early detection and lifestyle modifications can 
