@@ -6,102 +6,309 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import warnings
+import time
 warnings.filterwarnings('ignore')
 
-# Page configuration
-st.set_page_config(
-    page_title="Alzheimer's Disease Risk Predictor",
-    page_icon="🧠",
-    layout="wide"
-)
-
-# Custom CSS - EXACT same styling as XGBoost version
+# SINGLE, CLEAN CSS SECTION - EXACT SAME AS XGBOOST
 st.markdown("""
-<style>
-    .main-title {
-        font-size: 3.5rem;
-        font-weight: 700;
-        text-align: center;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 1rem;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    <style>
+    /* Light blue background */
+    .stApp {
+        background-color: #e5f3fd !important;
     }
     
-    .subtitle {
-        font-size: 1.3rem;
-        text-align: center;
-        color: #666;
-        margin-bottom: 2rem;
-        font-weight: 300;
+    .main {
+        background-color: #e5f3fd !important;
     }
     
-    .risk-card {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 20px;
+    /* Custom header styling */
+    .main-header {
+        background-color: #d1e5f4 !important;
         padding: 2rem;
+        border-radius: 15px;
         text-align: center;
-        color: white;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        border: 1px solid #93BCDC;
+    }
+    
+    .main-header h1 {
+        color: #2d3436 !important;
+        font-size: 3rem !important;
+        font-weight: 700 !important;
+        margin-bottom: 0.5rem !important;
+    }
+    
+    .main-header p {
+        color: #636e72 !important;
+        font-size: 1.2rem !important;
+        font-weight: 300 !important;
+    }
+    
+    /* Feature input containers */
+    .feature-container {
+        background-color: #FDF6E7 !important;
+        padding: 1.5rem;
+        border-radius: 15px;
+        margin-bottom: 1rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        border: 1px solid #93BCDC;
+    }
+    
+    /* SELECT BOX STYLING */
+    .stSelectbox > div > div {
+        background-color: #FDF6E7 !important;
+        color: black !important;
+        border-radius: 10px !important;
+        border: 2px solid #93BCDC !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    .stSelectbox > div > div:focus-within {
+        border-color: #d1e5f4 !important;
+        box-shadow: 0 0 0 0.2rem rgba(209, 229, 244, 0.25) !important;
+    }
+
+    /* TEXT INPUT STYLING */
+    div[data-baseweb="input"] > div {
+        background-color: #FDF6E7 !important;
+        border: 2px solid #93BCDC !important;
+        border-radius: 10px !important;
+        color: black !important;
+        padding: 6px !important;
+    }
+
+    div[data-baseweb="input"] input {
+        background-color: transparent !important;
+        box-shadow: none !important;
+        border: none !important;
+        color: black !important;
+    }
+
+    div[data-baseweb="input"] > div:focus-within {
+        border-color: #d1e5f4 !important;
+        box-shadow: 0 0 0 0.2rem rgba(209, 229, 244, 0.25) !important;
+    }
+
+    /* NUMBER INPUT STYLING - Complete fix for inner border */
+    div[data-testid="stNumberInput"] > div {
+        border: 2px solid #93BCDC !important;
+        border-radius: 10px !important;
+        background-color: #FDF6E7 !important;
+        height: 42px !important;
+        display: flex !important;
+        align-items: center !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+    }
+
+    div[data-testid="stNumberInput"]:focus-within > div {
+        border-color: #d1e5f4 !important;
+        box-shadow: none !important;
+    }
+
+    /* HIDE all inner containers that create the cream border */
+    div[data-testid="stNumberInput"] > div > div:first-child {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        height: 100% !important;
+        width: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        flex: 1 !important;
+    }
+
+    /* Hide ANY inner div that might be creating borders */
+    div[data-testid="stNumberInput"] > div > div > div {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    div[data-testid="stNumberInput"] input[type="number"] {
+        border: none !important;
+        background: transparent !important;
+        height: 100% !important;
+        width: 100% !important;
+        padding: 0 12px !important;
+        color: black !important;
+        outline: none !important;
+        box-shadow: none !important;
+        appearance: none !important;
+        -webkit-appearance: none !important;
+        -moz-appearance: textfield !important;
+    }
+
+    /* Remove focus borders completely */
+    div[data-testid="stNumberInput"] input[type="number"]:focus {
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+        background: transparent !important;
+    }
+
+    /* Remove all shadows from all elements */
+    div[data-testid="stNumberInput"] *,
+    div[data-testid="stNumberInput"] *:focus,
+    div[data-testid="stNumberInput"] *:focus-within {
+        box-shadow: none !important;
+    }
+
+    div[data-testid="stNumberInput"] button {
+        border: none !important;
+        background: rgba(147, 188, 220, 0.2) !important;
+        height: 100% !important;
+        width: 35px !important;
+        transition: background-color 0.2s ease !important;
+        flex-shrink: 0 !important;
+    }
+
+    div[data-testid="stNumberInput"] button:hover {
+        background: rgba(147, 188, 220, 0.4) !important;
+    }
+
+    /* Button container positioning */
+    div[data-testid="stNumberInput"] > div > div:has(button) {
+        display: flex !important;
+        gap: 0 !important;
+        margin-left: auto !important;
+        width: 70px !important;
+        height: 100% !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+    
+    /* Results containers */
+    .result-high-risk {
+        background-color: #ffcccb;
+        color: #d63031;
+        padding: 1.5rem;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(214, 48, 49, 0.2);
+        margin: 1rem 0;
+        border: 2px solid #ff7675;
+    }
+    
+    .result-low-risk {
+        background-color: #d4edda;
+        color: #155724;
+        padding: 1.5rem;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(21, 87, 36, 0.2);
+        margin: 1rem 0;
+        border: 2px solid #28a745;
+    }
+    
+    .result-moderate-risk {
+        background-color: #fff3cd;
+        color: #856404;
+        padding: 1.5rem;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(133, 100, 4, 0.2);
+        margin: 1rem 0;
+        border: 2px solid #ffc107;
+    }
+    
+    /* Tips section styling */
+    .tips-container {
+        background-color: #FDF6E7 !important;
+        padding: 2rem;
+        border-radius: 20px;
         margin: 2rem 0;
-        border: 3px solid rgba(255,255,255,0.1);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        border: 1px solid #93BCDC;
     }
     
-    .risk-card h1 {
-        font-size: 4rem;
-        margin: 0;
-        font-weight: 700;
+    .tips-container h2 {
+        color: #2d3436 !important;
+        text-align: center;
+        margin-bottom: 1.5rem !important;
     }
     
-    .risk-card h3 {
-        font-size: 1.5rem;
-        margin: 0.5rem 0;
-        opacity: 0.9;
+    /* Sidebar styling */
+    .stSidebar {
+        background-color: #FDF6E7 !important;
+        width: 350px !important;
+        min-width: 350px !important;
     }
     
+    section[data-testid="stSidebar"] {
+        width: 350px !important;
+        min-width: 350px !important;
+    }
+    
+    /* Button styling */
+    .stButton > button {
+        background-color: #d1e5f4 !important;
+        color: black !important;
+        border-radius: 8px;
+        font-size: 16px;
+        padding: 10px 20px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        border: none;
+    }
+    
+    .stButton > button:hover {
+        background-color: #93BCDC !important;
+        color: black !important;
+    }
+    
+    /* Animation for loading */
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+    
+    .pulse-animation {
+        animation: pulse 2s infinite;
+    }
+    
+    /* Custom metric styling */
     .metric-container {
-        background: white;
-        border-radius: 15px;
-        padding: 1.5rem;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        border-left: 5px solid #667eea;
-        margin: 1rem 0;
-    }
-    
-    .stSelectbox > div > div > div {
-        background-color: #f8f9fa;
-        border-radius: 10px;
-    }
-    
-    .stNumberInput > div > div > input {
-        background-color: #f8f9fa;
-        border-radius: 10px;
-    }
-    
-    .stSlider > div > div > div > div {
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-    }
-    
-    .feature-box {
-        background: #f8f9fa;
-        border-radius: 10px;
+        background-color: #d1e5f4;
         padding: 1rem;
-        margin: 0.5rem 0;
-        border-left: 4px solid #667eea;
+        border-radius: 10px;
+        text-align: center;
+        margin: 0.5rem;
+        border: 1px solid #93BCDC;
+        color: #2d3436;
     }
     
-    .recommendation-box {
-        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-        border-radius: 15px;
-        padding: 1.5rem;
-        margin: 1rem 0;
-        border: 2px solid #2196f3;
+    /* Progress bar styling */
+    .stProgress>div>div {
+        background: linear-gradient(to right, #B3E5FC, #1E5A96) !important;
     }
-</style>
+    
+    /* Hide Streamlit default elements */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    .stDeployButton {display:none;}
+    header {visibility: hidden;}
+
+    </style>
 """, unsafe_allow_html=True)
 
-# Load models
+# Enhanced page configuration with custom styling - EXACT SAME AS XGBOOST
+st.set_page_config(
+    page_title="Alzheimer's Risk Assessment", 
+    layout="wide",
+    page_icon="🧠",
+    initial_sidebar_state="expanded"
+)
+
+# Load models - Keep your existing model loading
 @st.cache_resource
 def load_models():
     """Load the trained Random Forest model and preprocessing objects"""
@@ -109,262 +316,406 @@ def load_models():
         model = joblib.load('model_compressed.pkl.gz')
         scaler = joblib.load('scaler_compressed.pkl.gz')
         encoders = joblib.load('encoders_compressed.pkl.gz')
-        st.success("✅ All models loaded successfully!")
+        st.success("✅ Model loaded successfully!")
         return model, scaler, encoders
     except FileNotFoundError as e:
-        st.error(f"Model files not found: {e}")
+        st.error(f"❌ Model files not found: {e}")
         st.error("Looking for: model_compressed.pkl.gz, scaler_compressed.pkl.gz, encoders_compressed.pkl.gz")
         st.stop()
     except Exception as e:
-        st.error(f"Error loading models: {e}")
+        st.error(f"❌ Error loading model: {str(e)}")
+        st.error("This might be a version compatibility issue or corrupted model file.")
         st.stop()
 
 # Load the models
 model, scaler, label_encoders = load_models()
 
-# Main header - EXACT same as XGBoost version
-st.markdown('<h1 class="main-title">🧠 Alzheimer\'s Disease Risk Predictor</h1>', unsafe_allow_html=True)
-st.markdown('<p class="subtitle">Advanced AI-Powered Risk Assessment Using Machine Learning</p>', unsafe_allow_html=True)
+# Show model information for verification - SAME AS XGBOOST
+with st.expander("🔍 Model Information", expanded=False):
+    st.write("**Model Type:**", type(model).__name__)
+    if hasattr(model, 'n_features_in_'):
+        st.write("**Expected Features:**", model.n_features_in_)
+    if hasattr(model, 'feature_names_in_'):
+        st.write("**Feature Names:**", list(model.feature_names_in_) if model.feature_names_in_ is not None else "None")
+    if hasattr(model, 'classes_'):
+        st.write("**Model Classes:**", model.classes_)
 
-# Layout - EXACT same structure
+# === FEATURE DEFINITIONS (keep your existing ones) ===
+CATEGORICAL_OPTIONS = {
+    'Country': ['USA', 'Canada', 'UK', 'Germany', 'France', 'Japan', 'South Korea', 'India', 'China', 'Brazil', 'South Africa', 'Australia', 'Russia', 'Mexico', 'Italy'],
+    'Gender': ['Male', 'Female'],
+    'Education Level': ['No Formal Education', 'Primary Education', 'Secondary Education', "Bachelor's Degree", "Master's Degree", 'Doctorate'],
+    'Physical Activity Level': ['Low', 'Moderate', 'High'],
+    'Smoking Status': ['Never', 'Former', 'Current'],
+    'Alcohol Consumption': ['None', 'Moderate', 'High'],
+    'Diabetes': ['Yes', 'No'],
+    'Hypertension': ['Yes', 'No'],
+    'Cholesterol Level': ['Low', 'Normal', 'High'],
+    'Family History of Alzheimer\'s': ['Yes', 'No'],
+    'Sleep Quality': ['Poor', 'Fair', 'Good', 'Excellent'],
+    'Dietary Habits': ['Unhealthy', 'Moderate', 'Healthy'],
+    'Employment Status': ['Employed', 'Unemployed', 'Retired', 'Student'],
+    'Marital Status': ['Single', 'Married', 'Divorced', 'Widowed'],
+    'Genetic Risk Factor (APOE-ε4 allele)': ['Yes', 'No'],
+    'Social Engagement Level': ['Low', 'Moderate', 'High'],
+    'Income Level': ['Low', 'Middle', 'High'],
+    'Urban vs Rural Living': ['Urban', 'Rural'],
+    'Air Pollution Exposure': ['Minimal', 'Slight', 'Moderate', 'High', 'Severe']
+}
+
+NUMERICAL_FEATURES = ['Age', 'BMI', 'Cognitive Test Score', 'Depression Level', 'Stress Levels']
+
+# === FEATURE LIST (ordered for model) ===
+feature_names = [
+    'Country', 'Age', 'Gender', 'Education Level', 'BMI',
+    'Physical Activity Level', 'Smoking Status', 'Alcohol Consumption',
+    'Diabetes', 'Hypertension', 'Cholesterol Level',
+    'Family History of Alzheimer\'s', 'Cognitive Test Score', 'Depression Level',
+    'Sleep Quality', 'Dietary Habits', 'Air Pollution Exposure',
+    'Employment Status', 'Marital Status', 'Genetic Risk Factor (APOE-ε4 allele)',
+    'Social Engagement Level', 'Income Level', 'Stress Levels', 'Urban vs Rural Living'
+]
+
+# === USER INPUT FUNCTION - EXACT SAME AS XGBOOST ===
+def get_user_input():
+    user_data = {}
+    
+    # Create columns for better layout
+    col1, col2 = st.columns(2)
+    
+    feature_count = 0
+    for feature in feature_names:
+        # Alternate between columns
+        current_col = col1 if feature_count % 2 == 0 else col2
+        
+        with current_col:
+            if feature in CATEGORICAL_OPTIONS:
+                # Categorical features with dropdowns
+                value = st.selectbox(
+                    f"**{feature}**:", 
+                    options=CATEGORICAL_OPTIONS[feature],
+                    key=feature
+                )
+                user_data[feature] = value
+            elif feature in NUMERICAL_FEATURES:
+                # Numerical features with appropriate ranges and step sizes
+                if feature == 'Age':
+                    value = st.number_input(
+                        f"**{feature}** (years):", 
+                        min_value=10, max_value=120, value=65, step=1, key=feature
+                    )
+                elif feature == 'BMI':
+                    value = st.number_input(
+                        f"**{feature}** (kg/m²):", 
+                        min_value=10.0, max_value=50.0, value=25.0, step=0.1, key=feature
+                    )
+                elif feature == 'Cognitive Test Score':
+                    value = st.number_input(
+                        f"**{feature}** (0-30):", 
+                        min_value=0, max_value=30, value=25, step=1, key=feature
+                    )
+                elif feature == 'Depression Level':
+                    value = st.number_input(
+                        f"**{feature}** (0-15, higher = more depressed):", 
+                        min_value=0, max_value=15, value=2, step=1, key=feature
+                    )
+                elif feature == 'Stress Levels':
+                    value = st.number_input(
+                        f"**{feature}** (0-10, higher = more stress):", 
+                        min_value=0, max_value=10, value=5, step=1, key=feature
+                    )
+                else:
+                    value = st.number_input(f"**{feature}**:", key=feature, step=1.0)
+                
+                user_data[feature] = value
+        
+        feature_count += 1
+    
+    return pd.DataFrame([user_data])
+
+# === MAIN APP - EXACT SAME LAYOUT AS XGBOOST ===
+# Header
+st.markdown("""
+<div class="main-header">
+    <h1>🧠 Alzheimer's Risk Assessment</h1>
+    <p>Advanced AI-powered risk evaluation with personalized insights</p>
+</div>
+""", unsafe_allow_html=True)
+
+# Enhanced legal disclaimer at the top - SAME AS XGBOOST
+st.markdown("""
+<div style="background-color: #fff3cd; border: 1px solid #ffeaa7; padding: 1.5rem; border-radius: 15px; margin: 1rem 0;">
+    <h4 style="color: #856404; margin-top: 0;">⚠️ IMPORTANT MEDICAL DISCLAIMER</h4>
+    <p style="color: #856404; margin: 0;">
+        <strong>This tool is for EDUCATIONAL PURPOSES ONLY</strong> and should never be used for actual medical diagnosis. 
+        The predictions are based on statistical models and should not replace professional medical evaluation. 
+        Always consult qualified healthcare professionals for medical advice, diagnosis, or treatment decisions.
+    </p>
+</div>
+""", unsafe_allow_html=True)
+
+# Information section
+col1, col2, col3 = st.columns([1, 2, 1])
+with col2:
+    st.markdown("""
+    <div style="background-color: #d1e5f4; padding: 1.5rem; border-radius: 15px; text-align: center; border: 1px solid #93BCDC; color: #2d3436;">
+        <h4>🔬 How it works</h4>
+        <p>Our advanced Random Forest machine learning model analyzes 24 comprehensive health factors to provide personalized risk assessment and evidence-based recommendations.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col2:
+    st.markdown("""
+    <div class="tips-container">
+        <h3>⚠️ Warning Signs to Watch</h3>
+        <ul>
+            <li><strong>Memory Loss:</strong> Forgetting recently learned information</li>
+            <li><strong>Planning Problems:</strong> Difficulty with familiar tasks</li>
+            <li><strong>Confusion:</strong> Losing track of time or place</li>
+            <li><strong>Language Issues:</strong> Trouble finding the right words</li>
+            <li><strong>Mood Changes:</strong> Depression, anxiety, or personality changes</li>
+        </ul>
+        <p><strong>If you notice these signs, consult a healthcare professional.</strong></p>
+    </div>
+    """, unsafe_allow_html=True)
+
+# Footer with additional resources - SAME AS XGBOOST
+st.markdown("---")
+st.markdown("""
+<div style="background-color: #d1e5f4; padding: 2rem; border-radius: 15px; text-align: center; border: 1px solid #93BCDC;">
+    <h4 style="color: #2d3436;">🌟 Take Control of Your Brain Health</h4>
+    <p style="color: #636e72;">Knowledge is power. Use these insights to make informed decisions about your health and lifestyle. 
+    Remember, many risk factors for Alzheimer's disease are modifiable through healthy choices.</p>
+    
+    <div style="margin-top: 1rem; color: #636e72;">
+        <strong>Useful Resources:</strong><br>
+        • Alzheimer's Association: <a href="https://alz.org" target="_blank" style="color: #007bff;">alz.org</a><br>
+        • National Institute on Aging: <a href="https://nia.nih.gov" target="_blank" style="color: #007bff;">nia.nih.gov</a><br>
+        • Brain Health Research: <a href="https://brainhealthregistry.org" target="_blank" style="color: #007bff;">brainhealthregistry.org</a>
+    </div>
+</div>
+""", unsafe_allow_html=True)
+
+# Get user input
+user_input_df = get_user_input()
+
+# === PREDICTION SECTION - EXACT SAME LAYOUT AS XGBOOST ===
+st.markdown("<br>", unsafe_allow_html=True)
+st.markdown("""
+<div style="background-color: #d1e5f4; padding: 1rem; border-radius: 10px; margin: 1rem 0; border: 1px solid #93BCDC;">
+    <h3 style="color: #2d3436; text-align: center; margin: 0;">🎯 Risk Assessment</h3>
+</div>
+""", unsafe_allow_html=True)
+
 col1, col2, col3 = st.columns([1, 2, 1])
 
 with col2:
-    st.markdown("### 📋 Patient Information")
-    
-    # Demographics section - SAME layout
-    st.markdown("#### 👤 Demographics")
-    demo_col1, demo_col2 = st.columns(2)
-    
-    with demo_col1:
-        age = st.number_input("Age", min_value=18, max_value=120, value=50)
-        gender = st.selectbox("Gender", ["Male", "Female"])
-        country = st.selectbox("Country", [
-            "USA", "Canada", "UK", "Germany", "France", "Japan", 
-            "South Korea", "India", "China", "Brazil", "South Africa", 
-            "Australia", "Russia", "Mexico", "Italy"
-        ], index=7)
-    
-    with demo_col2:
-        education = st.selectbox("Education Level", [
-            "No Formal Education", "Primary Education", "Secondary Education", 
-            "Bachelor's Degree", "Master's Degree", "Doctorate"
-        ], index=2)
-        employment = st.selectbox("Employment Status", [
-            "Unemployed", "Student", "Employed", "Retired"
-        ], index=3)
-        marital_status = st.selectbox("Marital Status", [
-            "Single", "Divorced", "Widowed", "Married"
-        ], index=3)
-
-    # Health Metrics - SAME layout
-    st.markdown("#### 🏥 Health Metrics")
-    health_col1, health_col2 = st.columns(2)
-    
-    with health_col1:
-        bmi = st.number_input("BMI", min_value=10.0, max_value=50.0, value=25.0, step=0.1)
-        cognitive_score = st.slider("Cognitive Test Score", 0, 30, 25)
-        depression_level = st.slider("Depression Level", 0, 10, 2)
-        stress_level = st.slider("Stress Level", 0, 10, 1)
-    
-    with health_col2:
-        diabetes = st.selectbox("Diabetes", ["No", "Yes"])
-        hypertension = st.selectbox("Hypertension", ["No", "Yes"])
-        cholesterol = st.selectbox("Cholesterol Level", ["Low", "Normal", "High"], index=1)
-        family_history = st.selectbox("Family History of Alzheimer's", ["No", "Yes"])
-
-    # Lifestyle - SAME layout
-    st.markdown("#### 🏃‍♂️ Lifestyle Factors")
-    lifestyle_col1, lifestyle_col2 = st.columns(2)
-    
-    with lifestyle_col1:
-        physical_activity = st.selectbox("Physical Activity Level", ["Low", "Moderate", "High"], index=1)
-        smoking = st.selectbox("Smoking Status", ["Never", "Former", "Current"])
-        alcohol = st.selectbox("Alcohol Consumption", ["None", "Moderate", "High"])
-        sleep_quality = st.selectbox("Sleep Quality", ["Poor", "Fair", "Good", "Excellent"], index=3)
-    
-    with lifestyle_col2:
-        diet = st.selectbox("Dietary Habits", ["Unhealthy", "Moderate", "Healthy"], index=2)
-        pollution = st.selectbox("Air Pollution Exposure", [
-            "Minimal", "Slight", "Moderate", "High", "Severe"
-        ])
-        social_engagement = st.selectbox("Social Engagement Level", ["Low", "Moderate", "High"], index=1)
-        living_area = st.selectbox("Living Area", ["Rural", "Urban"], index=1)
-
-    # Additional Factors - SAME layout
-    st.markdown("#### 🧬 Additional Risk Factors")
-    additional_col1, additional_col2 = st.columns(2)
-    
-    with additional_col1:
-        income = st.selectbox("Income Level", ["Low", "Middle", "High"], index=1)
-        genetic_risk = st.selectbox("Genetic Risk Factor (APOE-ε4)", ["No", "Yes"])
-    
-    with additional_col2:
-        st.write("")  # Spacing to match original layout
-
-# Prediction button - SAME styling
-st.markdown("<br>", unsafe_allow_html=True)
-predict_col1, predict_col2, predict_col3 = st.columns([1, 2, 1])
-with predict_col2:
-    predict_button = st.button("🔮 Predict Alzheimer's Risk", 
-                              type="primary", 
-                              use_container_width=True)
-
-# Results section - EXACT same layout as XGBoost version
-if predict_button:
-    # Create input dataframe
-    input_data = pd.DataFrame({
-        'Country': [country],
-        'Age': [age],
-        'Gender': [gender],
-        'Education Level': [education],
-        'BMI': [bmi],
-        'Physical Activity Level': [physical_activity],
-        'Smoking Status': [smoking],
-        'Alcohol Consumption': [alcohol],
-        'Diabetes': [diabetes],
-        'Hypertension': [hypertension],
-        'Cholesterol Level': [cholesterol],
-        'Family History of Alzheimer\'s': [family_history],
-        'Cognitive Test Score': [cognitive_score],
-        'Depression Level': [depression_level],
-        'Sleep Quality': [sleep_quality],
-        'Dietary Habits': [diet],
-        'Air Pollution Exposure': [pollution],
-        'Employment Status': [employment],
-        'Marital Status': [marital_status],
-        'Genetic Risk Factor (APOE-ε4 allele)': [genetic_risk],
-        'Social Engagement Level': [social_engagement],
-        'Income Level': [income],
-        'Stress Levels': [stress_level],
-        'Urban vs Rural Living': [living_area]
-    })
-    
-    # Encode categorical variables
-    input_encoded = input_data.copy()
-    for column in input_data.select_dtypes(include=['object']).columns:
-        if column in label_encoders:
-            try:
-                input_encoded[column] = label_encoders[column].transform(input_data[column])
-            except ValueError:
-                input_encoded[column] = 0
-    
-    # Scale features
-    input_scaled = scaler.transform(input_encoded)
-    
-    # Make prediction
-    risk_probability = model.predict_proba(input_scaled)[0][1]
-    risk_percentage = risk_probability * 100
-    
-    # Results layout - EXACT same as XGBoost version
-    st.markdown("<br><br>", unsafe_allow_html=True)
-    
-    result_col1, result_col2, result_col3 = st.columns([1, 2, 1])
-    
-    with result_col2:
-        # Risk card - SAME styling
-        st.markdown(f"""
-        <div class="risk-card">
-            <h3>🎯 Alzheimer's Disease Risk</h3>
-            <h1>{risk_percentage:.1f}%</h1>
-            <p style="font-size: 1.1rem; margin-top: 1rem;">
-                Risk Assessment Based on Current Health Profile
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
+    if st.button("🧪 Analyze My Alzheimer's Risk", type="primary", use_container_width=True):
         
-        # Risk interpretation - SAME as XGBoost version
-        if risk_percentage < 30:
-            st.success("🎉 **Low Risk**: Based on your current health profile, you have a relatively low risk of developing Alzheimer's disease. Keep maintaining your healthy lifestyle!")
-        elif risk_percentage < 70:
-            st.warning("⚠️ **Moderate Risk**: Your risk level is moderate. Consider discussing preventive measures with your healthcare provider.")
-        else:
-            st.error("🚨 **High Risk**: Your risk level is elevated. It's important to consult with a healthcare professional for a comprehensive evaluation.")
+        with st.spinner("🔍 Processing your health data..."):
+            progress_bar = st.progress(0)
+            for i in range(100):
+                time.sleep(0.01)
+                progress_bar.progress(i + 1)
+            
+            try:
+                # Check for missing critical values
+                critical_fields = ['Age', 'BMI', 'Cognitive Test Score', 'Depression Level', 'Stress Levels']
+                missing_fields = []
+                
+                for field in critical_fields:
+                    if pd.isna(user_input_df[field].iloc[0]) or user_input_df[field].iloc[0] in [0, None, ""]:
+                        missing_fields.append(field)
+                
+                if missing_fields:
+                    progress_bar.empty()
+                    st.error(f"⚠️ **Missing Required Information:** {', '.join(missing_fields)}")
+                    st.info("Please fill in all fields for an accurate assessment.")
+                    st.stop()
+                
+                # Create input dataframe in correct order
+                input_data = pd.DataFrame({
+                    'Country': [user_input_df['Country'].iloc[0]],
+                    'Age': [user_input_df['Age'].iloc[0]],
+                    'Gender': [user_input_df['Gender'].iloc[0]],
+                    'Education Level': [user_input_df['Education Level'].iloc[0]],
+                    'BMI': [user_input_df['BMI'].iloc[0]],
+                    'Physical Activity Level': [user_input_df['Physical Activity Level'].iloc[0]],
+                    'Smoking Status': [user_input_df['Smoking Status'].iloc[0]],
+                    'Alcohol Consumption': [user_input_df['Alcohol Consumption'].iloc[0]],
+                    'Diabetes': [user_input_df['Diabetes'].iloc[0]],
+                    'Hypertension': [user_input_df['Hypertension'].iloc[0]],
+                    'Cholesterol Level': [user_input_df['Cholesterol Level'].iloc[0]],
+                    'Family History of Alzheimer\'s': [user_input_df['Family History of Alzheimer\'s'].iloc[0]],
+                    'Cognitive Test Score': [user_input_df['Cognitive Test Score'].iloc[0]],
+                    'Depression Level': [user_input_df['Depression Level'].iloc[0]],
+                    'Sleep Quality': [user_input_df['Sleep Quality'].iloc[0]],
+                    'Dietary Habits': [user_input_df['Dietary Habits'].iloc[0]],
+                    'Air Pollution Exposure': [user_input_df['Air Pollution Exposure'].iloc[0]],
+                    'Employment Status': [user_input_df['Employment Status'].iloc[0]],
+                    'Marital Status': [user_input_df['Marital Status'].iloc[0]],
+                    'Genetic Risk Factor (APOE-ε4 allele)': [user_input_df['Genetic Risk Factor (APOE-ε4 allele)'].iloc[0]],
+                    'Social Engagement Level': [user_input_df['Social Engagement Level'].iloc[0]],
+                    'Income Level': [user_input_df['Income Level'].iloc[0]],
+                    'Stress Levels': [user_input_df['Stress Levels'].iloc[0]],
+                    'Urban vs Rural Living': [user_input_df['Urban vs Rural Living'].iloc[0]]
+                })
+                
+                # Encode categorical variables
+                input_encoded = input_data.copy()
+                for column in input_data.select_dtypes(include=['object']).columns:
+                    if column in label_encoders:
+                        try:
+                            input_encoded[column] = label_encoders[column].transform(input_data[column])
+                        except ValueError:
+                            input_encoded[column] = 0
+                
+                # Scale features
+                input_scaled = scaler.transform(input_encoded)
+                
+                # Make prediction
+                raw_probabilities = model.predict_proba(input_scaled)[0]
+                prediction = model.predict(input_scaled)[0]
+                
+                # Clear progress bar
+                progress_bar.empty()
+                
+                # Debug section to see what's happening - SAME AS XGBOOST
+                with st.expander("🔧 Debug: Model Predictions", expanded=True):
+                    st.write("**Raw Input Data:**")
+                    st.dataframe(user_input_df)
+                    st.write("**Encoded Input Data:**")
+                    st.dataframe(input_encoded)
+                    st.write("**Model Input Shape:**", input_scaled.shape)
+                    st.write("**Raw Model Probabilities:**", raw_probabilities)
+                    st.write("**Prediction Class:**", prediction)
+                    st.write("**Class 0 (No Alzheimer's):**", f"{raw_probabilities[0]:.4f} ({raw_probabilities[0]*100:.1f}%)")
+                    st.write("**Class 1 (Alzheimer's):**", f"{raw_probabilities[1]:.4f} ({raw_probabilities[1]*100:.1f}%)")
+                    
+                    # Show key features
+                    family_history = user_input_df["Family History of Alzheimer's"].iloc[0]
+                    apoe_gene = user_input_df["Genetic Risk Factor (APOE-ε4 allele)"].iloc[0]
+                    st.write("**Key Risk Factors:**")
+                    st.write(f"- Age: {user_input_df['Age'].iloc[0]}")
+                    st.write(f"- Family History: {family_history}")
+                    st.write(f"- APOE Gene: {apoe_gene}")
+                    st.write(f"- Cognitive Score: {user_input_df['Cognitive Test Score'].iloc[0]}")
+                
+                # Use raw model predictions without artificial calibration
+                alzheimers_risk = raw_probabilities[1] * 100  # Class 1 = Alzheimer's risk
+                no_risk = raw_probabilities[0] * 100  # Class 0 = No Alzheimer's
+                
+                # Display main risk metric
+                col1, col2, col3 = st.columns([1, 2, 1])
+                with col2:
+                    st.metric("Alzheimer's Risk Assessment", f"{alzheimers_risk:.1f}%", 
+                             help="Raw model prediction probability")
+                
+                # Risk interpretation based on actual model output - SAME AS XGBOOST
+                if alzheimers_risk >= 70:  # High risk
+                    st.markdown(f"""
+                    <div class="result-high-risk">
+                        <h2>⚠️ High Risk Assessment</h2>
+                        <h3>Alzheimer's Risk: {alzheimers_risk:.1f}%</h3>
+                        <p>The model indicates elevated risk factors. Please consult healthcare professionals.</p>
+                    </div>
+                    """, unsafe_allow_html=True)
+                    
+                elif alzheimers_risk >= 30:  # Moderate risk
+                    st.markdown(f"""
+                    <div class="result-moderate-risk">
+                        <h2>🔶 Moderate Risk Assessment</h2>
+                        <h3>Alzheimer's Risk: {alzheimers_risk:.1f}%</h3>
+                        <p>The model shows moderate risk factors that warrant attention.</p>
+                    </div>
+                    """, unsafe_allow_html=True)
+                    
+                else:  # Low risk
+                    st.markdown(f"""
+                    <div class="result-low-risk">
+                        <h2>✅ Low Risk Assessment</h2>
+                        <h3>Alzheimer's Risk: {alzheimers_risk:.1f}%</h3>
+                        <p>Your current health profile indicates lower risk factors.</p>
+                    </div>
+                    """, unsafe_allow_html=True)
 
-    # Gauge chart - SAME as XGBoost version
-    fig = go.Figure(go.Indicator(
-        mode = "gauge+number",
-        value = risk_percentage,
-        domain = {'x': [0, 1], 'y': [0, 1]},
-        title = {'text': "Risk Percentage", 'font': {'size': 24, 'color': '#333'}},
-        gauge = {
-            'axis': {'range': [None, 100], 'tickwidth': 1, 'tickcolor': "darkblue"},
-            'bar': {'color': "#667eea"},
-            'bgcolor': "white",
-            'borderwidth': 2,
-            'bordercolor': "gray",
-            'steps': [
-                {'range': [0, 30], 'color': '#c8e6c9'},
-                {'range': [30, 70], 'color': '#fff3e0'},
-                {'range': [70, 100], 'color': '#ffcdd2'}
-            ],
-            'threshold': {
-                'line': {'color': "red", 'width': 4},
-                'thickness': 0.75,
-                'value': 90
-            }
-        }
-    ))
-    
-    fig.update_layout(
-        paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(0,0,0,0)",
-        font={'color': "#333", 'family': "Arial"},
-        height=400,
-        margin=dict(l=50, r=50, t=50, b=50)
-    )
-    
-    st.plotly_chart(fig, use_container_width=True)
-    
-    # Additional insights - SAME layout as XGBoost version
-    insight_col1, insight_col2 = st.columns(2)
-    
-    with insight_col1:
-        st.markdown("""
-        <div class="metric-container">
-            <h4>📊 Key Risk Factors</h4>
-            <div class="feature-box">🎂 <strong>Age:</strong> {}</div>
-            <div class="feature-box">🧬 <strong>Genetic Risk:</strong> {}</div>
-            <div class="feature-box">👨‍👩‍👧‍👦 <strong>Family History:</strong> {}</div>
-            <div class="feature-box">🧠 <strong>Cognitive Score:</strong> {}/30</div>
-        </div>
-        """.format(age, genetic_risk, family_history, cognitive_score), unsafe_allow_html=True)
-    
-    with insight_col2:
-        st.markdown("""
-        <div class="metric-container">
-            <h4>💡 Lifestyle Factors</h4>
-            <div class="feature-box">🏃‍♂️ <strong>Physical Activity:</strong> {}</div>
-            <div class="feature-box">🥗 <strong>Diet Quality:</strong> {}</div>
-            <div class="feature-box">😴 <strong>Sleep Quality:</strong> {}</div>
-            <div class="feature-box">🚭 <strong>Smoking:</strong> {}</div>
-        </div>
-        """.format(physical_activity, diet, sleep_quality, smoking), unsafe_allow_html=True)
-    
-    # Recommendations - SAME as XGBoost version
+                # Recommendations based on risk level - SAME AS XGBOOST
+                st.markdown("---")
+                st.markdown("### 💡 Recommendations")
+                
+                if alzheimers_risk >= 70:
+                    st.error("""
+                    **High Priority Actions:**
+                    • Schedule consultation with healthcare provider
+                    • Consider neurological evaluation
+                    • Implement comprehensive brain-healthy lifestyle changes
+                    """)
+                elif alzheimers_risk >= 30:
+                    st.warning("""
+                    **Moderate Priority Actions:**
+                    • Increase physical activity and cognitive challenges
+                    • Adopt brain-healthy diet (Mediterranean/MIND diet)
+                    • Improve sleep quality and stress management
+                    """)
+                else:
+                    st.success("""
+                    **Maintenance Strategies:**
+                    • Continue current healthy lifestyle practices
+                    • Maintain regular physical activity and social engagement
+                    • Keep challenging your brain with new activities
+                    """)
+
+                # Legal disclaimer
+                st.markdown("---")
+                st.error("""
+                ⚠️ **MEDICAL DISCLAIMER:** This tool provides educational insights only. 
+                Always consult healthcare professionals for medical decisions.
+                """)
+                    
+            except Exception as e:
+                progress_bar.empty()
+                st.error(f"❌ **Error during prediction:** {str(e)}")
+                st.error("Please check your inputs and try again.")
+                
+                # Debug information
+                with st.expander("🔧 Debug Information", expanded=False):
+                    st.write("**Error Details:**")
+                    st.write(f"Error Type: {type(e).__name__}")
+                    st.write(f"Error Message: {str(e)}")
+                    if 'input_encoded' in locals():
+                        st.write("**User Input Shape:**", input_encoded.shape)
+                        st.write("**Feature Names Length:**", len(feature_names))
+
+# Educational content - EXACT SAME AS XGBOOST
+st.markdown("---")
+st.markdown("## 📖 Educational Resources")
+
+col1, col2 = st.columns(2)
+
+with col1:
     st.markdown("""
-    <div class="recommendation-box">
-        <h4>📋 General Recommendations</h4>
+    <div class="tips-container">
+        <h3>🧠 Brain Health Tips</h3>
         <ul>
-            <li><strong>🧠 Cognitive Health:</strong> Engage in mentally stimulating activities like reading, puzzles, or learning new skills</li>
-            <li><strong>🏃‍♂️ Physical Exercise:</strong> Regular aerobic exercise can help maintain brain health</li>
-            <li><strong>🥗 Healthy Diet:</strong> Mediterranean-style diet rich in fruits, vegetables, and omega-3 fatty acids</li>
-            <li><strong>😴 Quality Sleep:</strong> Maintain 7-9 hours of good quality sleep per night</li>
-            <li><strong>👥 Social Engagement:</strong> Stay socially active and maintain strong relationships</li>
-            <li><strong>⚕️ Medical Care:</strong> Regular check-ups and management of chronic conditions</li>
+            <li><strong>Stay Physically Active:</strong> Regular exercise increases blood flow to the brain</li>
+            <li><strong>Challenge Your Mind:</strong> Learn new skills, read, solve puzzles</li>
+            <li><strong>Eat Brain-Healthy Foods:</strong> Mediterranean diet rich in omega-3s</li>
+            <li><strong>Get Quality Sleep:</strong> 7-9 hours nightly for memory consolidation</li>
+            <li><strong>Stay Social:</strong> Maintain relationships and community connections</li>
         </ul>
     </div>
     """, unsafe_allow_html=True)
 
-# Footer - EXACT same as XGBoost version
-st.markdown("<br><br>", unsafe_allow_html=True)
-st.markdown("---")
-st.markdown("""
-<div style='text-align: center; color: #666; padding: 2rem;'>
-    <p><strong>⚠️ Medical Disclaimer:</strong> This tool is for educational purposes only and should not replace professional medical advice.</p>
-    <p>🧠 <em>Powered by Advanced Random Forest Machine Learning Algorithm</em></p>
-    <p style='font-size: 0.9rem; margin-top: 1rem;'>
-        For accurate diagnosis and treatment recommendations, please consult with qualified healthcare professionals.
-    </p>
-</div>
-""", unsafe_allow_html=True)
+with col2:
+    st.markdown("""
+    <div class="tips-container">
+        <h3>🔬 Risk Factors You Can Control</h3>
+        <ul>
+            <li><strong>Physical Activity:</strong> 150+ minutes moderate exercise weekly</li>
+            <li><strong>Diet Quality:</strong> Mediterranean or MIND diet patterns</li>
+            <li><strong>Sleep Hygiene:</strong> Consistent sleep schedule, quality rest</li>
+            <li><strong>Stress Management:</strong> Meditation, relaxation techniques</li>
+            <li><strong>Social Connections:</strong> Regular meaningful interactions</li>
+        </ul>
+    </div>
+    """, unsafe_allow_html=True)
