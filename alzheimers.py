@@ -598,7 +598,7 @@ def get_user_input():
                             help="Perceived stress level (0=no stress, 10=maximum stress)"
                         )
                     else:
-                    encoding_maps[feature] = {option: idx for idx, option in enumerate(options)}
+                        encoding_maps[feature] = {option: idx for idx, option in enumerate(options)}
         
         # Encode categorical variables
         for column in input_data.columns:
