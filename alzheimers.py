@@ -150,7 +150,7 @@ st.markdown("""
         background: rgba(255, 255, 255, 1) !important;
     }
 
-    /* Better number inputs - fixed alignment */
+    /* Better number inputs - properly aligned with select boxes */
     div[data-testid="stNumberInput"] > div {
         border: 2px solid rgba(147, 188, 220, 0.4) !important;
         border-radius: 12px !important;
@@ -161,6 +161,7 @@ st.markdown("""
         overflow: hidden !important;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08) !important;
         transition: all 0.3s ease !important;
+        position: relative !important;
     }
 
     div[data-testid="stNumberInput"] > div:hover {
@@ -169,16 +170,21 @@ st.markdown("""
         background: rgba(255, 255, 255, 1) !important;
     }
 
+    /* Position the input to align with select box text */
     div[data-testid="stNumberInput"] input[type="number"] {
         border: none !important;
         background: transparent !important;
         height: 100% !important;
-        width: 100% !important;
+        width: calc(100% - 80px) !important;
         padding: 0 15px !important;
         color: #1e293b !important;
         font-size: 16px !important;
         font-weight: 500 !important;
         outline: none !important;
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        z-index: 1 !important;
     }
 
     div[data-testid="stNumberInput"]:focus-within > div {
@@ -187,6 +193,7 @@ st.markdown("""
         background: rgba(255, 255, 255, 1) !important;
     }
 
+    /* Position buttons on the right */
     div[data-testid="stNumberInput"] button {
         border: none !important;
         background: linear-gradient(45deg, #667eea, #764ba2) !important;
@@ -195,6 +202,17 @@ st.markdown("""
         width: 40px !important;
         transition: all 0.3s ease !important;
         font-weight: 600 !important;
+        position: absolute !important;
+        right: 0 !important;
+        z-index: 2 !important;
+    }
+
+    div[data-testid="stNumberInput"] button:first-of-type {
+        right: 40px !important;
+    }
+
+    div[data-testid="stNumberInput"] button:last-of-type {
+        right: 0 !important;
     }
 
     div[data-testid="stNumberInput"] button:hover {
