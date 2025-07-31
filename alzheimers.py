@@ -351,7 +351,7 @@ CATEGORICAL_OPTIONS = {
     'Diabetes': ['Yes', 'No'],
     'Hypertension': ['Yes', 'No'],
     'Cholesterol Level': ['Low', 'Normal', 'High'],
-    "Family History of Alzheimer's": ['Yes', 'No'],  # Fixed apostrophe
+    "Family History of Alzheimer's": ['Yes', 'No'],  # Regular apostrophe
     'Sleep Quality': ['Poor', 'Fair', 'Good', 'Excellent'],
     'Dietary Habits': ['Unhealthy', 'Moderate', 'Healthy'],
     'Employment Status': ['Employed', 'Unemployed', 'Retired', 'Student'],
@@ -370,7 +370,7 @@ feature_names = [
     'Country', 'Age', 'Gender', 'Education Level', 'BMI',
     'Physical Activity Level', 'Smoking Status', 'Alcohol Consumption',
     'Diabetes', 'Hypertension', 'Cholesterol Level',
-    "Family History of Alzheimer's", 'Cognitive Test Score', 'Depression Level',
+    'Family History of Alzheimer\'s', 'Cognitive Test Score', 'Depression Level',
     'Sleep Quality', 'Dietary Habits', 'Air Pollution Exposure',
     'Employment Status', 'Marital Status', 'Genetic Risk Factor (APOE-ε4 allele)',
     'Social Engagement Level', 'Income Level', 'Stress Levels', 'Urban vs Rural Living'
@@ -504,7 +504,7 @@ with col2:
                     'Diabetes': [user_input_df['Diabetes'].iloc[0]],
                     'Hypertension': [user_input_df['Hypertension'].iloc[0]],
                     'Cholesterol Level': [user_input_df['Cholesterol Level'].iloc[0]],
-                    "Family History of Alzheimer's": [user_input_df["Family History of Alzheimer's"].iloc[0]],  # Fixed apostrophe
+                    'Family History of Alzheimer\'s': [user_input_df['Family History of Alzheimer\'s'].iloc[0]],  # Regular apostrophe
                     'Cognitive Test Score': [user_input_df['Cognitive Test Score'].iloc[0]],
                     'Depression Level': [user_input_df['Depression Level'].iloc[0]],
                     'Sleep Quality': [user_input_df['Sleep Quality'].iloc[0]],
@@ -564,8 +564,22 @@ with col2:
                                 input_encoded[column] = encoding_maps[column][original_value]
                                 st.info(f"Using manual encoding for {column}: {original_value} → {encoding_maps[column][original_value]}")
                             else:
-                                input_encoded[column] = 0
-                                st.warning(f"Using default value 0 for {column}: {original_value}")
+                                # Check if there's a close match in the encoding map
+                                found_close_match = False
+                                for map_key in encoding_maps:
+                                    if (map_key.replace("'", "'") == column or 
+                                        map_key.replace("'", "'") == column or
+                                        map_key == column.replace("'", "'") or
+                                        map_key == column.replace("'", "'")):
+                                        if original_value in encoding_maps[map_key]:
+                                            input_encoded[column] = encoding_maps[map_key][original_value]
+                                            st.info(f"Using manual encoding for {column}: {original_value} → {encoding_maps[map_key][original_value]}")
+                                            found_close_match = True
+                                            break
+                                
+                                if not found_close_match:
+                                    input_encoded[column] = 0
+                                    st.warning(f"Using default value 0 for {column}: {original_value}")
                 
                 # Ensure exact column order matches what model expects
                 if hasattr(model, 'feature_names_in_') and model.feature_names_in_ is not None:
@@ -644,8 +658,8 @@ with col2:
                     st.write("**Class 1 (Alzheimer's):**", f"{raw_probabilities[1]:.4f} ({raw_probabilities[1]*100:.1f}%)")
                     
                     # Show key features
-                    family_history = user_input_df["Family History of Alzheimer's"].iloc[0]
-                    apoe_gene = user_input_df["Genetic Risk Factor (APOE-ε4 allele)"].iloc[0]
+                    family_history = user_input_df['Family History of Alzheimer\'s'].iloc[0]
+                    apoe_gene = user_input_df['Genetic Risk Factor (APOE-ε4 allele)'].iloc[0]
                     st.write("**Key Risk Factors:**")
                     st.write(f"- Age: {user_input_df['Age'].iloc[0]}")
                     st.write(f"- Family History: {family_history}")
