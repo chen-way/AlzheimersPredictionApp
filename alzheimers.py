@@ -297,7 +297,6 @@ def load_models():
         model = joblib.load('model_compressed.pkl.gz')
         scaler = joblib.load('scaler_compressed.pkl.gz')
         encoders = joblib.load('encoders_compressed.pkl.gz')
-        st.success("✅ Model loaded successfully!")
         return model, scaler, encoders
     except FileNotFoundError as e:
         st.error(f"❌ Model files not found: {e}")
@@ -606,12 +605,10 @@ st.markdown("""
 # Information section
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
-    st.markdown("""
-    <div style="background-color: #d1e5f4; padding: 1.5rem; border-radius: 15px; text-align: center; border: 1px solid #93BCDC; color: #2d3436;">
-        <h4>🔬 How it works</h4>
-        <p>Our advanced machine learning model analyzes 24 comprehensive health factors to provide personalized risk assessment and evidence-based recommendations.</p>
-    </div>
-    """, unsafe_allow_html=True)
+    with st.expander("🔬 How it works", expanded=False):
+        st.markdown("""
+        Our advanced machine learning model analyzes 24 comprehensive health factors to provide personalized risk assessment and evidence-based recommendations.
+        """)
 
 # Get user input
 user_input_df = get_user_input()
@@ -665,7 +662,32 @@ with col2:
 st.markdown("---")
 st.markdown("## 📖 Educational Resources")
 
-col1, col2 = st.columns(2)
+col1, col2 = st.columns([1, 2])
+
+# Initialize session state variables for tips
+if 'brain_tip' not in st.session_state:
+    st.session_state.brain_tip = None
+if 'lifestyle_tip' not in st.session_state:
+    st.session_state.lifestyle_tip = None
+if 'show_all_tips' not in st.session_state:
+    st.session_state.show_all_tips = False
+
+# Brain health and lifestyle tips
+brain_tips = [
+    "🧠 Challenge your mind with puzzles, reading, or learning new skills daily.",
+    "🎵 Listen to music or learn to play an instrument to boost cognitive function.",
+    "🎯 Practice mindfulness and meditation for better brain health.",
+    "👥 Stay socially active and maintain meaningful relationships.",
+    "🎨 Engage in creative activities like painting, writing, or crafts."
+]
+
+lifestyle_tips = [
+    "🏃 Aim for at least 150 minutes of moderate exercise weekly.",
+    "🥗 Follow a Mediterranean or MIND diet rich in omega-3s.",
+    "😴 Get 7-9 hours of quality sleep each night.",
+    "🚭 Avoid smoking and limit alcohol consumption.",
+    "💧 Stay hydrated and maintain a healthy weight."
+]
 
 with col1:
     st.markdown("""
@@ -680,11 +702,37 @@ with col1:
         </ul>
     </div>
     """, unsafe_allow_html=True)
+    
+    # Random tip buttons
+    col_a, col_b = st.columns(2)
+    with col_a:
+        if st.button("🧠 Get Brain Tip"):
+            st.session_state.brain_tip = random.choice(brain_tips)
+    with col_b:
+        if st.button("🌟 Get Lifestyle Tip"):
+            st.session_state.lifestyle_tip = random.choice(lifestyle_tips)
+    
+    if st.session_state.brain_tip:
+        st.success(st.session_state.brain_tip)
+    if st.session_state.lifestyle_tip:
+        st.success(st.session_state.lifestyle_tip)
+    
+    # Show all tips button
+    if st.button("📋 Show All Tips"):
+        st.session_state.show_all_tips = not st.session_state.show_all_tips
+    
+    if st.session_state.show_all_tips:
+        with st.expander("🧠 All Brain Health Tips", expanded=True):
+            for tip in brain_tips:
+                st.write(f"• {tip}")
+        with st.expander("🌟 All Lifestyle Tips", expanded=True):
+            for tip in lifestyle_tips:
+                st.write(f"• {tip}")
 
 with col2:
     st.markdown("""
-    <div class="tips-container">
-        <h3>⚠️ Warning Signs to Watch</h3>
+    <div style="background-color: #FDF6E7; padding: 2rem; border-radius: 20px; margin: 2rem 0; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); border: 1px solid #93BCDC; height: fit-content;">
+        <h3 style="color: #2d3436; text-align: center; margin-bottom: 1.5rem;">⚠️ Warning Signs to Watch</h3>
         <ul>
             <li><strong>Memory Loss:</strong> Forgetting recently learned information</li>
             <li><strong>Planning Problems:</strong> Difficulty with familiar tasks</li>
