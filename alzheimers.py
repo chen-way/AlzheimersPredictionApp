@@ -10,112 +10,159 @@ import time
 import random
 warnings.filterwarnings('ignore')
 
-# Enhanced mobile-friendly page configuration - MUST BE FIRST
-st.set_page_config(
-    page_title="Alzheimer's Risk Assessment", 
-    layout="wide",
-    page_icon="🧠",
-    initial_sidebar_state="collapsed"
-)
-
-# MOBILE-OPTIMIZED CSS SECTION - Fixed for iOS compatibility
+# GORGEOUS MODERN CSS WITH GLASSMORPHISM AND ANIMATIONS
 st.markdown("""
     <style>
-    /* Mobile-first responsive design */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    
+    /* Modern glassmorphism background */
     .stApp {
-        background-color: #e5f3fd !important;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        font-family: 'Inter', sans-serif !important;
     }
     
     .main {
-        background-color: #e5f3fd !important;
+        background: transparent !important;
         padding: 0.5rem !important;
     }
     
-    /* Responsive header styling */
+    /* Glassmorphism header with floating effect */
     .main-header {
-        background-color: #d1e5f4 !important;
-        padding: 1rem;
-        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.15) !important;
+        backdrop-filter: blur(20px) !important;
+        -webkit-backdrop-filter: blur(20px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        padding: 2rem;
+        border-radius: 24px;
         text-align: center;
-        margin-bottom: 1rem;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        border: 1px solid #93BCDC;
+        margin-bottom: 2rem;
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37) !important;
+        transform: translateY(0);
+        transition: all 0.3s ease !important;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .main-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: left 0.5s;
+    }
+    
+    .main-header:hover::before {
+        left: 100%;
+    }
+    
+    .main-header:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px rgba(31, 38, 135, 0.5) !important;
     }
     
     .main-header h1 {
-        color: #2d3436 !important;
-        font-size: 1.8rem !important;
+        color: #ffffff !important;
+        font-size: 2.5rem !important;
         font-weight: 700 !important;
         margin-bottom: 0.5rem !important;
-        line-height: 1.2 !important;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.3) !important;
+        background: linear-gradient(45deg, #fff, #e0e7ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
     }
     
     .main-header p {
-        color: #636e72 !important;
-        font-size: 0.9rem !important;
-        font-weight: 300 !important;
-        margin-bottom: 0 !important;
+        color: rgba(255, 255, 255, 0.9) !important;
+        font-size: 1.1rem !important;
+        font-weight: 400 !important;
+        text-shadow: 0 1px 5px rgba(0,0,0,0.2) !important;
     }
     
-    /* Mobile-responsive feature containers */
-    .feature-container {
-        background-color: #FDF6E7 !important;
-        padding: 1rem;
-        border-radius: 10px;
-        margin-bottom: 0.5rem;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        border: 1px solid #93BCDC;
-    }
-    
-    /* Mobile-optimized select boxes */
-    .stSelectbox > div > div {
-        background-color: #FDF6E7 !important;
-        color: black !important;
-        border-radius: 8px !important;
-        border: 2px solid #93BCDC !important;
+    /* Floating glassmorphism containers */
+    .feature-container, .tips-container {
+        background: rgba(255, 255, 255, 0.1) !important;
+        backdrop-filter: blur(15px) !important;
+        -webkit-backdrop-filter: blur(15px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        padding: 1.5rem;
+        border-radius: 20px;
+        margin-bottom: 1rem;
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37) !important;
         transition: all 0.3s ease !important;
-        min-height: 44px !important;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .feature-container:hover, .tips-container:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 40px rgba(31, 38, 135, 0.5) !important;
+        border-color: rgba(255, 255, 255, 0.3) !important;
+    }
+    
+    /* Modern input styling with glow effects */
+    .stSelectbox > div > div {
+        background: rgba(255, 255, 255, 0.9) !important;
+        color: #2d3748 !important;
+        border-radius: 12px !important;
+        border: 2px solid rgba(147, 188, 220, 0.3) !important;
+        transition: all 0.3s ease !important;
+        min-height: 48px !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
     }
     
     .stSelectbox > div > div:focus-within {
-        border-color: #d1e5f4 !important;
-        box-shadow: 0 0 0 0.2rem rgba(209, 229, 244, 0.25) !important;
+        border-color: #667eea !important;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1), 0 4px 20px rgba(102, 126, 234, 0.2) !important;
+        transform: translateY(-1px);
     }
 
-    /* Mobile-optimized text inputs */
+    /* Enhanced text inputs */
     div[data-baseweb="input"] > div {
-        background-color: #FDF6E7 !important;
-        border: 2px solid #93BCDC !important;
-        border-radius: 8px !important;
-        color: black !important;
-        padding: 8px !important;
-        min-height: 44px !important;
+        background: rgba(255, 255, 255, 0.9) !important;
+        border: 2px solid rgba(147, 188, 220, 0.3) !important;
+        border-radius: 12px !important;
+        color: #2d3748 !important;
+        padding: 12px !important;
+        min-height: 48px !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+        transition: all 0.3s ease !important;
     }
 
     div[data-baseweb="input"] input {
         background-color: transparent !important;
         box-shadow: none !important;
         border: none !important;
-        color: black !important;
+        color: #2d3748 !important;
         font-size: 16px !important;
+        font-weight: 500 !important;
     }
 
     div[data-baseweb="input"] > div:focus-within {
-        border-color: #d1e5f4 !important;
-        box-shadow: 0 0 0 0.2rem rgba(209, 229, 244, 0.25) !important;
+        border-color: #667eea !important;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1), 0 4px 20px rgba(102, 126, 234, 0.2) !important;
+        transform: translateY(-1px);
     }
 
-    /* Mobile-optimized number inputs */
+    /* Stunning number inputs */
     div[data-testid="stNumberInput"] > div {
-        border: 2px solid #93BCDC !important;
-        border-radius: 8px !important;
-        background-color: #FDF6E7 !important;
-        min-height: 44px !important;
+        border: 2px solid rgba(147, 188, 220, 0.3) !important;
+        border-radius: 12px !important;
+        background: rgba(255, 255, 255, 0.9) !important;
+        min-height: 48px !important;
         display: flex !important;
         align-items: center !important;
-        flex: 1 !important;
-        padding: 0 !important;
         overflow: hidden !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+        transition: all 0.3s ease !important;
+    }
+
+    div[data-testid="stNumberInput"] > div:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
     }
 
     div[data-testid="stNumberInput"] input[type="number"] {
@@ -123,111 +170,262 @@ st.markdown("""
         background: transparent !important;
         height: 100% !important;
         width: 100% !important;
-        padding: 0 12px !important;
-        color: black !important;
-        outline: none !important;
-        box-shadow: none !important;
-        appearance: none !important;
-        -webkit-appearance: none !important;
-        -moz-appearance: textfield !important;
+        padding: 0 15px !important;
+        color: #2d3748 !important;
         font-size: 16px !important;
+        font-weight: 500 !important;
+        outline: none !important;
+    }
+
+    div[data-testid="stNumberInput"]:focus-within > div {
+        border-color: #667eea !important;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1), 0 4px 20px rgba(102, 126, 234, 0.2) !important;
     }
 
     div[data-testid="stNumberInput"] button {
         border: none !important;
-        background: rgba(147, 188, 220, 0.2) !important;
+        background: linear-gradient(45deg, #667eea, #764ba2) !important;
+        color: white !important;
         height: 100% !important;
         width: 40px !important;
-        transition: background-color 0.2s ease !important;
-        flex-shrink: 0 !important;
-        min-height: 44px !important;
+        transition: all 0.3s ease !important;
+        font-weight: 600 !important;
     }
 
     div[data-testid="stNumberInput"] button:hover {
-        background: rgba(147, 188, 220, 0.4) !important;
+        background: linear-gradient(45deg, #5a67d8, #6b46c1) !important;
+        transform: scale(1.05);
     }
     
-    /* Mobile-optimized results containers */
+    /* Gorgeous result containers with animations */
     .result-high-risk, .result-low-risk, .result-moderate-risk {
-        padding: 1rem;
-        border-radius: 10px;
+        padding: 2rem;
+        border-radius: 20px;
         text-align: center;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        margin: 1rem 0;
+        margin: 2rem 0;
         border: 2px solid;
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        animation: slideInUp 0.6s ease-out;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    @keyframes slideInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
     }
     
     .result-high-risk {
-        background-color: #ffcccb;
-        color: #d63031;
-        border-color: #ff7675;
+        background: rgba(248, 113, 113, 0.15);
+        color: #dc2626;
+        border-color: rgba(248, 113, 113, 0.5);
+        box-shadow: 0 8px 32px rgba(248, 113, 113, 0.3);
     }
     
     .result-low-risk {
-        background-color: #d4edda;
-        color: #155724;
-        border-color: #28a745;
+        background: rgba(34, 197, 94, 0.15);
+        color: #16a34a;
+        border-color: rgba(34, 197, 94, 0.5);
+        box-shadow: 0 8px 32px rgba(34, 197, 94, 0.3);
     }
     
     .result-moderate-risk {
-        background-color: #fff3cd;
-        color: #856404;
-        border-color: #ffc107;
+        background: rgba(245, 158, 11, 0.15);
+        color: #d97706;
+        border-color: rgba(245, 158, 11, 0.5);
+        box-shadow: 0 8px 32px rgba(245, 158, 11, 0.3);
     }
     
     .result-high-risk h2, .result-low-risk h2, .result-moderate-risk h2 {
-        font-size: 1.3rem !important;
-        margin-bottom: 0.5rem !important;
+        font-size: 1.8rem !important;
+        margin-bottom: 1rem !important;
+        font-weight: 700 !important;
     }
     
     .result-high-risk h3, .result-low-risk h3, .result-moderate-risk h3 {
-        font-size: 1.1rem !important;
-        margin-bottom: 0.5rem !important;
-    }
-    
-    /* Mobile-optimized tips containers */
-    .tips-container {
-        background-color: #FDF6E7 !important;
-        padding: 1rem;
-        border-radius: 15px;
-        margin: 1rem 0;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        border: 1px solid #93BCDC;
-    }
-    
-    .tips-container h2 {
-        color: #2d3436 !important;
-        text-align: center;
+        font-size: 1.4rem !important;
         margin-bottom: 1rem !important;
-        font-size: 1.2rem !important;
+        font-weight: 600 !important;
     }
     
-    /* Mobile-optimized sidebar */
+    /* Floating sidebar */
+    .stSidebar {
+        background: rgba(255, 255, 255, 0.1) !important;
+        backdrop-filter: blur(20px) !important;
+        -webkit-backdrop-filter: blur(20px) !important;
+        border-right: 1px solid rgba(255, 255, 255, 0.2) !important;
+    }
+    
+    /* Premium button styling */
+    .stButton > button {
+        background: linear-gradient(45deg, #667eea 0%, #764ba2 100%) !important;
+        color: white !important;
+        border-radius: 12px !important;
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        padding: 14px 28px !important;
+        border: none !important;
+        min-height: 48px !important;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4) !important;
+        transition: all 0.3s ease !important;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .stButton > button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: left 0.5s;
+    }
+    
+    .stButton > button:hover::before {
+        left: 100%;
+    }
+    
+    .stButton > button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6) !important;
+        background: linear-gradient(45deg, #5a67d8 0%, #6b46c1 100%) !important;
+    }
+    
+    .stButton > button:active {
+        transform: translateY(0);
+    }
+    
+    /* Animated loading */
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+    
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+    }
+    
+    .pulse-animation {
+        animation: pulse 2s infinite;
+    }
+    
+    .float-animation {
+        animation: float 3s ease-in-out infinite;
+    }
+    
+    /* Enhanced metric styling */
+    .metric-container {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        padding: 1.5rem;
+        border-radius: 16px;
+        text-align: center;
+        margin: 1rem 0;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+        color: white;
+        transition: all 0.3s ease;
+    }
+    
+    .metric-container:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px rgba(31, 38, 135, 0.5);
+    }
+    
+    /* Gorgeous progress bar */
+    .stProgress > div > div {
+        background: linear-gradient(90deg, #667eea, #764ba2, #f093fb) !important;
+        border-radius: 10px !important;
+        animation: shimmer 2s infinite;
+    }
+    
+    @keyframes shimmer {
+        0% { background-position: -200px 0; }
+        100% { background-position: 200px 0; }
+    }
+    
+    /* Hide default elements */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    .stDeployButton {display:none;}
+    header {visibility: hidden;}
+    
+    /* Mobile responsiveness */
     @media (max-width: 768px) {
-        .stSidebar {
-            display: none !important;
+        .main-header h1 {
+            font-size: 2rem !important;
         }
         
-        .main .block-container {
-            padding-left: 1rem !important;
-            padding-right: 1rem !important;
-            max-width: 100% !important;
+        .main-header {
+            padding: 1.5rem;
         }
         
-        .stColumns {
-            flex-direction: column !important;
+        .feature-container, .tips-container {
+            padding: 1rem;
         }
         
-        .stColumn {
-            width: 100% !important;
-            margin-bottom: 0.5rem !important;
+        .result-high-risk h2, .result-low-risk h2, .result-moderate-risk h2 {
+            font-size: 1.4rem !important;
+        }
+    }
+    
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        border-radius: 10px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(45deg, #5a67d8, #6b46c1);
+    }
+    
+    /* Enhanced text styling */
+    .stMarkdown h1, .stMarkdown h2, .stMarkdown h3, .stMarkdown h4 {
+        color: white !important;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.3) !important;
+    }
+    
+    .stMarkdown p, .stMarkdown li {
+        color: rgba(255, 255, 255, 0.9) !important;
+        line-height: 1.6 !important;
+    }
+    
+    /* Expander styling */
+    .streamlit-expanderHeader {
+        background: rgba(255, 255, 255, 0.1) !important;
+        border-radius: 12px !important;
+        color: white !important;
+        font-weight: 600 !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    }
+    
+    .streamlit-expanderContent {
+        background: rgba(255, 255, 255, 0.05) !important;
+        border-radius: 0 0 12px 12px !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-top: none !important;
+    }
+
+    </style>
+""", unsafe_allow_html=True);
         }
         
-        .stButton > button {
-            width: 100% !important;
-            margin-bottom: 0.5rem !important;
-        }
-        
+        /* Adjust header for mobile */
         .main-header h1 {
             font-size: 1.5rem !important;
         }
@@ -242,11 +440,11 @@ st.markdown("""
         background-color: #d1e5f4 !important;
         color: black !important;
         border-radius: 8px;
-        font-size: 16px !important;
-        padding: 12px 20px !important;
+        font-size: 16px !important; /* Prevents zoom on iOS */
+        padding: 12px 20px !important; /* Larger touch target */
         transition: background-color 0.3s ease, color 0.3s ease;
         border: none;
-        min-height: 44px !important;
+        min-height: 44px !important; /* Touch-friendly */
         cursor: pointer;
     }
     
@@ -332,7 +530,15 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Load models - with better error handling
+# Enhanced mobile-friendly page configuration
+st.set_page_config(
+    page_title="Alzheimer's Risk Assessment", 
+    layout="wide",
+    page_icon="🧠",
+    initial_sidebar_state="collapsed"  # Collapsed by default for mobile
+)
+
+# Load models
 @st.cache_resource
 def load_models():
     """Load the trained Random Forest model and preprocessing objects"""
@@ -342,11 +548,11 @@ def load_models():
         encoders = joblib.load('encoders_compressed.pkl.gz')
         return model, scaler, encoders
     except FileNotFoundError as e:
-        st.error("Model files not found. Please check file locations.")
+        st.error(f"❌ Model files not found: {e}")
         st.error("Looking for: model_compressed.pkl.gz, scaler_compressed.pkl.gz, encoders_compressed.pkl.gz")
         st.stop()
     except Exception as e:
-        st.error(f"Error loading model: {str(e)}")
+        st.error(f"❌ Error loading model: {str(e)}")
         st.error("This might be a version compatibility issue or corrupted model file.")
         st.stop()
 
@@ -392,8 +598,8 @@ def get_user_input():
     user_data = {}
     
     # Mobile-first: single column layout for better mobile experience
-    st.write("### 📝 Health Information Form")
-    st.write("*Please fill in all fields for the most accurate assessment*")
+    st.markdown("### 📝 Health Information Form")
+    st.markdown("*Please fill in all fields for the most accurate assessment*")
     
     # Group related features for better organization on mobile
     feature_groups = {
@@ -463,13 +669,16 @@ def make_prediction(user_input_df):
         
         # Under 50 automatic low risk check
         if user_age < 50:
-            # Using st.write instead of st.markdown to avoid regex issues
-            st.success("✅ Low Risk Assessment")
-            st.write(f"**Alzheimer's Risk: Very Low**")
-            st.write("Age under 50 typically indicates very low risk. Continue healthy lifestyle practices!")
+            st.markdown(f"""
+            <div class="result-low-risk">
+                <h2>✅ Low Risk Assessment</h2>
+                <h3>Alzheimer's Risk: Very Low</h3>
+                <p>Age under 50 typically indicates very low risk. Continue healthy lifestyle practices!</p>
+            </div>
+            """, unsafe_allow_html=True)
             
-            st.write("---")
-            st.write("### 💡 Maintenance Strategies")
+            st.markdown("---")
+            st.markdown("### 💡 Maintenance Strategies")
             st.success("""
             **Maintenance Strategies:**
             • Continue current healthy lifestyle practices
@@ -547,8 +756,7 @@ def make_prediction(user_input_df):
                         if (expected_feature.replace("'", "'") == input_col or 
                             expected_feature.replace("'", "'") == input_col or
                             expected_feature == input_col.replace("'", "'") or
-                            expected_feature == input_col.replace("'", "'")):
-                            model_input[expected_feature] = input_encoded[input_col]
+                            expected_feature == input_col.replace("'", "'")):                            model_input[expected_feature] = input_encoded[input_col]
                             found_match = True
                             break
                     if not found_match:
@@ -561,30 +769,38 @@ def make_prediction(user_input_df):
         alzheimers_risk = raw_probabilities[1] * 100
         
         # Display main risk metric - mobile optimized
-        st.write("### 🎯 Your Risk Assessment")
+        st.markdown("### 🎯 Your Risk Assessment")
         st.metric("Alzheimer's Risk Assessment", f"{alzheimers_risk:.1f}%", 
                  help="Raw model prediction probability")
         
         # Risk interpretation based on actual model output
         if alzheimers_risk >= 70:  # High risk
-            st.error("⚠️ High Risk Assessment")
-            st.write(f"**Alzheimer's Risk: {alzheimers_risk:.1f}%**")
-            st.write("The model indicates elevated risk factors. Please consult healthcare professionals.")
+            st.markdown(f"""
+            <div class="result-high-risk">
+                <h2>⚠️ High Risk Assessment</h2>
+                <h3>Alzheimer's Risk: {alzheimers_risk:.1f}%</h3>
+                <p>The model indicates elevated risk factors. Please consult healthcare professionals.</p>
+            </div>
+            """, unsafe_allow_html=True)
             
-            st.write("### 💡 Recommendations")
+            st.markdown("### 💡 Recommendations")
             st.error("""
             **High Priority Actions:**
             • Schedule consultation with healthcare provider
-            • Consider neurological evaluation
+            • Consider neurological evaluation  
             • Implement comprehensive brain-healthy lifestyle changes
             """)
             
         elif alzheimers_risk >= 30:  # Moderate risk
-            st.warning("🔶 Moderate Risk Assessment")
-            st.write(f"**Alzheimer's Risk: {alzheimers_risk:.1f}%**")
-            st.write("The model shows moderate risk factors that warrant attention.")
+            st.markdown(f"""
+            <div class="result-moderate-risk">
+                <h2>🔶 Moderate Risk Assessment</h2>
+                <h3>Alzheimer's Risk: {alzheimers_risk:.1f}%</h3>
+                <p>The model shows moderate risk factors that warrant attention.</p>
+            </div>
+            """, unsafe_allow_html=True)
             
-            st.write("### 💡 Recommendations")
+            st.markdown("### 💡 Recommendations")
             st.warning("""
             **Moderate Priority Actions:**
             • Increase physical activity and cognitive challenges
@@ -593,11 +809,15 @@ def make_prediction(user_input_df):
             """)
             
         else:  # Low risk
-            st.success("✅ Low Risk Assessment")
-            st.write(f"**Alzheimer's Risk: {alzheimers_risk:.1f}%**")
-            st.write("Your current health profile indicates lower risk factors.")
+            st.markdown(f"""
+            <div class="result-low-risk">
+                <h2>✅ Low Risk Assessment</h2>
+                <h3>Alzheimer's Risk: {alzheimers_risk:.1f}%</h3>
+                <p>Your current health profile indicates lower risk factors.</p>
+            </div>
+            """, unsafe_allow_html=True)
             
-            st.write("### 💡 Recommendations")
+            st.markdown("### 💡 Recommendations")
             st.success("""
             **Maintenance Strategies:**
             • Continue current healthy lifestyle practices
@@ -606,7 +826,7 @@ def make_prediction(user_input_df):
             """)
 
         # Legal disclaimer
-        st.write("---")
+        st.markdown("---")
         st.error("""
         ⚠️ **MEDICAL DISCLAIMER:** This tool provides educational insights only. 
         Always consult healthcare professionals for medical decisions.
@@ -618,22 +838,29 @@ def make_prediction(user_input_df):
         st.error(f"❌ **Error during prediction:** {str(e)}")
         return None
 
-# Header - using st.write to avoid regex issues
-st.write("# 🧠 Alzheimer's Risk Assessment")
-st.write("*AI-powered risk evaluation with personalized insights*")
+# Header
+st.markdown("""
+<div class="main-header float-animation">
+    <h1>🧠 Alzheimer's Risk Assessment</h1>
+    <p>AI-powered risk evaluation with personalized insights</p>
+</div>
+""", unsafe_allow_html=True)
 
-# Enhanced legal disclaimer at the top - using st.write
-st.warning("""
-⚠️ **IMPORTANT MEDICAL DISCLAIMER**
-
-**This tool is for EDUCATIONAL PURPOSES ONLY** and should never be used for actual medical diagnosis. 
-The predictions are based on statistical models and should not replace professional medical evaluation. 
-Always consult qualified healthcare professionals for medical advice, diagnosis, or treatment decisions.
-""")
+# Enhanced legal disclaimer at the top
+st.markdown("""
+<div style="background-color: #fff3cd; border: 1px solid #ffeaa7; padding: 1rem; border-radius: 10px; margin: 1rem 0;">
+    <h4 style="color: #856404; margin-top: 0; font-size: 1rem;">⚠️ IMPORTANT MEDICAL DISCLAIMER</h4>
+    <p style="color: #856404; margin: 0; font-size: 0.85rem;">
+        <strong>This tool is for EDUCATIONAL PURPOSES ONLY</strong> and should never be used for actual medical diagnosis. 
+        The predictions are based on statistical models and should not replace professional medical evaluation. 
+        Always consult qualified healthcare professionals for medical advice, diagnosis, or treatment decisions.
+    </p>
+</div>
+""", unsafe_allow_html=True)
 
 # Information section - mobile optimized
 with st.expander("🔬 How it works", expanded=False):
-    st.write("""
+    st.markdown("""
     Our machine learning model analyzes 24 comprehensive health factors to provide personalized risk assessment and evidence-based recommendations.
     
     **Key Features:**
@@ -647,8 +874,8 @@ with st.expander("🔬 How it works", expanded=False):
 user_input_df = get_user_input()
 
 # === PREDICTION SECTION ===
-st.write("")
-st.write("### 🎯 Get Your Risk Assessment")
+st.markdown("<br>", unsafe_allow_html=True)
+st.markdown("### 🎯 Get Your Risk Assessment")
 
 # Mobile-friendly button layout
 if st.button("🧪 Analyze My Alzheimer's Risk", type="primary", use_container_width=True):
@@ -685,9 +912,9 @@ if st.button("🧪 Analyze My Alzheimer's Risk", type="primary", use_container_w
             st.error(f"❌ **Error during prediction:** {str(e)}")
             st.error("Please check your inputs and try again.")
 
-# Educational content - mobile optimized using st.write
-st.write("---")
-st.write("## 📖 Educational Resources")
+# Educational content - mobile optimized
+st.markdown("---")
+st.markdown("## 📖 Educational Resources")
 
 # Initialize session state variables for tips
 if 'brain_tip' not in st.session_state:
@@ -715,30 +942,35 @@ lifestyle_tips = [
 ]
 
 # Mobile-optimized layout: stacked sections
-st.write("### 🧠 Brain Health Tips")
-st.info("""
-**Key Brain Health Strategies:**
-• Stay Physically Active: Regular exercise increases blood flow to the brain
-• Challenge Your Mind: Learn new skills, read, solve puzzles
-• Eat Brain-Healthy Foods: Mediterranean diet rich in omega-3s
-• Get Quality Sleep: 7-9 hours nightly for memory consolidation
-• Stay Social: Maintain relationships and community connections
-""")
+st.markdown("### 🧠 Brain Health Tips")
+st.markdown("""
+<div class="tips-container">
+    <ul style="margin: 0; padding-left: 1.2rem;">
+        <li><strong>Stay Physically Active:</strong> Regular exercise increases blood flow to the brain</li>
+        <li><strong>Challenge Your Mind:</strong> Learn new skills, read, solve puzzles</li>
+        <li><strong>Eat Brain-Healthy Foods:</strong> Mediterranean diet rich in omega-3s</li>
+        <li><strong>Get Quality Sleep:</strong> 7-9 hours nightly for memory consolidation</li>
+        <li><strong>Stay Social:</strong> Maintain relationships and community connections</li>
+    </ul>
+</div>
+""", unsafe_allow_html=True)
 
-st.write("### ⚠️ Warning Signs to Watch")
-st.info("""
-**Important Warning Signs:**
-• Memory Loss: Forgetting recently learned information
-• Planning Problems: Difficulty with familiar tasks
-• Confusion: Losing track of time or place
-• Language Issues: Trouble finding the right words
-• Mood Changes: Depression, anxiety, or personality changes
-
-**If you notice these signs, consult a healthcare professional.**
-""")
+st.markdown("### ⚠️ Warning Signs to Watch")
+st.markdown("""
+<div class="tips-container">
+    <ul style="margin: 0; padding-left: 1.2rem;">
+        <li><strong>Memory Loss:</strong> Forgetting recently learned information</li>
+        <li><strong>Planning Problems:</strong> Difficulty with familiar tasks</li>
+        <li><strong>Confusion:</strong> Losing track of time or place</li>
+        <li><strong>Language Issues:</strong> Trouble finding the right words</li>
+        <li><strong>Mood Changes:</strong> Depression, anxiety, or personality changes</li>
+    </ul>
+    <p style="margin-top: 1rem; margin-bottom: 0;"><strong>If you notice these signs, consult a healthcare professional.</strong></p>
+</div>
+""", unsafe_allow_html=True)
 
 # Interactive Tips Section - mobile optimized
-st.write("### 💡 Get Personalized Tips")
+st.markdown("### 💡 Get Personalized Tips")
 
 # Stack buttons vertically on mobile for better touch experience
 col1, col2, col3 = st.columns(3)
@@ -762,32 +994,35 @@ if st.session_state.lifestyle_tip:
 
 # Show all tips section - mobile friendly
 if st.session_state.show_all_tips:
-    st.write("---")
+    st.markdown("---")
     
-    st.write("#### 🧠 All Brain Health Tips")
+    st.markdown("#### 🧠 All Brain Health Tips")
     for i, tip in enumerate(brain_tips, 1):
         st.write(f"{i}. {tip}")
     
-    st.write("#### 🌟 All Lifestyle Tips")
+    st.markdown("#### 🌟 All Lifestyle Tips")
     for i, tip in enumerate(lifestyle_tips, 1):
         st.write(f"{i}. {tip}")
 
 # Footer with additional resources - mobile optimized
-st.write("---")
-st.write("### 🌟 Take Control of Your Brain Health")
+st.markdown("---")
+st.markdown("### 🌟 Take Control of Your Brain Health")
 
-st.info("""
-Knowledge is power. Use these insights to make informed decisions about your health and lifestyle. 
-Remember, many risk factors for Alzheimer's disease are modifiable through healthy choices.
-
-**📚 Useful Resources:**
-• **Alzheimer's Association:** alz.org
-• **National Institute on Aging:** nia.nih.gov
-• **Brain Health Research:** brainhealthregistry.org
-""")
+st.markdown("""
+<div class="tips-container">
+    <p style="margin-bottom: 1rem;">
+        Knowledge is power. Use these insights to make informed decisions about your health and lifestyle. 
+        Remember, many risk factors for Alzheimer's disease are modifiable through healthy choices.
+    </p>
+    <h4 style="margin-bottom: 0.5rem;">📚 Useful Resources:</h4>
+    <p style="margin-bottom: 0.25rem;">• <strong>Alzheimer's Association:</strong> <a href="https://alz.org" target="_blank" style="color: #007bff;">alz.org</a></p>
+    <p style="margin-bottom: 0.25rem;">• <strong>National Institute on Aging:</strong> <a href="https://nia.nih.gov" target="_blank" style="color: #007bff;">nia.nih.gov</a></p>
+    <p style="margin-bottom: 0;">• <strong>Brain Health Research:</strong> <a href="https://brainhealthregistry.org" target="_blank" style="color: #007bff;">brainhealthregistry.org</a></p>
+</div>
+""", unsafe_allow_html=True)
 
 # Final disclaimer
-st.write("---")
+st.markdown("---")
 st.info("""
 💡 **Remember:** This tool is for educational purposes only. Always consult with healthcare professionals 
 for medical advice, diagnosis, or treatment decisions. Early detection and lifestyle modifications can 
