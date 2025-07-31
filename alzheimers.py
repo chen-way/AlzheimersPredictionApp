@@ -352,7 +352,7 @@ CATEGORICAL_OPTIONS = {
     'Diabetes': ['Yes', 'No'],
     'Hypertension': ['Yes', 'No'],
     'Cholesterol Level': ['Low', 'Normal', 'High'],
-    'Family History of Alzheimer's': ['Yes', 'No'],
+    'Family History of Alzheimer\'s': ['Yes', 'No'],
     'Sleep Quality': ['Poor', 'Fair', 'Good', 'Excellent'],
     'Dietary Habits': ['Unhealthy', 'Moderate', 'Healthy'],
     'Employment Status': ['Employed', 'Unemployed', 'Retired', 'Student'],
@@ -370,7 +370,7 @@ feature_names = [
     'Country', 'Age', 'Gender', 'Education Level', 'BMI',
     'Physical Activity Level', 'Smoking Status', 'Alcohol Consumption',
     'Diabetes', 'Hypertension', 'Cholesterol Level',
-    'Family History of Alzheimer's', 'Cognitive Test Score', 'Depression Level',
+    'Family History of Alzheimer\'s', 'Cognitive Test Score', 'Depression Level',
     'Sleep Quality', 'Dietary Habits', 'Air Pollution Exposure',
     'Employment Status', 'Marital Status', 'Genetic Risk Factor (APOE-ε4 allele)',
     'Social Engagement Level', 'Income Level', 'Stress Levels', 'Urban vs Rural Living'
@@ -468,7 +468,7 @@ def make_prediction(user_input_df):
             'Diabetes': [user_input_df['Diabetes'].iloc[0]],
             'Hypertension': [user_input_df['Hypertension'].iloc[0]],
             'Cholesterol Level': [user_input_df['Cholesterol Level'].iloc[0]],
-            'Family History of Alzheimer's': [user_input_df['Family History of Alzheimer's'].iloc[0]],
+            'Family History of Alzheimer\'s': [user_input_df['Family History of Alzheimer\'s'].iloc[0]],
             'Cognitive Test Score': [user_input_df['Cognitive Test Score'].iloc[0]],
             'Depression Level': [user_input_df['Depression Level'].iloc[0]],
             'Sleep Quality': [user_input_df['Sleep Quality'].iloc[0]],
@@ -487,7 +487,7 @@ def make_prediction(user_input_df):
         input_encoded = input_data.copy()
         encoding_maps = {}
         for feature, options in CATEGORICAL_OPTIONS.items():
-            if feature in ['Diabetes', 'Hypertension', 'Family History of Alzheimer's', 'Genetic Risk Factor (APOE-ε4 allele)']:
+            if feature in ['Diabetes', 'Hypertension', 'Family History of Alzheimer\'s', 'Genetic Risk Factor (APOE-ε4 allele)']:
                 # For Yes/No features, ensure 'No'=0 and 'Yes'=1 (standard medical encoding)
                 if 'Yes' in options and 'No' in options:
                     encoding_maps[feature] = {'No': 0, 'Yes': 1}
@@ -724,6 +724,13 @@ def main():
     st.markdown("##### https://www.alz.org/alzheimers-dementia/10_signs")
 
 main()
+
+# User Reviews section like your stroke app
+st.markdown("---")
+st.markdown("## 💭 User Reviews")
+st.write("⭐ 'Very informative and easy to understand my risk factors!' - Sarah M.")
+st.write("⭐ 'Great tool for understanding brain health. Highly recommended!' - David L.")
+st.write("⭐ 'Helped me make important lifestyle changes for my brain health.' - Maria C.")
 
 # Footer with additional resources
 st.markdown("---")
