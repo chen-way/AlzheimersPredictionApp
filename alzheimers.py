@@ -226,15 +226,7 @@ def make_prediction(user_input_df):
                     input_encoded[column] = encoding_maps[column][original_value]
                 else:
                     input_encoded[column] = 0
-        
-        # DEBUG: Show encoded values for key medical features (optional - remove in production)
-        st.write("🔍 **Encoded Medical Risk Factors:**")
-        medical_features = ['Genetic Risk Factor (APOE-ε4 allele)', 'Diabetes', 'Hypertension', 'Family History of Alzheimer’s']
-        for feature in medical_features:
-            if feature in input_encoded.columns:
-                original = input_data[feature].iloc[0]
-                encoded = input_encoded[feature].iloc[0]
-                st.write(f"   • {feature}: '{original}' → {encoded}")
+
         
         # Ensure all columns are numeric
         for col in input_encoded.columns:
