@@ -340,7 +340,7 @@ with st.expander("🔍 Model Information", expanded=False):
     if hasattr(model, 'classes_'):
         st.write("**Model Classes:**", model.classes_)
 
-# === FEATURE DEFINITIONS (keep your existing ones) ===
+# === FEATURE DEFINITIONS (Updated to match your training data) ===
 CATEGORICAL_OPTIONS = {
     'Country': ['USA', 'Canada', 'UK', 'Germany', 'France', 'Japan', 'South Korea', 'India', 'China', 'Brazil', 'South Africa', 'Australia', 'Russia', 'Mexico', 'Italy'],
     'Gender': ['Male', 'Female'],
@@ -351,7 +351,7 @@ CATEGORICAL_OPTIONS = {
     'Diabetes': ['Yes', 'No'],
     'Hypertension': ['Yes', 'No'],
     'Cholesterol Level': ['Low', 'Normal', 'High'],
-    'Family History of Alzheimer\'s': ['Yes', 'No'],
+    "Family History of Alzheimer's": ['Yes', 'No'],  # Fixed apostrophe
     'Sleep Quality': ['Poor', 'Fair', 'Good', 'Excellent'],
     'Dietary Habits': ['Unhealthy', 'Moderate', 'Healthy'],
     'Employment Status': ['Employed', 'Unemployed', 'Retired', 'Student'],
@@ -365,12 +365,12 @@ CATEGORICAL_OPTIONS = {
 
 NUMERICAL_FEATURES = ['Age', 'BMI', 'Cognitive Test Score', 'Depression Level', 'Stress Levels']
 
-# === FEATURE LIST (ordered for model) ===
+# === FEATURE LIST (ordered exactly as they appear in your CSV/training data) ===
 feature_names = [
     'Country', 'Age', 'Gender', 'Education Level', 'BMI',
     'Physical Activity Level', 'Smoking Status', 'Alcohol Consumption',
     'Diabetes', 'Hypertension', 'Cholesterol Level',
-    'Family History of Alzheimer\'s', 'Cognitive Test Score', 'Depression Level',
+    "Family History of Alzheimer's", 'Cognitive Test Score', 'Depression Level',
     'Sleep Quality', 'Dietary Habits', 'Air Pollution Exposure',
     'Employment Status', 'Marital Status', 'Genetic Risk Factor (APOE-ε4 allele)',
     'Social Engagement Level', 'Income Level', 'Stress Levels', 'Urban vs Rural Living'
@@ -491,7 +491,7 @@ with col2:
                     st.info("Please fill in all fields for an accurate assessment.")
                     st.stop()
                 
-                # Create input dataframe in correct order
+                # Create input dataframe - match your model's exact expectations
                 input_data = pd.DataFrame({
                     'Country': [user_input_df['Country'].iloc[0]],
                     'Age': [user_input_df['Age'].iloc[0]],
@@ -504,7 +504,7 @@ with col2:
                     'Diabetes': [user_input_df['Diabetes'].iloc[0]],
                     'Hypertension': [user_input_df['Hypertension'].iloc[0]],
                     'Cholesterol Level': [user_input_df['Cholesterol Level'].iloc[0]],
-                    'Family History of Alzheimer\'s': [user_input_df['Family History of Alzheimer\'s'].iloc[0]],
+                    "Family History of Alzheimer's": [user_input_df["Family History of Alzheimer's"].iloc[0]],  # Fixed apostrophe
                     'Cognitive Test Score': [user_input_df['Cognitive Test Score'].iloc[0]],
                     'Depression Level': [user_input_df['Depression Level'].iloc[0]],
                     'Sleep Quality': [user_input_df['Sleep Quality'].iloc[0]],
@@ -519,7 +519,7 @@ with col2:
                     'Urban vs Rural Living': [user_input_df['Urban vs Rural Living'].iloc[0]]
                 })
                 
-                # Encode categorical variables - Fix the feature name issue
+                # Encode categorical variables using the same encoders from training
                 input_encoded = input_data.copy()
                 for column in input_data.select_dtypes(include=['object']).columns:
                     if column in label_encoders:
@@ -527,36 +527,15 @@ with col2:
                             input_encoded[column] = label_encoders[column].transform(input_data[column])
                         except ValueError as ve:
                             st.warning(f"Warning: Unknown value for {column}: {input_data[column].iloc[0]}. Using default encoding.")
+                            # Use the first class as default (usually corresponds to 0)
                             input_encoded[column] = 0
                 
-                # Check if model expects different column names
+                # Ensure exact column order matches what model expects
                 if hasattr(model, 'feature_names_in_') and model.feature_names_in_ is not None:
                     expected_features = list(model.feature_names_in_)
-                    current_features = list(input_encoded.columns)
-                    
-                    # Create a mapping for any feature name differences
-                    feature_mapping = {}
-                    for current_feature in current_features:
-                        if current_feature not in expected_features:
-                            # Try to find a close match
-                            for expected_feature in expected_features:
-                                # Check for exact match ignoring case and special characters
-                                current_clean = current_feature.lower().replace("'", "").replace("'", "").replace("-", "").replace(" ", "")
-                                expected_clean = expected_feature.lower().replace("'", "").replace("'", "").replace("-", "").replace(" ", "")
-                                if current_clean == expected_clean:
-                                    feature_mapping[current_feature] = expected_feature
-                                    break
-                    
-                    # Apply the mapping
-                    input_encoded = input_encoded.rename(columns=feature_mapping)
-                    
-                    # Reorder columns to match expected order and fill missing ones
                     input_encoded = input_encoded.reindex(columns=expected_features, fill_value=0)
-                else:
-                    # If no expected features, try using the original feature names list
-                    input_encoded = input_encoded.reindex(columns=feature_names, fill_value=0)
                 
-                # Scale features
+                # Scale features using the same scaler from training
                 input_scaled = scaler.transform(input_encoded)
                 
                 # Make prediction
