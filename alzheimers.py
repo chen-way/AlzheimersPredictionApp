@@ -534,21 +534,27 @@ with col2:
                     expected_features = list(model.feature_names_in_)
                     current_features = list(input_encoded.columns)
                     
-                    # Debug feature name differences
-                    st.write("**Expected features:**", expected_features)
-                    st.write("**Current features:**", current_features)
+                    # Create a mapping for any feature name differences
+                    feature_mapping = {}
+                    for current_feature in current_features:
+                        if current_feature not in expected_features:
+                            # Try to find a close match
+                            for expected_feature in expected_features:
+                                # Check for exact match ignoring case and special characters
+                                current_clean = current_feature.lower().replace("'", "").replace("'", "").replace("-", "").replace(" ", "")
+                                expected_clean = expected_feature.lower().replace("'", "").replace("'", "").replace("-", "").replace(" ", "")
+                                if current_clean == expected_clean:
+                                    feature_mapping[current_feature] = expected_feature
+                                    break
                     
-                    # Try to map features if there's a mismatch
-                    if "Family History of Alzheimer's" in current_features and "Family History of Alzheimer's" not in expected_features:
-                        # Check for alternative naming
-                        alt_names = ["Family History of Alzheimers", "Family_History_of_Alzheimers", "Family History"]
-                        for alt_name in alt_names:
-                            if alt_name in expected_features:
-                                input_encoded = input_encoded.rename(columns={"Family History of Alzheimer's": alt_name})
-                                break
+                    # Apply the mapping
+                    input_encoded = input_encoded.rename(columns=feature_mapping)
                     
-                    # Reorder columns to match expected order
+                    # Reorder columns to match expected order and fill missing ones
                     input_encoded = input_encoded.reindex(columns=expected_features, fill_value=0)
+                else:
+                    # If no expected features, try using the original feature names list
+                    input_encoded = input_encoded.reindex(columns=feature_names, fill_value=0)
                 
                 # Scale features
                 input_scaled = scaler.transform(input_encoded)
@@ -567,6 +573,23 @@ with col2:
                     st.write("**Encoded Input Data:**")
                     st.dataframe(input_encoded)
                     st.write("**Model Input Shape:**", input_scaled.shape)
+                    
+                    # Show model expected vs actual features
+                    if hasattr(model, 'feature_names_in_') and model.feature_names_in_ is not None:
+                        st.write("**Model Expected Features:**", list(model.feature_names_in_))
+                        st.write("**Current Input Features:**", list(input_encoded.columns))
+                        
+                        # Show differences
+                        expected_set = set(model.feature_names_in_)
+                        current_set = set(input_encoded.columns)
+                        missing_features = expected_set - current_set
+                        extra_features = current_set - expected_set
+                        
+                        if missing_features:
+                            st.error(f"**Missing Features:** {missing_features}")
+                        if extra_features:
+                            st.error(f"**Extra Features:** {extra_features}")
+                    
                     st.write("**Raw Model Probabilities:**", raw_probabilities)
                     st.write("**Prediction Class:**", prediction)
                     st.write("**Class 0 (No Alzheimer's):**", f"{raw_probabilities[0]:.4f} ({raw_probabilities[0]*100:.1f}%)")
@@ -696,20 +719,21 @@ with col2:
 
 # Footer with additional resources
 st.markdown("---")
-st.markdown("""
-<div style="background-color: #d1e5f4; padding: 2rem; border-radius: 15px; text-align: center; border: 1px solid #93BCDC;">
-    <h4 style="color: #2d3436;">🌟 Take Control of Your Brain Health</h4>
-    <p style="color: #636e72;">Knowledge is power. Use these insights to make informed decisions about your health and lifestyle. 
-    Remember, many risk factors for Alzheimer's disease are modifiable through healthy choices.</p>
-    
-    <div style="margin-top: 1rem; color: #636e72;">
-        <strong>Useful Resources:</strong><br>
-        • <a href="https://alz.org" target="_blank" style="color: #007bff;">Alzheimer's Association</a><br>
-        • <a href="https://nia.nih.gov" target="_blank" style="color: #007bff;">National Institute on Aging</a><br>
-        • <a href="https://brainhealthregistry.org" target="_blank" style="color: #007bff;">Brain Health Research</a>
+
+col1, col2, col3 = st.columns([1, 2, 1])
+with col2:
+    st.markdown("""
+    <div style="background-color: #d1e5f4; padding: 2rem; border-radius: 15px; text-align: center; border: 1px solid #93BCDC;">
+        <h4 style="color: #2d3436;">🌟 Take Control of Your Brain Health</h4>
+        <p style="color: #636e72;">Knowledge is power. Use these insights to make informed decisions about your health and lifestyle. 
+        Remember, many risk factors for Alzheimer's disease are modifiable through healthy choices.</p>
     </div>
-</div>
-""", unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
+    
+    st.markdown("**Useful Resources:**")
+    st.markdown("• [Alzheimer's Association](https://alz.org)")
+    st.markdown("• [National Institute on Aging](https://nia.nih.gov)")  
+    st.markdown("• [Brain Health Research](https://brainhealthregistry.org)")
 
 # Educational content - EXACT SAME AS XGBOOST
 st.markdown("---")
