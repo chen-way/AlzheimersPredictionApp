@@ -10,14 +10,14 @@ import time
 import random
 warnings.filterwarnings('ignore')
 
-# GORGEOUS MODERN CSS WITH GLASSMORPHISM AND ANIMATIONS
+# IMPROVED CSS WITH LIGHTER GRADIENT AND BETTER TEXT VISIBILITY
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
     
-    /* Modern glassmorphism background */
+    /* Lighter modern glassmorphism background */
     .stApp {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        background: linear-gradient(135deg, #a8b5ff 0%, #c4b5fd 50%, #e0e7ff 100%) !important;
         font-family: 'Inter', sans-serif !important;
     }
     
@@ -28,15 +28,15 @@ st.markdown("""
     
     /* Glassmorphism header with floating effect */
     .main-header {
-        background: rgba(255, 255, 255, 0.15) !important;
+        background: rgba(255, 255, 255, 0.9) !important;
         backdrop-filter: blur(20px) !important;
         -webkit-backdrop-filter: blur(20px) !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        border: 1px solid rgba(255, 255, 255, 0.4) !important;
         padding: 2rem;
         border-radius: 24px;
         text-align: center;
         margin-bottom: 2rem;
-        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37) !important;
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2) !important;
         transform: translateY(0);
         transition: all 0.3s ease !important;
         position: relative;
@@ -50,7 +50,7 @@ st.markdown("""
         left: -100%;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
         transition: left 0.5s;
     }
     
@@ -60,38 +60,38 @@ st.markdown("""
     
     .main-header:hover {
         transform: translateY(-5px);
-        box-shadow: 0 12px 40px rgba(31, 38, 135, 0.5) !important;
+        box-shadow: 0 12px 40px rgba(31, 38, 135, 0.3) !important;
     }
     
     .main-header h1 {
-        color: #ffffff !important;
+        color: #1e293b !important;
         font-size: 2.5rem !important;
         font-weight: 700 !important;
         margin-bottom: 0.5rem !important;
-        text-shadow: 0 2px 10px rgba(0,0,0,0.3) !important;
-        background: linear-gradient(45deg, #fff, #e0e7ff);
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+        background: linear-gradient(45deg, #1e293b, #475569);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
     }
     
     .main-header p {
-        color: rgba(255, 255, 255, 0.9) !important;
+        color: #475569 !important;
         font-size: 1.1rem !important;
-        font-weight: 400 !important;
-        text-shadow: 0 1px 5px rgba(0,0,0,0.2) !important;
+        font-weight: 500 !important;
+        text-shadow: none !important;
     }
     
-    /* Floating glassmorphism containers */
+    /* Floating glassmorphism containers with better contrast */
     .feature-container, .tips-container {
-        background: rgba(255, 255, 255, 0.1) !important;
+        background: rgba(255, 255, 255, 0.85) !important;
         backdrop-filter: blur(15px) !important;
         -webkit-backdrop-filter: blur(15px) !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        border: 1px solid rgba(255, 255, 255, 0.6) !important;
         padding: 1.5rem;
         border-radius: 20px;
         margin-bottom: 1rem;
-        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37) !important;
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15) !important;
         transition: all 0.3s ease !important;
         position: relative;
         overflow: hidden;
@@ -99,36 +99,38 @@ st.markdown("""
     
     .feature-container:hover, .tips-container:hover {
         transform: translateY(-2px);
-        box-shadow: 0 12px 40px rgba(31, 38, 135, 0.5) !important;
-        border-color: rgba(255, 255, 255, 0.3) !important;
+        box-shadow: 0 12px 40px rgba(31, 38, 135, 0.25) !important;
+        border-color: rgba(255, 255, 255, 0.8) !important;
+        background: rgba(255, 255, 255, 0.9) !important;
     }
     
-    /* Modern input styling with glow effects */
+    /* Modern input styling with better visibility */
     .stSelectbox > div > div {
-        background: rgba(255, 255, 255, 0.9) !important;
-        color: #2d3748 !important;
+        background: rgba(255, 255, 255, 0.95) !important;
+        color: #1e293b !important;
         border-radius: 12px !important;
-        border: 2px solid rgba(147, 188, 220, 0.3) !important;
+        border: 2px solid rgba(147, 188, 220, 0.4) !important;
         transition: all 0.3s ease !important;
         min-height: 48px !important;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08) !important;
     }
     
     .stSelectbox > div > div:focus-within {
         border-color: #667eea !important;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1), 0 4px 20px rgba(102, 126, 234, 0.2) !important;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15), 0 4px 20px rgba(102, 126, 234, 0.2) !important;
         transform: translateY(-1px);
+        background: rgba(255, 255, 255, 1) !important;
     }
 
     /* Enhanced text inputs */
     div[data-baseweb="input"] > div {
-        background: rgba(255, 255, 255, 0.9) !important;
-        border: 2px solid rgba(147, 188, 220, 0.3) !important;
+        background: rgba(255, 255, 255, 0.95) !important;
+        border: 2px solid rgba(147, 188, 220, 0.4) !important;
         border-radius: 12px !important;
-        color: #2d3748 !important;
+        color: #1e293b !important;
         padding: 12px !important;
         min-height: 48px !important;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08) !important;
         transition: all 0.3s ease !important;
     }
 
@@ -136,33 +138,35 @@ st.markdown("""
         background-color: transparent !important;
         box-shadow: none !important;
         border: none !important;
-        color: #2d3748 !important;
+        color: #1e293b !important;
         font-size: 16px !important;
         font-weight: 500 !important;
     }
 
     div[data-baseweb="input"] > div:focus-within {
         border-color: #667eea !important;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1), 0 4px 20px rgba(102, 126, 234, 0.2) !important;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15), 0 4px 20px rgba(102, 126, 234, 0.2) !important;
         transform: translateY(-1px);
+        background: rgba(255, 255, 255, 1) !important;
     }
 
-    /* Stunning number inputs */
+    /* Better number inputs */
     div[data-testid="stNumberInput"] > div {
-        border: 2px solid rgba(147, 188, 220, 0.3) !important;
+        border: 2px solid rgba(147, 188, 220, 0.4) !important;
         border-radius: 12px !important;
-        background: rgba(255, 255, 255, 0.9) !important;
+        background: rgba(255, 255, 255, 0.95) !important;
         min-height: 48px !important;
         display: flex !important;
         align-items: center !important;
         overflow: hidden !important;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08) !important;
         transition: all 0.3s ease !important;
     }
 
     div[data-testid="stNumberInput"] > div:hover {
         transform: translateY(-1px);
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12) !important;
+        background: rgba(255, 255, 255, 1) !important;
     }
 
     div[data-testid="stNumberInput"] input[type="number"] {
@@ -171,7 +175,7 @@ st.markdown("""
         height: 100% !important;
         width: 100% !important;
         padding: 0 15px !important;
-        color: #2d3748 !important;
+        color: #1e293b !important;
         font-size: 16px !important;
         font-weight: 500 !important;
         outline: none !important;
@@ -179,7 +183,8 @@ st.markdown("""
 
     div[data-testid="stNumberInput"]:focus-within > div {
         border-color: #667eea !important;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1), 0 4px 20px rgba(102, 126, 234, 0.2) !important;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15), 0 4px 20px rgba(102, 126, 234, 0.2) !important;
+        background: rgba(255, 255, 255, 1) !important;
     }
 
     div[data-testid="stNumberInput"] button {
@@ -197,7 +202,7 @@ st.markdown("""
         transform: scale(1.05);
     }
     
-    /* Gorgeous result containers with animations */
+    /* Better result containers with improved contrast */
     .result-high-risk, .result-low-risk, .result-moderate-risk {
         padding: 2rem;
         border-radius: 20px;
@@ -217,24 +222,24 @@ st.markdown("""
     }
     
     .result-high-risk {
-        background: rgba(248, 113, 113, 0.15);
-        color: #dc2626;
-        border-color: rgba(248, 113, 113, 0.5);
-        box-shadow: 0 8px 32px rgba(248, 113, 113, 0.3);
+        background: rgba(254, 242, 242, 0.95);
+        color: #991b1b;
+        border-color: rgba(248, 113, 113, 0.6);
+        box-shadow: 0 8px 32px rgba(248, 113, 113, 0.2);
     }
     
     .result-low-risk {
-        background: rgba(34, 197, 94, 0.15);
-        color: #16a34a;
-        border-color: rgba(34, 197, 94, 0.5);
-        box-shadow: 0 8px 32px rgba(34, 197, 94, 0.3);
+        background: rgba(240, 253, 244, 0.95);
+        color: #14532d;
+        border-color: rgba(34, 197, 94, 0.6);
+        box-shadow: 0 8px 32px rgba(34, 197, 94, 0.2);
     }
     
     .result-moderate-risk {
-        background: rgba(245, 158, 11, 0.15);
-        color: #d97706;
-        border-color: rgba(245, 158, 11, 0.5);
-        box-shadow: 0 8px 32px rgba(245, 158, 11, 0.3);
+        background: rgba(255, 251, 235, 0.95);
+        color: #92400e;
+        border-color: rgba(245, 158, 11, 0.6);
+        box-shadow: 0 8px 32px rgba(245, 158, 11, 0.2);
     }
     
     .result-high-risk h2, .result-low-risk h2, .result-moderate-risk h2 {
@@ -249,12 +254,12 @@ st.markdown("""
         font-weight: 600 !important;
     }
     
-    /* Floating sidebar */
+    /* Better sidebar */
     .stSidebar {
-        background: rgba(255, 255, 255, 0.1) !important;
+        background: rgba(255, 255, 255, 0.9) !important;
         backdrop-filter: blur(20px) !important;
         -webkit-backdrop-filter: blur(20px) !important;
-        border-right: 1px solid rgba(255, 255, 255, 0.2) !important;
+        border-right: 1px solid rgba(102, 126, 234, 0.2) !important;
     }
     
     /* Premium button styling */
@@ -267,7 +272,7 @@ st.markdown("""
         padding: 14px 28px !important;
         border: none !important;
         min-height: 48px !important;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4) !important;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3) !important;
         transition: all 0.3s ease !important;
         position: relative;
         overflow: hidden;
@@ -290,7 +295,7 @@ st.markdown("""
     
     .stButton > button:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6) !important;
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4) !important;
         background: linear-gradient(45deg, #5a67d8 0%, #6b46c1 100%) !important;
     }
     
@@ -318,27 +323,28 @@ st.markdown("""
         animation: float 3s ease-in-out infinite;
     }
     
-    /* Enhanced metric styling */
+    /* Enhanced metric styling with better contrast */
     .metric-container {
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.9);
         backdrop-filter: blur(15px);
         -webkit-backdrop-filter: blur(15px);
         padding: 1.5rem;
         border-radius: 16px;
         text-align: center;
         margin: 1rem 0;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
-        color: white;
+        border: 1px solid rgba(102, 126, 234, 0.3);
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+        color: #1e293b;
         transition: all 0.3s ease;
     }
     
     .metric-container:hover {
         transform: translateY(-5px);
-        box-shadow: 0 12px 40px rgba(31, 38, 135, 0.5);
+        box-shadow: 0 12px 40px rgba(31, 38, 135, 0.25);
+        background: rgba(255, 255, 255, 0.95);
     }
     
-    /* Gorgeous progress bar */
+    /* Better progress bar */
     .stProgress > div > div {
         background: linear-gradient(90deg, #667eea, #764ba2, #f093fb) !important;
         border-radius: 10px !important;
@@ -381,7 +387,7 @@ st.markdown("""
     }
     
     ::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.3);
         border-radius: 10px;
     }
     
@@ -394,30 +400,37 @@ st.markdown("""
         background: linear-gradient(45deg, #5a67d8, #6b46c1);
     }
     
-    /* Enhanced text styling */
+    /* Much better text styling with high contrast */
     .stMarkdown h1, .stMarkdown h2, .stMarkdown h3, .stMarkdown h4 {
-        color: white !important;
-        text-shadow: 0 2px 10px rgba(0,0,0,0.3) !important;
+        color: #1e293b !important;
+        text-shadow: none !important;
+        font-weight: 600 !important;
     }
     
     .stMarkdown p, .stMarkdown li {
-        color: rgba(255, 255, 255, 0.9) !important;
+        color: #374151 !important;
         line-height: 1.6 !important;
+        font-weight: 400 !important;
     }
     
-    /* Expander styling */
-    .streamlit-expanderHeader {
-        background: rgba(255, 255, 255, 0.1) !important;
-        border-radius: 12px !important;
-        color: white !important;
+    .stMarkdown strong {
+        color: #1e293b !important;
         font-weight: 600 !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    }
+    
+    /* Better expander styling */
+    .streamlit-expanderHeader {
+        background: rgba(255, 255, 255, 0.9) !important;
+        border-radius: 12px !important;
+        color: #1e293b !important;
+        font-weight: 600 !important;
+        border: 1px solid rgba(102, 126, 234, 0.3) !important;
     }
     
     .streamlit-expanderContent {
-        background: rgba(255, 255, 255, 0.05) !important;
+        background: rgba(255, 255, 255, 0.85) !important;
         border-radius: 0 0 12px 12px !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border: 1px solid rgba(102, 126, 234, 0.2) !important;
         border-top: none !important;
     }
 
@@ -437,7 +450,7 @@ st.markdown("""
         }
         
         .main-header p {
-            font-size: 0.8rem !important;
+            font-size: 0.9rem !important;
         }
         
         .tips-container {
@@ -456,7 +469,7 @@ st.markdown("""
     
     .stMarkdown p, .stMarkdown li {
         line-height: 1.4 !important;
-        font-size: 0.9rem !important;
+        font-size: 0.95rem !important;
     }
     
     /* Mobile-friendly expander */
@@ -468,6 +481,38 @@ st.markdown("""
     /* Touch-friendly spacing */
     .stSelectbox, .stNumberInput, .stTextInput {
         margin-bottom: 1rem !important;
+    }
+
+    /* Better alert/message styling */
+    .stAlert {
+        background: rgba(255, 255, 255, 0.9) !important;
+        border-radius: 12px !important;
+        border: 1px solid rgba(102, 126, 234, 0.3) !important;
+        backdrop-filter: blur(10px) !important;
+    }
+
+    /* Success/Warning/Error message improvements */
+    .stAlert > div {
+        color: #1e293b !important;
+    }
+
+    /* Better metric display */
+    div[data-testid="metric-container"] {
+        background: rgba(255, 255, 255, 0.9) !important;
+        border: 1px solid rgba(102, 126, 234, 0.3) !important;
+        border-radius: 12px !important;
+        padding: 1rem !important;
+        backdrop-filter: blur(10px) !important;
+    }
+
+    div[data-testid="metric-container"] > div {
+        color: #1e293b !important;
+    }
+
+    /* Label improvements */
+    .stSelectbox label, .stNumberInput label, .stTextInput label {
+        color: #1e293b !important;
+        font-weight: 500 !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -790,9 +835,9 @@ st.markdown("""
 
 # Enhanced legal disclaimer at the top
 st.markdown("""
-<div style="background-color: #fff3cd; border: 1px solid #ffeaa7; padding: 1rem; border-radius: 10px; margin: 1rem 0;">
-    <h4 style="color: #856404; margin-top: 0; font-size: 1rem;">⚠️ IMPORTANT MEDICAL DISCLAIMER</h4>
-    <p style="color: #856404; margin: 0; font-size: 0.85rem;">
+<div style="background-color: #fef3c7; border: 1px solid #f59e0b; padding: 1rem; border-radius: 10px; margin: 1rem 0;">
+    <h4 style="color: #92400e; margin-top: 0; font-size: 1rem;">⚠️ IMPORTANT MEDICAL DISCLAIMER</h4>
+    <p style="color: #92400e; margin: 0; font-size: 0.85rem;">
         <strong>This tool is for EDUCATIONAL PURPOSES ONLY</strong> and should never be used for actual medical diagnosis. 
         The predictions are based on statistical models and should not replace professional medical evaluation. 
         Always consult qualified healthcare professionals for medical advice, diagnosis, or treatment decisions.
@@ -957,9 +1002,9 @@ st.markdown("""
         Remember, many risk factors for Alzheimer's disease are modifiable through healthy choices.
     </p>
     <h4 style="margin-bottom: 0.5rem;">📚 Useful Resources:</h4>
-    <p style="margin-bottom: 0.25rem;">• <strong>Alzheimer's Association:</strong> <a href="https://alz.org" target="_blank" style="color: #007bff;">alz.org</a></p>
-    <p style="margin-bottom: 0.25rem;">• <strong>National Institute on Aging:</strong> <a href="https://nia.nih.gov" target="_blank" style="color: #007bff;">nia.nih.gov</a></p>
-    <p style="margin-bottom: 0;">• <strong>Brain Health Research:</strong> <a href="https://brainhealthregistry.org" target="_blank" style="color: #007bff;">brainhealthregistry.org</a></p>
+    <p style="margin-bottom: 0.25rem;">• <strong>Alzheimer's Association:</strong> <a href="https://alz.org" target="_blank" style="color: #667eea;">alz.org</a></p>
+    <p style="margin-bottom: 0.25rem;">• <strong>National Institute on Aging:</strong> <a href="https://nia.nih.gov" target="_blank" style="color: #667eea;">nia.nih.gov</a></p>
+    <p style="margin-bottom: 0;">• <strong>Brain Health Research:</strong> <a href="https://brainhealthregistry.org" target="_blank" style="color: #667eea;">brainhealthregistry.org</a></p>
 </div>
 """, unsafe_allow_html=True)
 
