@@ -10,7 +10,7 @@ import time
 import random
 warnings.filterwarnings('ignore')
 
-# ENHANCED CSS STYLING - Combined aesthetics
+# SINGLE, CLEAN CSS SECTION - NO CONFLICTS
 st.markdown("""
     <style>
     /* Light blue background */
@@ -97,26 +97,6 @@ st.markdown("""
         border-radius: 10px !important;
         background-color: #FDF6E7 !important;
         height: 42px !important;
-        display: flex !important;
-        align-items: center !important;
-        padding: 0 !important;
-        overflow: hidden !important;
-    }
-
-    div[data-testid="stNumberInput"]:focus-within > div {
-        border-color: #d1e5f4 !important;
-        box-shadow: none !important;
-    }
-
-    /* HIDE all inner containers that create the cream border */
-    div[data-testid="stNumberInput"] > div > div:first-child {
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        height: 100% !important;
-        width: 100% !important;
         display: flex !important;
         align-items: center !important;
         flex: 1 !important;
@@ -292,16 +272,6 @@ st.markdown("""
         background: linear-gradient(to right, #B3E5FC, #1E5A96) !important;
     }
     
-    /* Risk level styling */
-    .risk-text {
-        font-weight: bold;
-        font-size: 18px;
-        padding: 5px;
-    }
-    .risk-high { color: red !important; }
-    .risk-moderate { color: orange !important; }
-    .risk-low { color: green !important; }
-    
     /* Hide Streamlit default elements */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
@@ -311,7 +281,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Enhanced page configuration
+# Enhanced page configuration with custom styling
 st.set_page_config(
     page_title="Alzheimer's Risk Assessment", 
     layout="wide",
@@ -376,57 +346,59 @@ feature_names = [
     'Social Engagement Level', 'Income Level', 'Stress Levels', 'Urban vs Rural Living'
 ]
 
-# Initialize session state variables
-if 'prediction_result' not in st.session_state:
-    st.session_state.prediction_result = None
-if 'brain_tip' not in st.session_state:
-    st.session_state.brain_tip = None
-if 'lifestyle_tip' not in st.session_state:
-    st.session_state.lifestyle_tip = None
-
-# User input function
 def get_user_input():
-    st.sidebar.header("📋 Enter Patient Details")
     user_data = {}
     
-    # Organize inputs in sidebar like your stroke app
+    # Create columns for better layout
+    col1, col2 = st.columns(2)
+    
+    feature_count = 0
     for feature in feature_names:
-        if feature in CATEGORICAL_OPTIONS:
-            if feature == 'Country':
-                value = st.sidebar.selectbox(f'{feature}', CATEGORICAL_OPTIONS[feature])
-            elif feature == 'Gender':
-                value = st.sidebar.selectbox(f'{feature}', CATEGORICAL_OPTIONS[feature])
-            elif feature == 'Education Level':
-                value = st.sidebar.selectbox(f'{feature}', CATEGORICAL_OPTIONS[feature])
-            else:
-                value = st.sidebar.selectbox(f'{feature}', CATEGORICAL_OPTIONS[feature])
-            user_data[feature] = value
-            
-        elif feature in NUMERICAL_FEATURES:
-            if feature == 'Age':
-                value = st.sidebar.number_input(f'{feature} (years)', min_value=10, max_value=120, value=65, step=1)
-            elif feature == 'BMI':
-                value = st.sidebar.number_input(f'{feature} (kg/m²)', min_value=10.0, max_value=50.0, value=25.0, step=0.1)
-            elif feature == 'Cognitive Test Score':
-                value = st.sidebar.number_input(f'{feature} (0-30)', min_value=0, max_value=30, value=25, step=1)
-            elif feature == 'Depression Level':
-                value = st.sidebar.number_input(f'{feature} (0-15)', min_value=0, max_value=15, value=2, step=1)
-            elif feature == 'Stress Levels':
-                value = st.sidebar.number_input(f'{feature} (0-10)', min_value=0, max_value=10, value=5, step=1)
-            user_data[feature] = value
-    
-    # Display data in a light blue box like your stroke app
-    user_data_html = f"""
-    <div style="background-color:#d1e5f4; padding: 20px; border-radius: 10px; color: black;">
-        <h4>User Input Data:</h4>
-        <ul>
-            {"".join([f"<li><strong>{key}:</strong> {value}</li>" for key, value in user_data.items()])}
-        </ul>
-    </div>
-    """
-    
-    st.markdown(user_data_html, unsafe_allow_html=True)
-    st.markdown("<br>", unsafe_allow_html=True)
+        # Alternate between columns
+        current_col = col1 if feature_count % 2 == 0 else col2
+        
+        with current_col:
+            if feature in CATEGORICAL_OPTIONS:
+                # Categorical features with dropdowns
+                value = st.selectbox(
+                    f"**{feature}**:", 
+                    options=CATEGORICAL_OPTIONS[feature],
+                    key=feature
+                )
+                user_data[feature] = value
+            elif feature in NUMERICAL_FEATURES:
+                # Numerical features with appropriate ranges and step sizes
+                if feature == 'Age':
+                    value = st.number_input(
+                        f"**{feature}** (years):", 
+                        min_value=10, max_value=120, value=65, step=1, key=feature
+                    )
+                elif feature == 'BMI':
+                    value = st.number_input(
+                        f"**{feature}** (kg/m²):", 
+                        min_value=10.0, max_value=50.0, value=25.0, step=0.1, key=feature
+                    )
+                elif feature == 'Cognitive Test Score':
+                    value = st.number_input(
+                        f"**{feature}** (0-30):", 
+                        min_value=0, max_value=30, value=25, step=1, key=feature
+                    )
+                elif feature == 'Depression Level':
+                    value = st.number_input(
+                        f"**{feature}** (0-15, higher = more depressed):", 
+                        min_value=0, max_value=15, value=2, step=1, key=feature
+                    )
+                elif feature == 'Stress Levels':
+                    value = st.number_input(
+                        f"**{feature}** (0-10, higher = more stress):", 
+                        min_value=0, max_value=10, value=5, step=1, key=feature
+                    )
+                else:
+                    value = st.number_input(f"**{feature}**:", key=feature, step=1.0)
+                
+                user_data[feature] = value
+        
+        feature_count += 1
     
     return pd.DataFrame([user_data])
 
@@ -537,19 +509,14 @@ def make_prediction(user_input_df):
         raw_probabilities = model.predict_proba(input_scaled)[0]
         alzheimers_risk = raw_probabilities[1] * 100
         
-        # Display main risk metric with enhanced styling
+        # Display main risk metric
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
             st.metric("Alzheimer's Risk Assessment", f"{alzheimers_risk:.1f}%", 
-                     help="Model prediction probability")
+                     help="Raw model prediction probability")
         
-        # Display progress bar
-        st.progress(min(int(alzheimers_risk), 100))
-        
-        # Enhanced risk assessment with styled boxes
-        if alzheimers_risk >= 70:
-            risk_level = "High"
-            risk_class = "risk-high"
+        # Risk interpretation based on actual model output
+        if alzheimers_risk >= 70:  # High risk
             st.markdown(f"""
             <div class="result-high-risk">
                 <h2>⚠️ High Risk Assessment</h2>
@@ -567,9 +534,7 @@ def make_prediction(user_input_df):
             • Implement comprehensive brain-healthy lifestyle changes
             """)
             
-        elif alzheimers_risk >= 30:
-            risk_level = "Moderate" 
-            risk_class = "risk-moderate"
+        elif alzheimers_risk >= 30:  # Moderate risk
             st.markdown(f"""
             <div class="result-moderate-risk">
                 <h2>🔶 Moderate Risk Assessment</h2>
@@ -587,9 +552,7 @@ def make_prediction(user_input_df):
             • Improve sleep quality and stress management
             """)
             
-        else:
-            risk_level = "Low"
-            risk_class = "risk-low"
+        else:  # Low risk
             st.markdown(f"""
             <div class="result-low-risk">
                 <h2>✅ Low Risk Assessment</h2>
@@ -606,131 +569,132 @@ def make_prediction(user_input_df):
             • Maintain regular physical activity and social engagement
             • Keep challenging your brain with new activities
             """)
+
+        # Legal disclaimer
+        st.markdown("---")
+        st.error("""
+        ⚠️ **MEDICAL DISCLAIMER:** This tool provides educational insights only. 
+        Always consult healthcare professionals for medical decisions.
+        """)
         
-        return risk_level
+        return "Complete"
         
     except Exception as e:
         st.error(f"❌ **Error during prediction:** {str(e)}")
         return None
 
-# Brain health and lifestyle tips
-brain_tips = [
-    "🧠 Challenge your mind with puzzles, reading, or learning new skills daily.",
-    "🎵 Listen to music or learn to play an instrument to boost cognitive function.",
-    "🎯 Practice mindfulness and meditation for better brain health.",
-    "👥 Stay socially active and maintain meaningful relationships.",
-    "🎨 Engage in creative activities like painting, writing, or crafts."
-]
+# Header
+st.markdown("""
+<div class="main-header">
+    <h1>🧠 Alzheimer's Risk Assessment</h1>
+    <p>Advanced AI-powered risk evaluation with personalized insights</p>
+</div>
+""", unsafe_allow_html=True)
 
-lifestyle_tips = [
-    "🏃 Aim for at least 150 minutes of moderate exercise weekly.",
-    "🥗 Follow a Mediterranean or MIND diet rich in omega-3s.",
-    "😴 Get 7-9 hours of quality sleep each night.",
-    "🚭 Avoid smoking and limit alcohol consumption.",
-    "💧 Stay hydrated and maintain a healthy weight."
-]
+# Enhanced legal disclaimer at the top
+st.markdown("""
+<div style="background-color: #fff3cd; border: 1px solid #ffeaa7; padding: 1.5rem; border-radius: 15px; margin: 1rem 0;">
+    <h4 style="color: #856404; margin-top: 0;">⚠️ IMPORTANT MEDICAL DISCLAIMER</h4>
+    <p style="color: #856404; margin: 0;">
+        <strong>This tool is for EDUCATIONAL PURPOSES ONLY</strong> and should never be used for actual medical diagnosis. 
+        The predictions are based on statistical models and should not replace professional medical evaluation. 
+        Always consult qualified healthcare professionals for medical advice, diagnosis, or treatment decisions.
+    </p>
+</div>
+""", unsafe_allow_html=True)
 
-# Main app
-def main():
-    # Enhanced Header
+# Information section
+col1, col2, col3 = st.columns([1, 2, 1])
+with col2:
     st.markdown("""
-    <div class="main-header">
-        <h1>🧠 Alzheimer's Risk Assessment</h1>
-        <p>Advanced AI-powered risk evaluation with personalized insights</p>
+    <div style="background-color: #d1e5f4; padding: 1.5rem; border-radius: 15px; text-align: center; border: 1px solid #93BCDC; color: #2d3436;">
+        <h4>🔬 How it works</h4>
+        <p>Our advanced machine learning model analyzes 24 comprehensive health factors to provide personalized risk assessment and evidence-based recommendations.</p>
     </div>
     """, unsafe_allow_html=True)
 
-    # Enhanced legal disclaimer
-    st.markdown("""
-    <div style="background-color: #fff3cd; border: 1px solid #ffeaa7; padding: 1.5rem; border-radius: 15px; margin: 1rem 0;">
-        <h4 style="color: #856404; margin-top: 0;">⚠️ IMPORTANT MEDICAL DISCLAIMER</h4>
-        <p style="color: #856404; margin: 0;">
-            <strong>This tool is for EDUCATIONAL PURPOSES ONLY</strong> and should never be used for actual medical diagnosis. 
-            The predictions are based on statistical models and should not replace professional medical evaluation. 
-            Always consult qualified healthcare professionals for medical advice, diagnosis, or treatment decisions.
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
+# Get user input
+user_input_df = get_user_input()
 
-    # Information section
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
-        st.markdown("""
-        <div style="background-color: #d1e5f4; padding: 1.5rem; border-radius: 15px; text-align: center; border: 1px solid #93BCDC; color: #2d3436;">
-            <h4>🔬 How it works</h4>
-            <p>Our advanced machine learning model analyzes 24 comprehensive health factors to provide personalized risk assessment and evidence-based recommendations.</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    # Adding space
-    st.markdown("<br>"*1, unsafe_allow_html=True)
-    
-    user_input = get_user_input()
-    
-    # Prediction section
-    if st.button('🧪 Analyze Alzheimer\'s Risk'):
-        with st.spinner('🔍 Processing your health data...'):
+# === PREDICTION SECTION ===
+st.markdown("<br>", unsafe_allow_html=True)
+st.markdown("""
+<div style="background-color: #d1e5f4; padding: 1rem; border-radius: 10px; margin: 1rem 0; border: 1px solid #93BCDC;">
+    <h3 style="color: #2d3436; text-align: center; margin: 0;">🎯 Risk Assessment</h3>
+</div>
+""", unsafe_allow_html=True)
+
+col1, col2, col3 = st.columns([1, 2, 1])
+
+with col2:
+    if st.button("🧪 Analyze My Alzheimer's Risk", type="primary", use_container_width=True):
+        
+        with st.spinner("🔍 Processing your health data..."):
             progress_bar = st.progress(0)
             for i in range(100):
                 time.sleep(0.01)
                 progress_bar.progress(i + 1)
-            progress_bar.empty()
             
-            st.session_state.prediction_result = make_prediction(user_input)
-    
-    # Display prediction if it exists
-    if st.session_state.prediction_result is not None:
-        pass  # Already displayed in make_prediction function
-    
-    # Enhanced Brain Health Tips Section
+            try:
+                # Check for missing critical values
+                critical_fields = ['Age', 'BMI', 'Cognitive Test Score', 'Depression Level', 'Stress Levels']
+                missing_fields = []
+                
+                for field in critical_fields:
+                    if pd.isna(user_input_df[field].iloc[0]) or user_input_df[field].iloc[0] in [0, None, ""]:
+                        missing_fields.append(field)
+                
+                if missing_fields:
+                    progress_bar.empty()
+                    st.error(f"⚠️ **Missing Required Information:** {', '.join(missing_fields)}")
+                    st.info("Please fill in all fields for an accurate assessment.")
+                    st.stop()
+                
+                # Clear progress bar
+                progress_bar.empty()
+                
+                # Make prediction
+                make_prediction(user_input_df)
+                    
+            except Exception as e:
+                progress_bar.empty()
+                st.error(f"❌ **Error during prediction:** {str(e)}")
+                st.error("Please check your inputs and try again.")
+
+# Educational content
+st.markdown("---")
+st.markdown("## 📖 Educational Resources")
+
+col1, col2 = st.columns(2)
+
+with col1:
     st.markdown("""
     <div class="tips-container">
-        <h2>💡 Brain Health Tips</h2>
+        <h3>🧠 Brain Health Tips</h3>
+        <ul>
+            <li><strong>Stay Physically Active:</strong> Regular exercise increases blood flow to the brain</li>
+            <li><strong>Challenge Your Mind:</strong> Learn new skills, read, solve puzzles</li>
+            <li><strong>Eat Brain-Healthy Foods:</strong> Mediterranean diet rich in omega-3s</li>
+            <li><strong>Get Quality Sleep:</strong> 7-9 hours nightly for memory consolidation</li>
+            <li><strong>Stay Social:</strong> Maintain relationships and community connections</li>
+        </ul>
     </div>
     """, unsafe_allow_html=True)
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        if st.button("🧠 Get a Brain Health Tip"):
-            st.session_state.brain_tip = random.choice(brain_tips)
-        if st.session_state.brain_tip:
-            st.success(st.session_state.brain_tip)
-    
-    with col2:
-        if st.button("🌟 Get a Lifestyle Tip"):
-            st.session_state.lifestyle_tip = random.choice(lifestyle_tips)
-        if st.session_state.lifestyle_tip:
-            st.success(st.session_state.lifestyle_tip)
-    
-    # Warning Signs Section
-    with col2:
-        st.markdown("""
-        <div class="tips-container">
-            <h3>⚠️ Warning Signs to Watch</h3>
-            <ul>
-                <li><strong>Memory Loss:</strong> Forgetting recently learned information</li>
-                <li><strong>Planning Problems:</strong> Difficulty with familiar tasks</li>
-                <li><strong>Confusion:</strong> Losing track of time or place</li>
-                <li><strong>Language Issues:</strong> Trouble finding the right words</li>
-                <li><strong>Mood Changes:</strong> Depression, anxiety, or personality changes</li>
-            </ul>
-            <p><strong>If you notice these signs, consult a healthcare professional.</strong></p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    # Check this out section
-    st.markdown("## 📢 Check this out!")
-    st.markdown("##### https://www.alz.org/alzheimers-dementia/10_signs")
 
-main()
-
-# User Reviews section like your stroke app
-st.markdown("---")
-st.markdown("## 💭 User Reviews")
-st.write("⭐ 'Very informative and easy to understand my risk factors!' - Sarah M.")
-st.write("⭐ 'Great tool for understanding brain health. Highly recommended!' - David L.")
-st.write("⭐ 'Helped me make important lifestyle changes for my brain health.' - Maria C.")
+with col2:
+    st.markdown("""
+    <div class="tips-container">
+        <h3>⚠️ Warning Signs to Watch</h3>
+        <ul>
+            <li><strong>Memory Loss:</strong> Forgetting recently learned information</li>
+            <li><strong>Planning Problems:</strong> Difficulty with familiar tasks</li>
+            <li><strong>Confusion:</strong> Losing track of time or place</li>
+            <li><strong>Language Issues:</strong> Trouble finding the right words</li>
+            <li><strong>Mood Changes:</strong> Depression, anxiety, or personality changes</li>
+        </ul>
+        <p><strong>If you notice these signs, consult a healthcare professional.</strong></p>
+    </div>
+    """, unsafe_allow_html=True)
 
 # Footer with additional resources
 st.markdown("---")
@@ -748,7 +712,23 @@ st.markdown("""
     </div>
 </div>
 """, unsafe_allow_html=True)
+        padding: 0 !important;
+        overflow: hidden !important;
+    }
 
-# Footer disclaimer in sidebar
-st.sidebar.markdown("---")
-st.sidebar.write("⚠️ **Disclaimer:** This tool is for educational purposes and should not replace professional medical advice.")
+    div[data-testid="stNumberInput"]:focus-within > div {
+        border-color: #d1e5f4 !important;
+        box-shadow: none !important;
+    }
+
+    /* HIDE all inner containers that create the cream border */
+    div[data-testid="stNumberInput"] > div > div:first-child {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        height: 100% !important;
+        width: 100% !important;
+        display: flex !important;
+        align-items: center !important;
