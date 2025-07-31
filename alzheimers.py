@@ -779,19 +779,25 @@ if st.session_state.show_all_tips:
 # Footer with additional resources
 st.markdown("---")
 
-# Resources section with proper HTML rendering
+# Resources section with proper HTML rendering in a styled box
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
-    st.markdown("### 🌟 Take Control of Your Brain Health")
     st.markdown("""
-    Knowledge is power. Use these insights to make informed decisions about your health and lifestyle. 
-    Remember, many risk factors for Alzheimer's disease are modifiable through healthy choices.
-    """)
-    
-    st.markdown("#### 📚 Useful Resources:")
-    st.markdown("• **Alzheimer's Association:** [alz.org](https://alz.org)")
-    st.markdown("• **National Institute on Aging:** [nia.nih.gov](https://nia.nih.gov)")  
-    st.markdown("• **Brain Health Research:** [brainhealthregistry.org](https://brainhealthregistry.org)")
+    <div style="background-color: #d1e5f4; padding: 2rem; border-radius: 15px; text-align: center; border: 1px solid #93BCDC; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);">
+        <h3 style="color: #2d3436; margin-bottom: 1rem;">🌟 Take Control of Your Brain Health</h3>
+        <p style="color: #636e72; margin-bottom: 1.5rem;">
+            Knowledge is power. Use these insights to make informed decisions about your health and lifestyle. 
+            Remember, many risk factors for Alzheimer's disease are modifiable through healthy choices.
+        </p>
+        
+        <div style="text-align: left; max-width: 400px; margin: 0 auto;">
+            <h4 style="color: #2d3436; margin-bottom: 1rem;">📚 Useful Resources:</h4>
+            <p style="color: #636e72; margin-bottom: 0.5rem;">• <strong>Alzheimer's Association:</strong> <a href="https://alz.org" target="_blank" style="color: #007bff; text-decoration: none;">alz.org</a></p>
+            <p style="color: #636e72; margin-bottom: 0.5rem;">• <strong>National Institute on Aging:</strong> <a href="https://nia.nih.gov" target="_blank" style="color: #007bff; text-decoration: none;">nia.nih.gov</a></p>
+            <p style="color: #636e72; margin-bottom: 0;">• <strong>Brain Health Research:</strong> <a href="https://brainhealthregistry.org" target="_blank" style="color: #007bff; text-decoration: none;">brainhealthregistry.org</a></p>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
 # Final disclaimer
 st.markdown("---")
