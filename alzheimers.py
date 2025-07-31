@@ -454,48 +454,6 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Information section
-col1, col2, col3 = st.columns([1, 2, 1])
-with col2:
-    st.markdown("""
-    <div style="background-color: #d1e5f4; padding: 1.5rem; border-radius: 15px; text-align: center; border: 1px solid #93BCDC; color: #2d3436;">
-        <h4>🔬 How it works</h4>
-        <p>Our advanced Random Forest machine learning model analyzes 24 comprehensive health factors to provide personalized risk assessment and evidence-based recommendations.</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-with col2:
-    st.markdown("""
-    <div class="tips-container">
-        <h3>⚠️ Warning Signs to Watch</h3>
-        <ul>
-            <li><strong>Memory Loss:</strong> Forgetting recently learned information</li>
-            <li><strong>Planning Problems:</strong> Difficulty with familiar tasks</li>
-            <li><strong>Confusion:</strong> Losing track of time or place</li>
-            <li><strong>Language Issues:</strong> Trouble finding the right words</li>
-            <li><strong>Mood Changes:</strong> Depression, anxiety, or personality changes</li>
-        </ul>
-        <p><strong>If you notice these signs, consult a healthcare professional.</strong></p>
-    </div>
-    """, unsafe_allow_html=True)
-
-# Footer with additional resources - SAME AS XGBOOST
-st.markdown("---")
-st.markdown("""
-<div style="background-color: #d1e5f4; padding: 2rem; border-radius: 15px; text-align: center; border: 1px solid #93BCDC;">
-    <h4 style="color: #2d3436;">🌟 Take Control of Your Brain Health</h4>
-    <p style="color: #636e72;">Knowledge is power. Use these insights to make informed decisions about your health and lifestyle. 
-    Remember, many risk factors for Alzheimer's disease are modifiable through healthy choices.</p>
-    
-    <div style="margin-top: 1rem; color: #636e72;">
-        <strong>Useful Resources:</strong><br>
-        • Alzheimer's Association: <a href="https://alz.org" target="_blank" style="color: #007bff;">alz.org</a><br>
-        • National Institute on Aging: <a href="https://nia.nih.gov" target="_blank" style="color: #007bff;">nia.nih.gov</a><br>
-        • Brain Health Research: <a href="https://brainhealthregistry.org" target="_blank" style="color: #007bff;">brainhealthregistry.org</a>
-    </div>
-</div>
-""", unsafe_allow_html=True)
-
 # Get user input
 user_input_df = get_user_input()
 
@@ -561,14 +519,36 @@ with col2:
                     'Urban vs Rural Living': [user_input_df['Urban vs Rural Living'].iloc[0]]
                 })
                 
-                # Encode categorical variables
+                # Encode categorical variables - Fix the feature name issue
                 input_encoded = input_data.copy()
                 for column in input_data.select_dtypes(include=['object']).columns:
                     if column in label_encoders:
                         try:
                             input_encoded[column] = label_encoders[column].transform(input_data[column])
-                        except ValueError:
+                        except ValueError as ve:
+                            st.warning(f"Warning: Unknown value for {column}: {input_data[column].iloc[0]}. Using default encoding.")
                             input_encoded[column] = 0
+                
+                # Check if model expects different column names
+                if hasattr(model, 'feature_names_in_') and model.feature_names_in_ is not None:
+                    expected_features = list(model.feature_names_in_)
+                    current_features = list(input_encoded.columns)
+                    
+                    # Debug feature name differences
+                    st.write("**Expected features:**", expected_features)
+                    st.write("**Current features:**", current_features)
+                    
+                    # Try to map features if there's a mismatch
+                    if "Family History of Alzheimer's" in current_features and "Family History of Alzheimer's" not in expected_features:
+                        # Check for alternative naming
+                        alt_names = ["Family History of Alzheimers", "Family_History_of_Alzheimers", "Family History"]
+                        for alt_name in alt_names:
+                            if alt_name in expected_features:
+                                input_encoded = input_encoded.rename(columns={"Family History of Alzheimer's": alt_name})
+                                break
+                    
+                    # Reorder columns to match expected order
+                    input_encoded = input_encoded.reindex(columns=expected_features, fill_value=0)
                 
                 # Scale features
                 input_scaled = scaler.transform(input_encoded)
@@ -685,6 +665,51 @@ with col2:
                     if 'input_encoded' in locals():
                         st.write("**User Input Shape:**", input_encoded.shape)
                         st.write("**Feature Names Length:**", len(feature_names))
+                        if hasattr(model, 'feature_names_in_') and model.feature_names_in_ is not None:
+                            st.write("**Model Expected Features:**", list(model.feature_names_in_))
+                        st.write("**Current Input Features:**", list(input_encoded.columns))
+
+# Information section
+col1, col2, col3 = st.columns([1, 2, 1])
+with col2:
+    st.markdown("""
+    <div style="background-color: #d1e5f4; padding: 1.5rem; border-radius: 15px; text-align: center; border: 1px solid #93BCDC; color: #2d3436;">
+        <h4>🔬 How it works</h4>
+        <p>Our advanced Random Forest machine learning model analyzes 24 comprehensive health factors to provide personalized risk assessment and evidence-based recommendations.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col2:
+    st.markdown("""
+    <div class="tips-container">
+        <h3>⚠️ Warning Signs to Watch</h3>
+        <ul>
+            <li><strong>Memory Loss:</strong> Forgetting recently learned information</li>
+            <li><strong>Planning Problems:</strong> Difficulty with familiar tasks</li>
+            <li><strong>Confusion:</strong> Losing track of time or place</li>
+            <li><strong>Language Issues:</strong> Trouble finding the right words</li>
+            <li><strong>Mood Changes:</strong> Depression, anxiety, or personality changes</li>
+        </ul>
+        <p><strong>If you notice these signs, consult a healthcare professional.</strong></p>
+    </div>
+    """, unsafe_allow_html=True)
+
+# Footer with additional resources
+st.markdown("---")
+st.markdown("""
+<div style="background-color: #d1e5f4; padding: 2rem; border-radius: 15px; text-align: center; border: 1px solid #93BCDC;">
+    <h4 style="color: #2d3436;">🌟 Take Control of Your Brain Health</h4>
+    <p style="color: #636e72;">Knowledge is power. Use these insights to make informed decisions about your health and lifestyle. 
+    Remember, many risk factors for Alzheimer's disease are modifiable through healthy choices.</p>
+    
+    <div style="margin-top: 1rem; color: #636e72;">
+        <strong>Useful Resources:</strong><br>
+        • <a href="https://alz.org" target="_blank" style="color: #007bff;">Alzheimer's Association</a><br>
+        • <a href="https://nia.nih.gov" target="_blank" style="color: #007bff;">National Institute on Aging</a><br>
+        • <a href="https://brainhealthregistry.org" target="_blank" style="color: #007bff;">Brain Health Research</a>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
 # Educational content - EXACT SAME AS XGBOOST
 st.markdown("---")
