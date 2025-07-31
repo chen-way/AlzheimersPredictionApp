@@ -150,7 +150,12 @@ st.markdown("""
         background: rgba(255, 255, 255, 1) !important;
     }
 
-    /* Better number inputs */
+    /* Fixed number inputs alignment */
+    div[data-testid="stNumberInput"] {
+        margin-left: 0 !important;
+        padding-left: 0 !important;
+    }
+
     div[data-testid="stNumberInput"] > div {
         border: 2px solid rgba(147, 188, 220, 0.4) !important;
         border-radius: 12px !important;
@@ -161,6 +166,9 @@ st.markdown("""
         overflow: hidden !important;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08) !important;
         transition: all 0.3s ease !important;
+        margin-left: 0 !important;
+        padding-left: 0 !important;
+        width: 100% !important;
     }
 
     div[data-testid="stNumberInput"] > div:hover {
@@ -173,12 +181,14 @@ st.markdown("""
         border: none !important;
         background: transparent !important;
         height: 100% !important;
-        width: 100% !important;
+        width: calc(100% - 80px) !important;
         padding: 0 15px !important;
         color: #1e293b !important;
         font-size: 16px !important;
         font-weight: 500 !important;
         outline: none !important;
+        margin: 0 !important;
+        text-align: left !important;
     }
 
     div[data-testid="stNumberInput"]:focus-within > div {
@@ -195,11 +205,23 @@ st.markdown("""
         width: 40px !important;
         transition: all 0.3s ease !important;
         font-weight: 600 !important;
+        flex-shrink: 0 !important;
     }
 
     div[data-testid="stNumberInput"] button:hover {
         background: linear-gradient(45deg, #5a67d8, #6b46c1) !important;
         transform: scale(1.05);
+    }
+
+    /* Ensure all input containers have consistent alignment */
+    .stSelectbox, .stNumberInput, .stTextInput {
+        margin-left: 0 !important;
+        padding-left: 0 !important;
+    }
+
+    .stSelectbox > div, .stNumberInput > div, .stTextInput > div {
+        margin-left: 0 !important;
+        padding-left: 0 !important;
     }
     
     /* Better result containers with improved contrast */
