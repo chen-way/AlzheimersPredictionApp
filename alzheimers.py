@@ -598,7 +598,77 @@ def get_user_input():
                             help="Perceived stress level (0=no stress, 10=maximum stress)"
                         )
                     else:
-                        encoding_maps[feature] = {option: idx for idx, option in enumerate(options)}
+                        value = st.number_input(f"**{feature}**:", key=feature, step=1.0)
+                    
+                    user_data[feature] = value
+    
+    return pd.DataFrame([user_data])
+
+def make_prediction(user_input_df):
+    try:
+        # Get user's age for safety check
+        user_age = user_input_df['Age'].iloc[0]
+        
+        # Under 50 automatic low risk check
+        if user_age < 50:
+            st.markdown(f"""
+            <div class="result-low-risk">
+                <h2>✅ Low Risk Assessment</h2>
+                <h3>Alzheimer's Risk: Very Low</h3>
+                <p>Age under 50 typically indicates very low risk. Continue healthy lifestyle practices!</p>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            st.markdown("---")
+            st.markdown("### 💡 Maintenance Strategies")
+            st.success("""
+            **Maintenance Strategies:**
+            • Continue current healthy lifestyle practices
+            • Maintain regular physical activity and social engagement
+            • Keep challenging your brain with new activities
+            """)
+            return "Low"
+        
+        # Create input dataframe
+        input_data = pd.DataFrame({
+            'Country': [user_input_df['Country'].iloc[0]],
+            'Age': [user_input_df['Age'].iloc[0]],
+            'Gender': [user_input_df['Gender'].iloc[0]],
+            'Education Level': [user_input_df['Education Level'].iloc[0]],
+            'BMI': [user_input_df['BMI'].iloc[0]],
+            'Physical Activity Level': [user_input_df['Physical Activity Level'].iloc[0]],
+            'Smoking Status': [user_input_df['Smoking Status'].iloc[0]],
+            'Alcohol Consumption': [user_input_df['Alcohol Consumption'].iloc[0]],
+            'Diabetes': [user_input_df['Diabetes'].iloc[0]],
+            'Hypertension': [user_input_df['Hypertension'].iloc[0]],
+            'Cholesterol Level': [user_input_df['Cholesterol Level'].iloc[0]],
+            'Family History of Alzheimer’s': [user_input_df["Family History of Alzheimer’s"].iloc[0]],
+            'Cognitive Test Score': [user_input_df['Cognitive Test Score'].iloc[0]],
+            'Depression Level': [user_input_df['Depression Level'].iloc[0]],
+            'Sleep Quality': [user_input_df['Sleep Quality'].iloc[0]],
+            'Dietary Habits': [user_input_df['Dietary Habits'].iloc[0]],
+            'Air Pollution Exposure': [user_input_df['Air Pollution Exposure'].iloc[0]],
+            'Employment Status': [user_input_df['Employment Status'].iloc[0]],
+            'Marital Status': [user_input_df['Marital Status'].iloc[0]],
+            'Genetic Risk Factor (APOE-ε4 allele)': [user_input_df['Genetic Risk Factor (APOE-ε4 allele)'].iloc[0]],
+            'Social Engagement Level': [user_input_df['Social Engagement Level'].iloc[0]],
+            'Income Level': [user_input_df['Income Level'].iloc[0]],
+            'Stress Levels': [user_input_df['Stress Levels'].iloc[0]],
+            'Urban vs Rural Living': [user_input_df['Urban vs Rural Living'].iloc[0]]
+        })
+        
+        # Manual encoding with proper Yes/No handling
+        input_encoded = input_data.copy()
+        encoding_maps = {}
+        for feature, options in CATEGORICAL_OPTIONS.items():
+            if feature in ['Diabetes', 'Hypertension', "Family History of Alzheimer’s", 'Genetic Risk Factor (APOE-ε4 allele)']:
+                # For Yes/No features, ensure 'No'=0 and 'Yes'=1
+                if 'Yes' in options and 'No' in options:
+                    encoding_maps[feature] = {'No': 0, 'Yes': 1}
+                else:
+                    encoding_maps[feature] = {option: idx for idx, option in enumerate(options)}
+            else:
+                encoding_maps[feature] = {option: idx for idx, option in enumerate(options)}
         
         # Encode categorical variables
         for column in input_data.columns:
@@ -609,7 +679,6 @@ def get_user_input():
                 else:
                     input_encoded[column] = 0
 
-        
         # Ensure all columns are numeric
         for col in input_encoded.columns:
             input_encoded[col] = pd.to_numeric(input_encoded[col], errors='coerce').fillna(0)
@@ -901,73 +970,3 @@ st.info("""
 for medical advice, diagnosis, or treatment decisions. Early detection and lifestyle modifications can 
 make a significant difference in brain health outcomes.
 """)
-                        value = st.number_input(f"**{feature}**:", key=feature, step=1.0)
-                    
-                    user_data[feature] = value
-    
-    return pd.DataFrame([user_data])
-
-def make_prediction(user_input_df):
-    try:
-        # Get user's age for safety check
-        user_age = user_input_df['Age'].iloc[0]
-        
-        # Under 50 automatic low risk check
-        if user_age < 50:
-            st.markdown(f"""
-            <div class="result-low-risk">
-                <h2>✅ Low Risk Assessment</h2>
-                <h3>Alzheimer's Risk: Very Low</h3>
-                <p>Age under 50 typically indicates very low risk. Continue healthy lifestyle practices!</p>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            st.markdown("---")
-            st.markdown("### 💡 Maintenance Strategies")
-            st.success("""
-            **Maintenance Strategies:**
-            • Continue current healthy lifestyle practices
-            • Maintain regular physical activity and social engagement
-            • Keep challenging your brain with new activities
-            """)
-            return "Low"
-        
-        # Create input dataframe
-        input_data = pd.DataFrame({
-            'Country': [user_input_df['Country'].iloc[0]],
-            'Age': [user_input_df['Age'].iloc[0]],
-            'Gender': [user_input_df['Gender'].iloc[0]],
-            'Education Level': [user_input_df['Education Level'].iloc[0]],
-            'BMI': [user_input_df['BMI'].iloc[0]],
-            'Physical Activity Level': [user_input_df['Physical Activity Level'].iloc[0]],
-            'Smoking Status': [user_input_df['Smoking Status'].iloc[0]],
-            'Alcohol Consumption': [user_input_df['Alcohol Consumption'].iloc[0]],
-            'Diabetes': [user_input_df['Diabetes'].iloc[0]],
-            'Hypertension': [user_input_df['Hypertension'].iloc[0]],
-            'Cholesterol Level': [user_input_df['Cholesterol Level'].iloc[0]],
-            'Family History of Alzheimer’s': [user_input_df["Family History of Alzheimer’s"].iloc[0]],
-            'Cognitive Test Score': [user_input_df['Cognitive Test Score'].iloc[0]],
-            'Depression Level': [user_input_df['Depression Level'].iloc[0]],
-            'Sleep Quality': [user_input_df['Sleep Quality'].iloc[0]],
-            'Dietary Habits': [user_input_df['Dietary Habits'].iloc[0]],
-            'Air Pollution Exposure': [user_input_df['Air Pollution Exposure'].iloc[0]],
-            'Employment Status': [user_input_df['Employment Status'].iloc[0]],
-            'Marital Status': [user_input_df['Marital Status'].iloc[0]],
-            'Genetic Risk Factor (APOE-ε4 allele)': [user_input_df['Genetic Risk Factor (APOE-ε4 allele)'].iloc[0]],
-            'Social Engagement Level': [user_input_df['Social Engagement Level'].iloc[0]],
-            'Income Level': [user_input_df['Income Level'].iloc[0]],
-            'Stress Levels': [user_input_df['Stress Levels'].iloc[0]],
-            'Urban vs Rural Living': [user_input_df['Urban vs Rural Living'].iloc[0]]
-        })
-        
-        # Manual encoding with proper Yes/No handling
-        input_encoded = input_data.copy()
-        encoding_maps = {}
-        for feature, options in CATEGORICAL_OPTIONS.items():
-            if feature in ['Diabetes', 'Hypertension', "Family History of Alzheimer’s", 'Genetic Risk Factor (APOE-ε4 allele)']:
-                # For Yes/No features, ensure 'No'=0 and 'Yes'=1
-                if 'Yes' in options and 'No' in options:
-                    encoding_maps[feature] = {'No': 0, 'Yes': 1}
-                else:
-                    encoding_maps[feature] = {option: idx for idx, option in enumerate(options)}
-            else:
