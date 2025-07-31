@@ -351,7 +351,7 @@ CATEGORICAL_OPTIONS = {
     'Diabetes': ['Yes', 'No'],
     'Hypertension': ['Yes', 'No'],
     'Cholesterol Level': ['Low', 'Normal', 'High'],
-    "Family History of Alzheimer's": ['Yes', 'No'],  # Fixed apostrophe
+    "Family History of Alzheimer’s": ['Yes', 'No'],  # Fixed apostrophe
     'Sleep Quality': ['Poor', 'Fair', 'Good', 'Excellent'],
     'Dietary Habits': ['Unhealthy', 'Moderate', 'Healthy'],
     'Employment Status': ['Employed', 'Unemployed', 'Retired', 'Student'],
@@ -370,7 +370,7 @@ feature_names = [
     'Country', 'Age', 'Gender', 'Education Level', 'BMI',
     'Physical Activity Level', 'Smoking Status', 'Alcohol Consumption',
     'Diabetes', 'Hypertension', 'Cholesterol Level',
-    "Family History of Alzheimer's", 'Cognitive Test Score', 'Depression Level',
+    "Family History of Alzheimer’s", 'Cognitive Test Score', 'Depression Level',
     'Sleep Quality', 'Dietary Habits', 'Air Pollution Exposure',
     'Employment Status', 'Marital Status', 'Genetic Risk Factor (APOE-ε4 allele)',
     'Social Engagement Level', 'Income Level', 'Stress Levels', 'Urban vs Rural Living'
@@ -504,7 +504,7 @@ with col2:
                     'Diabetes': [user_input_df['Diabetes'].iloc[0]],
                     'Hypertension': [user_input_df['Hypertension'].iloc[0]],
                     'Cholesterol Level': [user_input_df['Cholesterol Level'].iloc[0]],
-                    "Family History of Alzheimer's": [user_input_df["Family History of Alzheimer's"].iloc[0]],  # Fixed apostrophe
+                    "Family History of Alzheimer’s": [user_input_df["Family History of Alzheimer’s"].iloc[0]],  # Fixed apostrophe
                     'Cognitive Test Score': [user_input_df['Cognitive Test Score'].iloc[0]],
                     'Depression Level': [user_input_df['Depression Level'].iloc[0]],
                     'Sleep Quality': [user_input_df['Sleep Quality'].iloc[0]],
@@ -575,7 +575,7 @@ with col2:
                     st.write("**Class 1 (Alzheimer's):**", f"{raw_probabilities[1]:.4f} ({raw_probabilities[1]*100:.1f}%)")
                     
                     # Show key features
-                    family_history = user_input_df["Family History of Alzheimer's"].iloc[0]
+                    family_history = user_input_df["Family History of Alzheimer’s"].iloc[0]
                     apoe_gene = user_input_df["Genetic Risk Factor (APOE-ε4 allele)"].iloc[0]
                     st.write("**Key Risk Factors:**")
                     st.write(f"- Age: {user_input_df['Age'].iloc[0]}")
