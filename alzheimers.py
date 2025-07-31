@@ -97,7 +97,7 @@ CATEGORICAL_OPTIONS = {
     'Diabetes': ['Yes', 'No'],
     'Hypertension': ['Yes', 'No'],
     'Cholesterol Level': ['Low', 'Normal', 'High'],
-    'Family History of Alzheimer’s': ['Yes', 'No'],
+    'Family History of Alzheimer\'s': ['Yes', 'No'],
     'Sleep Quality': ['Poor', 'Fair', 'Good', 'Excellent'],
     'Dietary Habits': ['Unhealthy', 'Moderate', 'Healthy'],
     'Employment Status': ['Employed', 'Unemployed', 'Retired', 'Student'],
@@ -115,7 +115,7 @@ feature_names = [
     'Country', 'Age', 'Gender', 'Education Level', 'BMI',
     'Physical Activity Level', 'Smoking Status', 'Alcohol Consumption',
     'Diabetes', 'Hypertension', 'Cholesterol Level',
-    'Family History of Alzheimer’s', 'Cognitive Test Score', 'Depression Level',
+    'Family History of Alzheimer\'s', 'Cognitive Test Score', 'Depression Level',
     'Sleep Quality', 'Dietary Habits', 'Air Pollution Exposure',
     'Employment Status', 'Marital Status', 'Genetic Risk Factor (APOE-ε4 allele)',
     'Social Engagement Level', 'Income Level', 'Stress Levels', 'Urban vs Rural Living'
@@ -190,7 +190,7 @@ def make_prediction(user_input_df):
             'Diabetes': [user_input_df['Diabetes'].iloc[0]],
             'Hypertension': [user_input_df['Hypertension'].iloc[0]],
             'Cholesterol Level': [user_input_df['Cholesterol Level'].iloc[0]],
-            'Family History of Alzheimer’s': [user_input_df['Family History of Alzheimer’s'].iloc[0]],
+            'Family History of Alzheimer\'s': [user_input_df['Family History of Alzheimer\'s'].iloc[0]],
             'Cognitive Test Score': [user_input_df['Cognitive Test Score'].iloc[0]],
             'Depression Level': [user_input_df['Depression Level'].iloc[0]],
             'Sleep Quality': [user_input_df['Sleep Quality'].iloc[0]],
@@ -205,11 +205,18 @@ def make_prediction(user_input_df):
             'Urban vs Rural Living': [user_input_df['Urban vs Rural Living'].iloc[0]]
         })
         
-        # Manual encoding since encoders aren't available
+        # FIXED: Manual encoding with proper Yes/No handling
         input_encoded = input_data.copy()
         encoding_maps = {}
         for feature, options in CATEGORICAL_OPTIONS.items():
-            encoding_maps[feature] = {option: idx for idx, option in enumerate(options)}
+            if feature in ['Diabetes', 'Hypertension', 'Family History of Alzheimer\'s', 'Genetic Risk Factor (APOE-ε4 allele)']:
+                # For Yes/No features, ensure 'No'=0 and 'Yes'=1 (standard medical encoding)
+                if 'Yes' in options and 'No' in options:
+                    encoding_maps[feature] = {'No': 0, 'Yes': 1}
+                else:
+                    encoding_maps[feature] = {option: idx for idx, option in enumerate(options)}
+            else:
+                encoding_maps[feature] = {option: idx for idx, option in enumerate(options)}
         
         # Encode categorical variables
         for column in input_data.columns:
@@ -219,6 +226,15 @@ def make_prediction(user_input_df):
                     input_encoded[column] = encoding_maps[column][original_value]
                 else:
                     input_encoded[column] = 0
+        
+        # DEBUG: Show encoded values for key medical features (optional - remove in production)
+        st.write("🔍 **Encoded Medical Risk Factors:**")
+        medical_features = ['Genetic Risk Factor (APOE-ε4 allele)', 'Diabetes', 'Hypertension', 'Family History of Alzheimer\'s']
+        for feature in medical_features:
+            if feature in input_encoded.columns:
+                original = input_data[feature].iloc[0]
+                encoded = input_encoded[feature].iloc[0]
+                st.write(f"   • {feature}: '{original}' → {encoded}")
         
         # Ensure all columns are numeric
         for col in input_encoded.columns:
