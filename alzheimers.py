@@ -10,10 +10,16 @@ import time
 import random
 warnings.filterwarnings('ignore')
 
-# IMPROVED CSS WITH LIGHTER GRADIENT AND BETTER TEXT VISIBILITY
+# MOBILE-COMPATIBLE CSS KEEPING ORIGINAL DESIGN
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    
+    /* Ensure proper font sizing for mobile */
+    html, body {
+        font-size: 16px !important;
+        -webkit-text-size-adjust: 100% !important;
+    }
     
     /* Lighter modern glassmorphism background */
     .stApp {
@@ -104,7 +110,7 @@ st.markdown("""
         background: rgba(255, 255, 255, 0.9) !important;
     }
     
-    /* Modern input styling with better visibility */
+    /* Modern input styling with better visibility - MOBILE COMPATIBLE */
     .stSelectbox > div > div {
         background: rgba(255, 255, 255, 0.95) !important;
         color: #1e293b !important;
@@ -113,6 +119,7 @@ st.markdown("""
         transition: all 0.3s ease !important;
         min-height: 48px !important;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08) !important;
+        font-size: 16px !important; /* Prevents zoom on iOS */
     }
     
     .stSelectbox > div > div:focus-within {
@@ -139,7 +146,7 @@ st.markdown("""
         box-shadow: none !important;
         border: none !important;
         color: #1e293b !important;
-        font-size: 16px !important;
+        font-size: 16px !important; /* Prevents zoom on iOS */
         font-weight: 500 !important;
     }
 
@@ -150,7 +157,7 @@ st.markdown("""
         background: rgba(255, 255, 255, 1) !important;
     }
 
-    /* Better number inputs - properly aligned with select boxes */
+    /* Better number inputs - properly aligned with select boxes - MOBILE COMPATIBLE */
     div[data-testid="stNumberInput"] > div {
         border: 2px solid rgba(147, 188, 220, 0.4) !important;
         border-radius: 12px !important;
@@ -170,7 +177,7 @@ st.markdown("""
         background: rgba(255, 255, 255, 1) !important;
     }
 
-    /* Position the input to align with select box text */
+    /* Position the input to align with select box text - MOBILE COMPATIBLE */
     div[data-testid="stNumberInput"] input[type="number"] {
         border: none !important;
         background: transparent !important;
@@ -178,13 +185,22 @@ st.markdown("""
         width: calc(100% - 80px) !important;
         padding: 0 15px !important;
         color: #1e293b !important;
-        font-size: 16px !important;
+        font-size: 16px !important; /* Prevents zoom on iOS */
         font-weight: 500 !important;
         outline: none !important;
         position: absolute !important;
         left: 0 !important;
         top: 0 !important;
         z-index: 1 !important;
+        -webkit-appearance: none !important;
+        -moz-appearance: textfield !important;
+    }
+
+    /* Hide number input spinners on mobile */
+    div[data-testid="stNumberInput"] input[type="number"]::-webkit-outer-spin-button,
+    div[data-testid="stNumberInput"] input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none !important;
+        margin: 0 !important;
     }
 
     div[data-testid="stNumberInput"]:focus-within > div {
@@ -205,6 +221,7 @@ st.markdown("""
         position: absolute !important;
         right: 0 !important;
         z-index: 2 !important;
+        -webkit-tap-highlight-color: transparent !important;
     }
 
     div[data-testid="stNumberInput"] button:first-of-type {
@@ -280,7 +297,7 @@ st.markdown("""
         border-right: 1px solid rgba(102, 126, 234, 0.2) !important;
     }
     
-    /* Premium button styling */
+    /* Premium button styling - MOBILE COMPATIBLE */
     .stButton > button {
         background: linear-gradient(45deg, #667eea 0%, #764ba2 100%) !important;
         color: white !important;
@@ -294,6 +311,8 @@ st.markdown("""
         transition: all 0.3s ease !important;
         position: relative;
         overflow: hidden;
+        -webkit-tap-highlight-color: transparent !important;
+        touch-action: manipulation !important;
     }
     
     .stButton > button::before {
@@ -436,13 +455,16 @@ st.markdown("""
         font-weight: 600 !important;
     }
     
-    /* Better expander styling */
+    /* Better expander styling - MOBILE COMPATIBLE */
     .streamlit-expanderHeader {
         background: rgba(255, 255, 255, 0.9) !important;
         border-radius: 12px !important;
         color: #1e293b !important;
         font-weight: 600 !important;
         border: 1px solid rgba(102, 126, 234, 0.3) !important;
+        font-size: 16px !important; /* Prevents zoom on iOS */
+        min-height: 48px !important;
+        -webkit-tap-highlight-color: transparent !important;
     }
     
     .streamlit-expanderContent {
@@ -531,6 +553,19 @@ st.markdown("""
     .stSelectbox label, .stNumberInput label, .stTextInput label {
         color: #1e293b !important;
         font-weight: 500 !important;
+        font-size: 16px !important; /* Prevents zoom on iOS */
+    }
+    
+    /* Mobile touch improvements */
+    * {
+        -webkit-tap-highlight-color: transparent;
+        -webkit-touch-callout: none;
+    }
+    
+    /* Smooth scrolling for better mobile UX */
+    html {
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -540,7 +575,7 @@ st.set_page_config(
     page_title="Alzheimer's Risk Assessment", 
     layout="wide",
     page_icon="🧠",
-    initial_sidebar_state="collapsed"  # Collapsed by default for mobile
+    initial_sidebar_state="collapsed"
 )
 
 # Load models
